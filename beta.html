@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Library - PERHIMAGI</title>
     
-    <!-- 1. FIXED FAVICON (Menggunakan versi thumbnail agar proporsional/persegi) -->
+    <!-- 1. FIXED FAVICON -->
     <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
     <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" sizes="192x192">
     
@@ -35,9 +35,12 @@
             height: 1.1em;
         }
 
-        /* Animasi Transisi Halaman */
+        /* Animasi Transisi Halaman & Mobile Menu */
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .slide-down { animation: slideDown 0.2s ease-out forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
@@ -46,6 +49,7 @@
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
+                <!-- Logo Area -->
                 <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
                     <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
                          alt="Logo PERHIMAGI" 
@@ -55,14 +59,32 @@
                         <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
                     </div>
                 </div>
+
+                <!-- Desktop Navigation -->
                 <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
                     <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
                     <button onclick="navigateTo('home')" id="nav-library" class="text-red-600 hover:text-red-600 transition">Library</button>
-                    <!-- 3. Menu Tentang sebagai Navigasi Halaman -->
                     <button onclick="navigateTo('about')" id="nav-about" class="hover:text-red-600 transition">Tentang</button>
                 </div>
-                <button class="md:hidden p-2 text-slate-600">
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                     <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <button onclick="navigateTo('home')" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </button>
+                <button onclick="navigateTo('about')" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
                 </button>
             </div>
         </div>
@@ -233,7 +255,7 @@
                 <!-- Pengurus -->
                 <div class="bg-slate-50 rounded-xl p-8 border border-slate-100">
                     <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <i data-lucide="users" class="text-red-600"></i> Inisiator
+                        <i data-lucide="users" class="text-red-600"></i> Struktur Pengelola
                     </h3>
                     
                     <div class="space-y-6">
@@ -317,8 +339,14 @@
                     </label>
                 </div>
             </div>
+            <!-- Footer Modal with Report Link -->
             <div class="p-6 border-t border-slate-100 bg-slate-50">
                 <a id="actionBtn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg font-bold text-white transition-all bg-slate-300 cursor-not-allowed pointer-events-none"></a>
+                
+                <!-- Hidden Report Link -->
+                <p id="reportBrokenLink" class="hidden text-center text-xs text-slate-500 mt-3 pt-2 border-t border-slate-200">
+                    Laporkan kepada <a href="https://wa.me/6282290193887?text=Halo%20Divisi%20Akademik%2C%20saya%20ingin%20melaporkan%20file%20tidak%20tersedia%20di%20Digilab." target="_blank" class="text-red-600 font-semibold hover:underline">Divisi Akademik</a> jika file tidak tersedia.
+                </p>
             </div>
         </div>
     </div>
@@ -387,15 +415,17 @@
             lucide.createIcons();
         });
 
-        // --- NAVIGATION SYSTEM (NEW) ---
+        // --- NAVIGATION SYSTEM ---
         function navigateTo(pageId) {
             const home = document.getElementById('page-home');
             const about = document.getElementById('page-about');
             const navLib = document.getElementById('nav-library');
             const navAbout = document.getElementById('nav-about');
+            const mobileNav = document.getElementById('mobileNavDropdown');
             
-            // Tutup drawer mobile jika terbuka
+            // Close all mobile drawers
             document.getElementById('mobileFilterDrawer').classList.add('hidden');
+            mobileNav.classList.add('hidden');
 
             if (pageId === 'home') {
                 home.classList.remove('hidden');
@@ -716,6 +746,12 @@
                 if (currentPage < totalPages) { currentPage++; renderGrid(); renderPagination(); }
             });
 
+            // --- MOBILE MENU TOGGLE LOGIC (NEW) ---
+            document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                const menu = document.getElementById('mobileNavDropdown');
+                menu.classList.toggle('hidden');
+            });
+
             document.getElementById('openMobileFilter').addEventListener('click', () => {
                 document.getElementById('mobileFilterDrawer').classList.remove('hidden');
             });
@@ -730,6 +766,7 @@
                 const btn = document.getElementById('actionBtn');
                 const isChecked = e.target.checked;
                 const isPrivate = currentModalItem.akses === "Privat";
+                const reportLink = document.getElementById('reportBrokenLink'); // Element report
 
                 if (isChecked) {
                     btn.classList.remove('bg-slate-300', 'cursor-not-allowed', 'pointer-events-none');
@@ -745,6 +782,7 @@
                 } else {
                     btn.classList.add('bg-slate-300', 'cursor-not-allowed', 'pointer-events-none');
                     btn.classList.remove('bg-green-600', 'hover:bg-green-700', 'shadow-lg', 'shadow-green-200');
+                    reportLink.classList.add('hidden'); // Sembunyikan report jika belum dicentang
                     
                     if (isPrivate) {
                         btn.innerHTML = `<i data-lucide="external-link" class="w-5 h-5"></i> Centang Konfirmasi untuk Request`;
@@ -754,6 +792,11 @@
                     btn.href = "#";
                 }
                 lucide.createIcons();
+            });
+            
+            // Logic untuk menampilkan tombol lapor setelah klik download/akses
+            document.getElementById('actionBtn').addEventListener('click', () => {
+                document.getElementById('reportBrokenLink').classList.remove('hidden');
             });
         }
 
@@ -824,6 +867,9 @@
             ).join('');
 
             document.getElementById('confirmationCheck').checked = false;
+            // Reset tombol report saat modal dibuka
+            document.getElementById('reportBrokenLink').classList.add('hidden');
+            
             const btn = document.getElementById('actionBtn');
             btn.classList.add('bg-slate-300', 'cursor-not-allowed', 'pointer-events-none');
             btn.classList.remove('bg-green-600', 'hover:bg-green-700', 'shadow-lg', 'shadow-green-200');
