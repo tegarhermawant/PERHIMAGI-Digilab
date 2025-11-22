@@ -49,30 +49,26 @@
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo Area -->
-                <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
                     <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
-                         alt="Logo PERHIMAGI" 
-                         class="w-10 h-10 object-contain">
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
                     <div>
                         <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
                         <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
                     </div>
                 </div>
-
-                <!-- Desktop Navigation -->
                 <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
-                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
-                    <button onclick="navigateTo('home')" id="nav-library" class="text-red-600 hover:text-red-600 transition">Library</button>
-                    <button onclick="navigateTo('about')" id="nav-about" class="hover:text-red-600 transition">Tentang</button>
+                    <a href="perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="index.html" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Library</a>
+                    <a href="/alat/" class="hover:text-red-600 transition">Alat</a>
+                    <a href="tentang.html" class="hover:text-red-600 transition">Tentang</a>
                 </div>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                <button class="md:hidden p-2 text-slate-600">
                     <i data-lucide="menu"></i>
                 </button>
             </div>
         </div>
+    </header>
 
         <!-- Mobile Navigation Dropdown (Hidden by default) -->
         <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
@@ -80,12 +76,15 @@
                 <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
                     <i data-lucide="home" class="w-5 h-5"></i> Home
                 </a>
-                <button onclick="navigateTo('home')" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                <a href="index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
                     <i data-lucide="book" class="w-5 h-5"></i> Library
-                </button>
-                <button onclick="navigateTo('about')" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                </a>
+                <a href="alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
                     <i data-lucide="info" class="w-5 h-5"></i> Tentang
-                </button>
+                </a>
             </div>
         </div>
     </header>
@@ -219,85 +218,10 @@
         </main>
     </div>
 
-    <!-- === HALAMAN TENTANG (SEPARATE PAGE) === -->
-    <div id="page-about" class="fade-in hidden flex-1 bg-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <!-- Title -->
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">Tentang Digital Library</h2>
-                <div class="h-1 w-20 bg-red-600 mx-auto rounded"></div>
-            </div>
-
-            <!-- Content Container -->
-            <div class="grid md:grid-cols-2 gap-12 items-start">
-                <!-- Misi -->
-                <div class="space-y-6">
-                    <div class="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg">
-                        <h3 class="text-xl font-bold text-red-800 mb-3">Misi Pemerataan Pendidikan</h3>
-                        <p class="text-slate-700 leading-relaxed">
-                            Digital Library ini adalah wujud nyata komitmen <strong>PERHIMAGI</strong> untuk mendemokratisasi akses ilmu kebumian. Kami percaya bahwa setiap mahasiswa geologi, di manapun berada, berhak mendapatkan referensi literasi yang berkualitas tanpa terhalang jarak atau biaya.
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-                            <i data-lucide="shield-check" class="text-blue-600"></i> Kebijakan Akses
-                        </h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                            Sebagian besar koleksi kami bersifat <strong class="text-green-600">Open Source</strong> dan dapat diunduh langsung untuk keperluan akademik dan penelitian.
-                        </p>
-                        <p class="text-slate-600 text-sm leading-relaxed">
-                            Untuk dokumen tertentu yang bersifat <strong class="text-blue-600">Privat</strong>, akses dibatasi demi menjaga integritas data atau hak cipta. Pengguna dapat mengajukan permintaan akses (request) langsung kepada admin melalui fitur yang tersedia.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Pengurus -->
-                <div class="bg-slate-50 rounded-xl p-8 border border-slate-100">
-                    <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <i data-lucide="users" class="text-red-600"></i> Inisiator
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-slate-200 shadow-sm text-slate-400">
-                                <i data-lucide="user" class="w-6 h-6"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs text-red-600 font-bold uppercase tracking-wide mb-1">Sekretaris Jenderal PERHIMAGI</p>
-                                <h4 class="text-lg font-bold text-slate-900">Tegar Hermawan Tahir</h4>
-                                <p class="text-sm text-slate-500 mt-1">Penanggung Jawab Umum</p>
-                            </div>
-                        </div>
-
-                        <div class="w-full h-px bg-slate-200"></div>
-
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-slate-200 shadow-sm text-slate-400">
-                                <i data-lucide="book-open" class="w-6 h-6"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs text-red-600 font-bold uppercase tracking-wide mb-1">Kepala Divisi Akademik (2025/2026)</p>
-                                <h4 class="text-lg font-bold text-slate-900">Asta Dinata P.</h4>
-                                <p class="text-sm text-slate-500 mt-1">Pengelola Digital Library</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-8 pt-6 border-t border-slate-200">
-                        <button onclick="navigateTo('home')" class="w-full py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
-                            <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Library
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
         <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
-        <p class="mt-2">Divisi Akademik.</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
     </footer>
 
     <!-- MODAL DETAIL -->

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Ukuran Butir - PERHIMAGI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Analisis Ukuran Butir Sedimen - PERHIMAGI">
+    <meta property="og:description" content="Perhitungan statistik (Mean, Sortasi, Skewness, Kurtosis) menggunakan Method of Moments berdasarkan data pengayakan.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png">
+    <meta property="og:url" content="https://lib.perhimagi.org/alat/identifikasi-ukuranbutir.html">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax (Configured) -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    MathJax.startup.promise.then(() => {
+                        console.log('MathJax initial typesetting complete');
+                    });
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Table Styles */
+        .data-table input { 
+            background: transparent; 
+            width: 100%; 
+            text-align: center; 
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .data-table td {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 0.5rem;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table input:focus { border-bottom: 2px solid #dc2626; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+   <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Geologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Ukuran Butir Sedimen</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-2xl mx-auto">
+                Perhitungan statistik (Mean, Sortasi, Skewness, Kurtosis) menggunakan <em>Method of Moments</em> berdasarkan data pengayakan.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- KOLOM KIRI: INPUT DATA -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="table" class="text-red-600 w-5 h-5"></i> Input Data Lab
+                        </h3>
+                        <button onclick="resetTable()" class="text-xs text-slate-400 hover:text-red-600 underline">Reset Data</button>
+                    </div>
+
+                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mb-4 text-xs text-slate-700">
+                        <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>
+                        Masukkan berat tertahan (gram). Total berat harus 100% (atau mendekati). Sistem akan otomatis menghitung Phi ($\phi$).
+                    </div>
+                    
+                    <div class="overflow-x-auto rounded-lg border border-slate-200">
+                        <table class="w-full text-sm text-left data-table">
+                            <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-xs">
+                                <tr>
+                                    <th class="p-3 w-20">Mesh No.</th>
+                                    <th class="p-3 w-24">Dia (mm)</th>
+                                    <th class="p-3 text-center bg-red-50 text-red-700">Berat Hulu</th>
+                                    <th class="p-3 text-center bg-blue-50 text-blue-700">Berat Hilir</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inputTableBody">
+                                <!-- Rows generated by JS -->
+                            </tbody>
+                            <tfoot class="bg-slate-50 font-bold text-xs">
+                                <tr>
+                                    <td colspan="2" class="p-3 text-right">TOTAL (gr)</td>
+                                    <td class="p-3 text-center" id="totalHulu">0</td>
+                                    <td class="p-3 text-center" id="totalHilir">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <button onclick="calculateStats()" class="w-full mt-6 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-lg flex justify-center items-center gap-2">
+                        <i data-lucide="calculator" class="w-4 h-4"></i> Hitung Statistik
+                    </button>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: HASIL & GRAFIK -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Result Card -->
+                <div id="resultContainer" class="hidden space-y-6 fade-in">
+                    
+                    <!-- Statistik Cards -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <!-- HULU CARD -->
+                        <div class="bg-white border-t-4 border-red-500 p-5 rounded-xl shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-1 rounded-bl-lg">SAMPEL HULU</div>
+                            <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">Statistik Hulu</h4>
+                            <div class="space-y-4 text-sm">
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                    <span class="text-slate-500">Mean ($\bar{x}_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold text-lg" id="huluMean">-</span>
+                                        <span class="text-[10px] text-slate-400 block">Phi Scale</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                    <span class="text-slate-500">Sortasi ($\sigma_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold" id="huluSort">-</span>
+                                        <span class="inline-block px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded mt-1" id="huluSortClass">-</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                    <span class="text-slate-500">Skewness ($Sk_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold" id="huluSkew">-</span>
+                                        <span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mt-1" id="huluSkewClass">-</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-500">Kurtosis ($K_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold" id="huluKurt">-</span>
+                                        <span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mt-1" id="huluKurtClass">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HILIR CARD -->
+                        <div class="bg-white border-t-4 border-blue-500 p-5 rounded-xl shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-bl-lg">SAMPEL HILIR</div>
+                            <h4 class="font-bold text-slate-900 mb-4">Statistik Hilir</h4>
+                            <div class="space-y-4 text-sm">
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                    <span class="text-slate-500">Mean ($\bar{x}_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold text-lg" id="hilirMean">-</span>
+                                        <span class="text-[10px] text-slate-400 block">Phi Scale</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                    <span class="text-slate-500">Sortasi ($\sigma_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold" id="hilirSort">-</span>
+                                        <span class="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded mt-1" id="hilirSortClass">-</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                    <span class="text-slate-500">Skewness ($Sk_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold" id="hilirSkew">-</span>
+                                        <span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mt-1" id="hilirSkewClass">-</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-500">Kurtosis ($K_\phi$)</span>
+                                    <div class="text-right">
+                                        <span class="font-mono font-bold" id="hilirKurt">-</span>
+                                        <span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mt-1" id="hilirKurtClass">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Histogram -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-4 text-center">Distribusi Ukuran Butir</h4>
+                        <div class="h-64">
+                            <canvas id="grainChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Interpretation / Action -->
+                    <div class="flex justify-center">
+                        <button onclick="openMathModal()" class="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-full transition flex items-center gap-2">
+                            <i data-lucide="function-square" class="w-4 h-4"></i> Lihat Proses Perhitungan
+                        </button>
+                    </div>
+
+                </div>
+                
+                <!-- Placeholder State -->
+                <div id="emptyState" class="h-full flex flex-col items-center justify-center text-slate-400 p-10 border-2 border-dashed border-slate-200 rounded-xl">
+                    <i data-lucide="bar-chart-2" class="w-12 h-12 mb-2 opacity-50"></i>
+                    <p class="text-sm">Hasil analisis akan muncul di sini</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="mt-8 max-w-4xl mx-auto bg-amber-50 border border-amber-100 p-4 rounded-xl flex gap-3 items-start">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 mt-0.5 shrink-0"></i>
+            <div class="text-xs text-amber-800">
+                <strong>Disclaimer:</strong> Hasil perhitungan ini menggunakan <em>Method of Moments</em> (Logarithmic). Hasil mungkin sedikit berbeda dengan metode grafis (Folk & Ward) tergantung distribusi data. Harap verifikasi manual untuk laporan resmi.
+            </div>
+        </div>
+
+    </main>
+
+    <!-- CALCULATION MODAL -->
+    <div id="mathModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 flex flex-col max-h-[90vh]">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="sigma" class="w-5 h-5 text-red-600"></i> Detail Perhitungan (Method of Moments)
+                </h3>
+                <button onclick="closeMathModal()" class="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-red-600 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-8 text-sm text-slate-600">
+                
+                <!-- Contoh Visual Laporan (Your Image) -->
+                <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <h4 class="font-bold text-slate-900 mb-2 text-xs uppercase tracking-wide">Referensi Laporan Standar</h4>
+                    <div class="relative aspect-[4/3] w-full max-w-lg mx-auto overflow-hidden rounded-lg border border-slate-300 shadow-sm">
+                       <img src="https://perhimagi.org/wp-content/uploads/2025/05/image_fd2221.png-40072fcb-a560-44ec-9607-d90b6cd32ea8" alt="Contoh Laporan Statistik Sedimen" class="object-contain w-full h-full">
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2 italic">Format tabel di atas adalah standar pelaporan data statistik granulometri.</p>
+                </div>
+
+                <!-- Calculation Steps Display -->
+                <div id="calcStepsContainer" class="space-y-8">
+                    <!-- Content injected by JS -->
+                    <div class="text-center text-slate-400 italic py-4">Data perhitungan akan muncul di sini setelah Anda menekan tombol "Hitung Statistik".</div>
+                </div>
+
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50">
+                <button onclick="closeMathModal()" class="w-full py-2.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+        <!-- REFERENCES & FOOTER INFO -->
+            <!-- References Section -->
+             <div class="max-w-3xl mx-auto px-4 mb-8">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi & Sitasi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Folk, R. L., & Ward, W. C. (1957).</strong> Brazos River bar: A study in the significance of grain size parameters. Journal of Sedimentary Research, 27(1), 3-26.</li>
+                    <li><strong>Boggs, S. (2006).</strong> Principles of Sedimentology and Stratigraphy (4th ed.). Pearson Prentice Hall.</li>
+                    <li><strong>Blott, S. J., & Pye, K. (2001).</strong> Gradistat: A grain size distribution and statistics package for the analysis of unconsolidated sediments. Earth Surface Processes and Landforms, 26(11), 1237-1248.</li>
+                </ul>
+            </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+
+        // --- CONFIG ---
+        // Standard Mesh Stack
+        const standardMesh = [
+            { no: "10", mm: 2.00 },
+            { no: "18", mm: 1.00 },
+            { no: "35", mm: 0.50 },
+            { no: "60", mm: 0.25 },
+            { no: "230", mm: 0.063 },
+            { no: "270", mm: 0.053 },
+            { no: "Pan", mm: 0.001 } 
+        ];
+        
+        // Store last calculation data
+        let lastCalcData = null;
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTableRows();
+        });
+
+        function renderTableRows() {
+            const tbody = document.getElementById('inputTableBody');
+            tbody.innerHTML = '';
+
+            standardMesh.forEach((mesh, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-bold text-slate-700">${mesh.no}</td>
+                    <td><input type="number" step="0.001" value="${mesh.mm}" class="text-slate-500" ${mesh.no === 'Pan' ? 'disabled' : ''}></td>
+                    <td><input type="number" class="input-hulu font-mono" placeholder="0" oninput="calcTotals()"></td>
+                    <td><input type="number" class="input-hilir font-mono" placeholder="0" oninput="calcTotals()"></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calcTotals() {
+            const huluInputs = document.querySelectorAll('.input-hulu');
+            const hilirInputs = document.querySelectorAll('.input-hilir');
+            
+            let sumHulu = 0, sumHilir = 0;
+            
+            huluInputs.forEach(i => sumHulu += parseFloat(i.value) || 0);
+            hilirInputs.forEach(i => sumHilir += parseFloat(i.value) || 0);
+
+            const elHulu = document.getElementById('totalHulu');
+            const elHilir = document.getElementById('totalHilir');
+
+            elHulu.innerText = sumHulu.toFixed(2);
+            elHilir.innerText = sumHilir.toFixed(2);
+
+            elHulu.className = `p-3 text-center font-bold ${Math.abs(sumHulu - 100) < 1 ? 'text-green-600' : 'text-red-600'}`;
+            elHilir.className = `p-3 text-center font-bold ${Math.abs(sumHilir - 100) < 1 ? 'text-green-600' : 'text-red-600'}`;
+        }
+
+        function resetTable() {
+            document.querySelectorAll('input[type="number"]').forEach(i => {
+                if(!i.disabled && (i.classList.contains('input-hulu') || i.classList.contains('input-hilir'))) i.value = '';
+            });
+            calcTotals();
+            document.getElementById('resultContainer').classList.add('hidden');
+            document.getElementById('emptyState').classList.remove('hidden');
+            lastCalcData = null;
+        }
+
+        // --- CORE CALCULATION ---
+        function calculateStats() {
+            const rows = document.querySelectorAll('#inputTableBody tr');
+            const dataPoints = [];
+
+            let prevPhi = -2.0; // Assumed upper bound (4mm) for Mesh 10
+
+            rows.forEach((row, index) => {
+                const mmInput = row.querySelector('td:nth-child(2) input').value;
+                const mm = parseFloat(mmInput);
+                const wHulu = parseFloat(row.querySelector('.input-hulu').value) || 0;
+                const wHilir = parseFloat(row.querySelector('.input-hilir').value) || 0;
+
+                let phi, midpoint;
+                
+                if (index === rows.length - 1) { // Pan
+                    phi = 10; 
+                    midpoint = (prevPhi + 6.0) / 2; 
+                } else {
+                    phi = -Math.log2(mm);
+                    midpoint = (phi + prevPhi) / 2;
+                    prevPhi = phi;
+                }
+
+                dataPoints.push({ m: midpoint, fHulu: wHulu, fHilir: wHilir });
+            });
+
+            // Helper: Calculate Moments
+            const getMoments = (data, key) => {
+                const total = data.reduce((acc, cur) => acc + cur[key], 0);
+                if (total === 0) return null;
+
+                // 1. Mean
+                const sumFM = data.reduce((acc, cur) => acc + (cur[key] * cur.m), 0);
+                const mean = sumFM / total;
+
+                // 2. StdDev (Sorting)
+                const sumFdev2 = data.reduce((acc, cur) => acc + (cur[key] * Math.pow(cur.m - mean, 2)), 0);
+                const variance = sumFdev2 / total;
+                const sorting = Math.sqrt(variance);
+
+                // 3. Skewness
+                const sumFdev3 = data.reduce((acc, cur) => acc + (cur[key] * Math.pow(cur.m - mean, 3)), 0);
+                const skew = sorting === 0 ? 0 : sumFdev3 / (total * Math.pow(sorting, 3));
+
+                // 4. Kurtosis
+                const sumFdev4 = data.reduce((acc, cur) => acc + (cur[key] * Math.pow(cur.m - mean, 4)), 0);
+                const kurt = sorting === 0 ? 0 : sumFdev4 / (total * Math.pow(sorting, 4));
+
+                return { 
+                    mean, sorting, skew, kurt, total,
+                    sumFM, sumFdev2, sumFdev3, sumFdev4
+                };
+            };
+
+            const statsHulu = getMoments(dataPoints, 'fHulu');
+            const statsHilir = getMoments(dataPoints, 'fHilir');
+
+            if (!statsHulu && !statsHilir) {
+                alert("Masukkan data berat terlebih dahulu.");
+                return;
+            }
+            
+            // Store for Modal
+            lastCalcData = { hulu: statsHulu, hilir: statsHilir };
+
+            displayResults('hulu', statsHulu);
+            displayResults('hilir', statsHilir);
+            renderChart(dataPoints);
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('resultContainer').classList.remove('hidden');
+            
+            // Trigger MathJax re-render
+            if(window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function displayResults(prefix, stats) {
+            if (!stats) return;
+            
+            document.getElementById(`${prefix}Mean`).innerText = stats.mean.toFixed(3) + " ϕ";
+            document.getElementById(`${prefix}Sort`).innerText = stats.sorting.toFixed(3);
+            document.getElementById(`${prefix}Skew`).innerText = stats.skew.toFixed(3);
+            document.getElementById(`${prefix}Kurt`).innerText = stats.kurt.toFixed(3);
+
+            // Classifications
+            document.getElementById(`${prefix}SortClass`).innerText = getClassSorting(stats.sorting);
+            document.getElementById(`${prefix}SkewClass`).innerText = getClassSkew(stats.skew);
+            document.getElementById(`${prefix}KurtClass`).innerText = getClassKurt(stats.kurt);
+        }
+
+        // --- CLASSIFICATIONS ---
+        function getClassSorting(v) {
+            if (v < 0.35) return "Very Well Sorted";
+            if (v < 0.50) return "Well Sorted";
+            if (v < 0.71) return "Moderately Well Sorted";
+            if (v < 1.00) return "Moderately Sorted";
+            if (v < 2.00) return "Poorly Sorted";
+            if (v < 4.00) return "Very Poorly Sorted";
+            return "Extremely Poorly Sorted";
+        }
+
+        function getClassSkew(v) {
+            if (v > 1.0) return "Very Fine Skewed";
+            if (v > 0.3) return "Very Fine Skewed"; 
+            if (v > 0.1) return "Fine Skewed";
+            if (v > -0.1) return "Near Symmetrical";
+            if (v > -0.3) return "Coarse Skewed";
+            return "Very Coarse Skewed";
+        }
+
+        function getClassKurt(v) {
+            if (v < 0.67) return "Very Platykurtic";
+            if (v < 0.90) return "Platykurtic";
+            if (v < 1.11) return "Mesokurtic";
+            if (v < 1.50) return "Leptokurtic";
+            if (v < 3.00) return "Very Leptokurtic";
+            return "Extremely Leptokurtic";
+        }
+
+        // --- CHART ---
+        let grainChart = null;
+        function renderChart(data) {
+            const ctx = document.getElementById('grainChart').getContext('2d');
+            const labels = data.map(d => d.m.toFixed(1) + "ϕ");
+            const dataHulu = data.map(d => d.fHulu);
+            const dataHilir = data.map(d => d.fHilir);
+
+            if (grainChart) grainChart.destroy();
+
+            grainChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Hulu (%)',
+                            data: dataHulu,
+                            backgroundColor: 'rgba(220, 38, 38, 0.6)',
+                            borderColor: 'rgba(220, 38, 38, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Hilir (%)',
+                            data: dataHilir,
+                            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: {display: true, text: 'Berat (%)'} },
+                        x: { title: {display: true, text: 'Midpoint (Phi)'} }
+                    }
+                }
+            });
+        }
+
+        // --- MODAL LOGIC ---
+        function openMathModal() {
+            const container = document.getElementById('calcStepsContainer');
+            const stats = lastCalcData ? (lastCalcData.hulu || lastCalcData.hilir) : null;
+
+            if (!stats) {
+                // If no calculation yet
+                document.getElementById('mathModal').classList.remove('hidden');
+                document.getElementById('mathModal').classList.add('flex');
+                return;
+            }
+
+            // Build Dynamic HTML for Steps (Example using Hulu data if available)
+            // Note: Using .innerHTML with MathJax requires typesetPromise afterwards
+            
+            const t = stats.total.toFixed(2);
+            const mean = stats.mean.toFixed(2);
+            const sdev = stats.sorting.toFixed(2);
+
+            container.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- 1. Konversi -->
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-2 border-b pb-1">1. Konversi Data ($\\phi$)</h4>
+                        <p class="mb-2">Diameter (mm) diubah ke satuan Phi.</p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-xs">
+                            $$ \\phi = -\\log_2(d_{mm}) $$
+                            $$ m = \\frac{\\phi_{mesh} + \\phi_{prev}}{2} $$
+                        </div>
+                    </div>
+
+                    <!-- 2. Mean -->
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-2 border-b pb-1">2. Mean ($\\bar{x}_\\phi$)</h4>
+                        <p class="mb-2">Rata-rata ukuran butir.</p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-xs">
+                            $$ \\bar{x}_\\phi = \\frac{\\sum (f \\cdot m)}{100} $$
+                            $$ \\bar{x}_\\phi = \\frac{${stats.sumFM.toFixed(1)}}{${t}} = \\mathbf{${mean}} $$
+                        </div>
+                    </div>
+
+                    <!-- 3. Sorting -->
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-2 border-b pb-1">3. Sortasi ($\\sigma_\\phi$)</h4>
+                        <p class="mb-2">Standar deviasi (keseragaman).</p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-xs">
+                            $$ \\sigma_\\phi = \\sqrt{ \\frac{\\sum f(m - \\bar{x}_\\phi)^2}{100} } $$
+                            $$ \\sigma_\\phi = \\sqrt{ \\frac{${stats.sumFdev2.toFixed(1)}}{${t}} } = \\mathbf{${sdev}} $$
+                        </div>
+                    </div>
+
+                    <!-- 4. Skewness -->
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-2 border-b pb-1">4. Skewness ($Sk_\\phi$)</h4>
+                        <p class="mb-2">Kepencengan kurva.</p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-xs">
+                            $$ Sk_\\phi = \\frac{\\sum f(m - \\bar{x}_\\phi)^3}{100 \\cdot \\sigma_\\phi^3} $$
+                            $$ Sk_\\phi = \\frac{${stats.sumFdev3.toFixed(1)}}{${t} \\cdot ${sdev}^3} = \\mathbf{${stats.skew.toFixed(2)}} $$
+                        </div>
+                    </div>
+
+                    <!-- 5. Kurtosis -->
+                    <div class="md:col-span-2">
+                        <h4 class="font-bold text-slate-900 mb-2 border-b pb-1">5. Kurtosis ($K_\\phi$)</h4>
+                        <p class="mb-2">Keruncingan kurva distribusi.</p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-xs text-center">
+                            $$ K_\\phi = \\frac{\\sum f(m - \\bar{x}_\\phi)^4}{100 \\cdot \\sigma_\\phi^4} $$
+                            $$ K_\\phi = \\frac{${stats.sumFdev4.toFixed(1)}}{${t} \\cdot ${sdev}^4} = \\mathbf{${stats.kurt.toFixed(2)}} $$
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mathModal').classList.remove('hidden');
+            document.getElementById('mathModal').classList.add('flex');
+            
+            if(window.MathJax) MathJax.typesetPromise();
+        }
+
+        function closeMathModal() {
+            document.getElementById('mathModal').classList.add('hidden');
+            document.getElementById('mathModal').classList.remove('flex');
+        }
+
+    </script>
+</body>
+</html>

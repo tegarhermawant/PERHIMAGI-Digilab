@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identifikasi Bentuk Butir - PERHIMAGI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Identifikasi Bentuk Butir - PERHIMAGI">
+    <meta property="og:description" content="Identifikasi bentuk, kebolaan, dan kebundaran batuan sedimen berdasarkan pengukuran sumbu butir.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png">
+    <meta property="og:url" content="https://lib.perhimagi.org/alat/identifikasi-bentukbutir.html">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Roundness Selection Cards */
+        .roundness-card:checked + div {
+            border-color: #dc2626;
+            background-color: #fef2f2;
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.1);
+        }
+        .roundness-card:checked + div .check-icon {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+   <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Sedimentologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Morfologi Butir Kerakal</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-2xl mx-auto">
+                Identifikasi bentuk, kebolaan, dan kebundaran batuan sedimen berdasarkan pengukuran sumbu butir.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- KOLOM KIRI: INPUT -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="ruler" class="text-red-600 w-5 h-5"></i> Input Sumbu Butir
+                        </h3>
+                        <button onclick="resetForm()" class="text-xs text-slate-400 hover:text-red-600 underline flex items-center gap-1">
+                            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset
+                        </button>
+                    </div>
+
+                    <!-- ILUSTRASI PENGUKURAN -->
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-6">
+                        <p class="text-xs font-bold text-slate-600 mb-3 uppercase text-center">Panduan Pengukuran Sumbu</p>
+                        <div class="flex justify-center items-center h-32 relative">
+                            <!-- SVG Ilustrasi -->
+                            <svg viewBox="0 0 200 120" class="w-full h-full">
+                                <!-- Pebble Shape -->
+                                <path d="M60,40 C60,20 100,10 140,30 C180,50 170,90 130,100 C90,110 50,90 40,60 C35,50 50,45 60,40 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>
+                                
+                                <!-- Axis Lines -->
+                                <!-- Axis A (Long) -->
+                                <line x1="40" y1="60" x2="170" y2="60" stroke="#dc2626" stroke-width="2" stroke-dasharray="4,2"/>
+                                <text x="105" y="55" font-size="12" fill="#dc2626" font-weight="bold">a</text>
+                                
+                                <!-- Axis B (Intermediate) -->
+                                <line x1="105" y1="20" x2="105" y2="100" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,2"/>
+                                <text x="110" y="85" font-size="12" fill="#2563eb" font-weight="bold">b</text>
+                                
+                                <!-- Axis C (Short - 3D implication) -->
+                                <circle cx="140" cy="30" r="3" fill="#16a34a"/>
+                                <text x="145" y="25" font-size="12" fill="#16a34a" font-weight="bold">c</text>
+                            </svg>
+                        </div>
+                        <div class="text-[10px] text-slate-500 mt-2 space-y-1">
+                            <p><span class="text-red-600 font-bold">a (Panjang):</span> Sumbu terpanjang butir.</p>
+                            <p><span class="text-blue-600 font-bold">b (Menengah):</span> Sumbu terlebar tegak lurus a.</p>
+                            <p><span class="text-green-600 font-bold">c (Pendek):</span> Sumbu tertebal (ketebalan) tegak lurus a & b.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-5">
+                        <!-- Input a -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="font-bold text-red-700">Sumbu Panjang (a)</label>
+                                <span class="font-mono text-slate-500 text-xs">cm</span>
+                            </div>
+                            <input type="number" id="axisA" step="0.1" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none text-center font-mono" placeholder="0.0" oninput="validateAxes()">
+                        </div>
+
+                        <!-- Input b -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="font-bold text-blue-700">Sumbu Menengah (b)</label>
+                                <span class="font-mono text-slate-500 text-xs">cm</span>
+                            </div>
+                            <input type="number" id="axisB" step="0.1" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-center font-mono" placeholder="0.0" oninput="validateAxes()">
+                        </div>
+
+                        <!-- Input c -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="font-bold text-green-700">Sumbu Pendek (c)</label>
+                                <span class="font-mono text-slate-500 text-xs">cm</span>
+                            </div>
+                            <input type="number" id="axisC" step="0.1" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none text-center font-mono" placeholder="0.0" oninput="validateAxes()">
+                        </div>
+                        
+                        <div id="axisWarning" class="hidden p-3 bg-amber-50 text-amber-700 text-xs rounded border border-amber-200 flex items-start gap-2">
+                            <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 shrink-0"></i>
+                            <span>Pastikan nilai <strong>a ≥ b ≥ c</strong>. Mohon periksa kembali input Anda.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roundness Selector -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="circle" class="text-slate-600 w-5 h-5"></i> Derajat Kebundaran
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-4">Pilih visual yang paling sesuai dengan sampel (Powers, 1953).</p>
+                    
+                    <div class="grid grid-cols-3 gap-3">
+                        <!-- VA -->
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="roundness" value="Very Angular" class="roundness-card hidden">
+                            <div class="border border-slate-200 rounded-lg p-2 text-center hover:border-red-300 transition relative">
+                                <div class="w-8 h-8 mx-auto mb-1 bg-slate-100 rounded flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6 stroke-slate-600" fill="none" stroke-width="2"><path d="M12 2L2 22h20L12 2z"/></svg>
+                                </div>
+                                <span class="text-[10px] font-bold block leading-tight">Very Angular</span>
+                                <i data-lucide="check-circle" class="check-icon w-3 h-3 text-red-600 absolute top-1 right-1 opacity-0 transition"></i>
+                            </div>
+                        </label>
+                        <!-- A -->
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="roundness" value="Angular" class="roundness-card hidden">
+                            <div class="border border-slate-200 rounded-lg p-2 text-center hover:border-red-300 transition relative">
+                                <div class="w-8 h-8 mx-auto mb-1 bg-slate-100 rounded flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6 stroke-slate-600" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/></svg>
+                                </div>
+                                <span class="text-[10px] font-bold block leading-tight">Angular</span>
+                                <i data-lucide="check-circle" class="check-icon w-3 h-3 text-red-600 absolute top-1 right-1 opacity-0 transition"></i>
+                            </div>
+                        </label>
+                        <!-- SA -->
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="roundness" value="Sub Angular" class="roundness-card hidden">
+                            <div class="border border-slate-200 rounded-lg p-2 text-center hover:border-red-300 transition relative">
+                                <div class="w-8 h-8 mx-auto mb-1 bg-slate-100 rounded flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6 stroke-slate-600" fill="none" stroke-width="2"><path d="M5 5h14v14H5z" rx="2"/></svg>
+                                </div>
+                                <span class="text-[10px] font-bold block leading-tight">Sub Angular</span>
+                                <i data-lucide="check-circle" class="check-icon w-3 h-3 text-red-600 absolute top-1 right-1 opacity-0 transition"></i>
+                            </div>
+                        </label>
+                        <!-- SR -->
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="roundness" value="Sub Rounded" class="roundness-card hidden">
+                            <div class="border border-slate-200 rounded-lg p-2 text-center hover:border-red-300 transition relative">
+                                <div class="w-8 h-8 mx-auto mb-1 bg-slate-100 rounded flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6 stroke-slate-600" fill="none" stroke-width="2"><path d="M5 5h14v14H5z" rx="5"/></svg>
+                                </div>
+                                <span class="text-[10px] font-bold block leading-tight">Sub Rounded</span>
+                                <i data-lucide="check-circle" class="check-icon w-3 h-3 text-red-600 absolute top-1 right-1 opacity-0 transition"></i>
+                            </div>
+                        </label>
+                        <!-- R -->
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="roundness" value="Rounded" class="roundness-card hidden">
+                            <div class="border border-slate-200 rounded-lg p-2 text-center hover:border-red-300 transition relative">
+                                <div class="w-8 h-8 mx-auto mb-1 bg-slate-100 rounded flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6 stroke-slate-600" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+                                </div>
+                                <span class="text-[10px] font-bold block leading-tight">Rounded</span>
+                                <i data-lucide="check-circle" class="check-icon w-3 h-3 text-red-600 absolute top-1 right-1 opacity-0 transition"></i>
+                            </div>
+                        </label>
+                        <!-- WR -->
+                        <label class="cursor-pointer group">
+                            <input type="radio" name="roundness" value="Well Rounded" class="roundness-card hidden">
+                            <div class="border border-slate-200 rounded-lg p-2 text-center hover:border-red-300 transition relative">
+                                <div class="w-8 h-8 mx-auto mb-1 bg-slate-100 rounded flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6 stroke-slate-600" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                                </div>
+                                <span class="text-[10px] font-bold block leading-tight">Well Rounded</span>
+                                <i data-lucide="check-circle" class="check-icon w-3 h-3 text-red-600 absolute top-1 right-1 opacity-0 transition"></i>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <button onclick="calculateShape()" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-lg flex justify-center items-center gap-2 text-lg">
+                    <i data-lucide="search" class="w-5 h-5"></i> IDENTIFIKASI SEKARANG
+                </button>
+            </div>
+
+            <!-- KOLOM KANAN: HASIL -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- RESULT CARD (UTAMA) -->
+                <div id="sphericityResults" class="hidden fade-in">
+                    <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                        <!-- Header -->
+                        <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
+                            <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                                <i data-lucide="clipboard-check" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900">Hasil Identifikasi</h3>
+                        </div>
+
+                        <!-- 4 Poin Utama (Grid) -->
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            
+                            <!-- 1. Bentuk Butir (Zingg) -->
+                            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 flex flex-col justify-between">
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="text-[10px] font-bold text-blue-600 uppercase tracking-wide">1. Bentuk Butir (Zingg)</p>
+                                    <i data-lucide="box" class="w-4 h-4 text-blue-400"></i>
+                                </div>
+                                <div class="text-xl font-black text-slate-900" id="resZingg">-</div>
+                            </div>
+
+                            <!-- 2. Derajat Kebolaan (Folk) -->
+                            <div class="bg-red-50 p-4 rounded-xl border border-red-100 flex flex-col justify-between">
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="text-[10px] font-bold text-red-600 uppercase tracking-wide">2. Kebolaan (Folk)</p>
+                                    <i data-lucide="circle" class="w-4 h-4 text-red-400"></i>
+                                </div>
+                                <div class="text-xl font-black text-slate-900" id="resFolk">-</div>
+                                <div class="text-xs text-slate-500 mt-1" id="resFolkVal">Val: 0.00</div>
+                            </div>
+
+                            <!-- 3. Derajat Kebundaran -->
+                            <div class="bg-green-50 p-4 rounded-xl border border-green-100 flex flex-col justify-between">
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="text-[10px] font-bold text-green-600 uppercase tracking-wide">3. Kebundaran</p>
+                                    <i data-lucide="octagon" class="w-4 h-4 text-green-400"></i>
+                                </div>
+                                <div class="text-xl font-black text-slate-900" id="resRoundness">-</div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Interpretasi Geologi (Terpisah) -->
+                        <div class="bg-amber-50 p-5 rounded-xl border border-amber-100 relative">
+                            <div class="flex items-center gap-2 mb-3">
+                                <i data-lucide="lightbulb" class="w-5 h-5 text-amber-500"></i>
+                                <p class="text-xs font-bold text-amber-700 uppercase tracking-wide">4. Interpretasi Geologi</p>
+                            </div>
+                            <p class="text-sm text-slate-700 font-medium leading-relaxed" id="resInterpretasi">
+                                -
+                            </p>
+                        </div>
+
+                        <!-- Tombol Hitungan -->
+                        <div class="mt-6 flex justify-end pt-4 border-t border-slate-100">
+                             <button onclick="openMathModal()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-lg hover:bg-slate-700 transition flex items-center gap-2 shadow-md">
+                                <i data-lucide="calculator" class="w-3 h-3"></i> Lihat Hitungan Matematis
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="h-64 flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl">
+                    <i data-lucide="bar-chart-2" class="w-10 h-10 mb-3 opacity-50"></i>
+                    <p class="text-sm font-medium">Masukkan data sumbu untuk melihat hasil.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- DISCLAIMER & REFERENCE -->
+        <div class="mt-12 max-w-4xl mx-auto space-y-6">
+            <!-- Disclaimer -->
+            <div class="bg-slate-100 border border-slate-200 p-4 rounded-xl flex gap-3 items-start">
+                <i data-lucide="info" class="w-5 h-5 text-slate-500 mt-0.5 shrink-0"></i>
+                <div class="text-xs text-slate-600">
+                    <strong>Catatan:</strong> Hasil perhitungan ini berdasarkan rumus empiris standar. Penentuan kebundaran (roundness) bersifat kualitatif visual dan subjektif. Harap verifikasi manual untuk laporan resmi.
+                </div>
+            </div>
+
+            <!-- Referensi -->
+            <div class="border-t border-slate-200 pt-6">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide">Referensi & Sitasi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Zingg, T. (1935).</strong> Beitrag zur Schotteranalyse. <em>Schweizerische Mineralogische und Petrographische Mitteilungen</em>, 15, 39-140.</li>
+                    <li><strong>Folk, R. L. (1958).</strong> Petrology of Sedimentary Rocks. Hemphill Publishing Company, Austin, Texas.</li>
+                    <li><strong>Krumbein, W. C. (1941).</strong> Measurement and Geological Significance of Shape and Roundness of Sedimentary Particles. <em>Journal of Sedimentary Petrology</em>, 11(2), 64-72.</li>
+                    <li><strong>Powers, M. C. (1953).</strong> A New Roundness Scale for Sedimentary Particles. <em>Journal of Sedimentary Petrology</em>, 23(2), 117-119.</li>
+                </ul>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- CALCULATION MODAL -->
+    <div id="mathModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 flex flex-col max-h-[90vh]">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="calculator" class="w-5 h-5 text-red-600"></i> Detail Perhitungan
+                </h3>
+                <button onclick="closeMathModal()" class="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-red-600 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 text-sm text-slate-600">
+                
+                <!-- Zingg Math -->
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-2 border-b border-slate-100 pb-1">1. Rasio Bentuk (Zingg, 1935)</h4>
+                    <div class="grid grid-cols-2 gap-2 text-center">
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <div id="math_ba" class="font-mono font-bold text-slate-900">-</div>
+                            <div class="text-[10px] text-slate-400">Rasio b/a</div>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <div id="math_cb" class="font-mono font-bold text-slate-900">-</div>
+                            <div class="text-[10px] text-slate-400">Rasio c/b</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sphericity Math -->
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-2 border-b border-slate-100 pb-1">2. Derajat Kebolaan (Sphericity)</h4>
+                    
+                    <p class="text-xs font-bold text-slate-700 mt-2">Metode Folk (1958)</p>
+                    <div id="math_folk" class="bg-red-50 p-3 rounded border border-red-100 font-mono text-xs text-center text-red-800 my-1">
+                        $$ \psi_p = \sqrt[3]{\frac{c^2}{a \cdot b}} $$
+                    </div>
+
+                    <p class="text-xs font-bold text-slate-700 mt-3">Metode Krumbein (1941)</p>
+                    <div id="math_krumbein" class="bg-blue-50 p-3 rounded border border-blue-100 font-mono text-xs text-center text-blue-800 my-1">
+                        $$ \psi_I = \sqrt[3]{\frac{b \cdot c}{a^2}} $$
+                    </div>
+                </div>
+
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50">
+                <button onclick="closeMathModal()" class="w-full py-2.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition shadow-md">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+        let lastCalc = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Listener for Roundness to update interpretation live
+            document.querySelectorAll('input[name="roundness"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if (!document.getElementById('emptyState').classList.contains('hidden')) return;
+                    
+                    document.getElementById('resRoundness').innerText = e.target.value;
+                    
+                    if (lastCalc) {
+                        const interpret = getInterpretation(e.target.value, lastCalc.folkClass);
+                        document.getElementById('resInterpretasi').innerText = interpret;
+                    }
+                });
+            });
+        });
+
+        function validateAxes() {
+            const a = parseFloat(document.getElementById('axisA').value);
+            const b = parseFloat(document.getElementById('axisB').value);
+            const c = parseFloat(document.getElementById('axisC').value);
+            const warning = document.getElementById('axisWarning');
+
+            if (a && b && c) {
+                if (a < b || b < c) {
+                    warning.classList.remove('hidden');
+                } else {
+                    warning.classList.add('hidden');
+                }
+            } else {
+                warning.classList.add('hidden');
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('axisA').value = '';
+            document.getElementById('axisB').value = '';
+            document.getElementById('axisC').value = '';
+            document.getElementById('axisWarning').classList.add('hidden');
+            
+            document.getElementById('sphericityResults').classList.add('hidden');
+            document.getElementById('emptyState').classList.remove('hidden');
+            
+            document.querySelectorAll('input[name="roundness"]').forEach(r => r.checked = false);
+            lastCalc = null;
+        }
+
+        function calculateShape() {
+            const a = parseFloat(document.getElementById('axisA').value);
+            const b = parseFloat(document.getElementById('axisB').value);
+            const c = parseFloat(document.getElementById('axisC').value);
+
+            if (!a || !b || !c) {
+                alert("Mohon lengkapi semua sumbu (a, b, c)!");
+                return;
+            }
+
+            // 1. Ratios
+            const ba = b / a;
+            const cb = c / b;
+
+            // 2. Zingg Classification
+            let shape = "";
+            if (ba > 2/3) {
+                if (cb < 2/3) shape = "Tabular / Oblate (Discoidal)"; 
+                else shape = "Equant (Spherical)"; 
+            } else {
+                if (cb < 2/3) shape = "Bladed (Triaxial)"; 
+                else shape = "Prolate (Rod-Shaped)"; 
+            }
+
+            // 3. Sphericity Calculations
+            // Folk (1958): (c^2 / ab)^(1/3)
+            const folkVal = Math.cbrt((c * c) / (a * b));
+            const folkClass = getSphericityClass(folkVal);
+
+            // Krumbein (1941): (bc / a^2)^(1/3)
+            const krumVal = Math.cbrt((b * c) / (a * a));
+
+            // 4. Roundness (User Input)
+            const rInput = document.querySelector('input[name="roundness"]:checked');
+            const roundness = rInput ? rInput.value : "Belum Dipilih";
+
+            // 5. Interpretation
+            const interpret = getInterpretation(roundness, folkClass);
+
+            // Store Data for Modal
+            lastCalc = { a, b, c, ba, cb, folkVal, folkClass, krumVal };
+
+            // UPDATE UI
+            document.getElementById('resZingg').innerText = shape;
+            document.getElementById('resFolk').innerText = `${folkClass} (${folkVal.toFixed(2)})`;
+            document.getElementById('resFolkVal').innerText = `Nilai: ${folkVal.toFixed(3)}`;
+            document.getElementById('resRoundness').innerText = roundness;
+            document.getElementById('resInterpretasi').innerText = interpret;
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('sphericityResults').classList.remove('hidden');
+            
+            // MathJax Render
+            if(window.MathJax) MathJax.typesetPromise();
+        }
+
+        function getSphericityClass(val) {
+            if (val < 0.60) return "Very Elongate";
+            if (val < 0.63) return "Elongate";
+            if (val < 0.66) return "Sub Elongate";
+            if (val < 0.69) return "Intermediate Shape";
+            if (val < 0.72) return "Sub Equent";
+            if (val < 0.75) return "Equent";
+            return "Very Equent";
+        }
+
+        function getInterpretation(roundness, sphericity) {
+            if (roundness === "Belum Dipilih") return "Mohon pilih derajat kebundaran (Roundness) di panel kiri untuk mendapatkan interpretasi geologi yang lengkap.";
+
+            let text = "";
+            
+            // Roundness Logic
+            if (roundness.includes("Angular")) {
+                text += "Bentuk butir yang menyudut (Angular) mengindikasikan transportasi jarak dekat dari sumber batuan, atau proses erosi/transportasi yang belum berlangsung lama (immature). ";
+            } else if (roundness.includes("Rounded")) {
+                text += "Bentuk butir yang membundar (Rounded) menandakan material telah mengalami transportasi jarak jauh atau proses abrasi yang berulang dalam waktu lama (mature). ";
+            }
+
+            // Sphericity Logic
+            if (sphericity.includes("Equent")) {
+                text += "Bentuk butir yang membola (Equant) menunjukkan butir cenderung terabrasi merata dari segala sisi, seringkali berasosiasi dengan transportasi bedload yang intensif.";
+            } else if (sphericity.includes("Elongate") || sphericity.includes("Bladed")) {
+                text += "Bentuk butir yang memanjang/pipih mungkin mencerminkan sifat asli batuan sumber (seperti serpih/slate yang membelah) atau mekanisme transport tertentu (seperti sliding/saltation) yang belum mengikis sudut secara merata.";
+            }
+
+            return text;
+        }
+
+        // --- MODAL LOGIC ---
+        function openMathModal() {
+            if (!lastCalc) return;
+            
+            document.getElementById('mathModal').classList.remove('hidden');
+            document.getElementById('mathModal').classList.add('flex');
+
+            // Inject Math
+            document.getElementById('math_ba').innerText = lastCalc.ba.toFixed(3);
+            document.getElementById('math_cb').innerText = lastCalc.cb.toFixed(3);
+
+            const a = lastCalc.a, b = lastCalc.b, c = lastCalc.c;
+            
+            document.getElementById('math_folk').innerHTML = `
+                $$ \\psi_p = \\sqrt[3]{\\frac{${c}^2}{${a} \\cdot ${b}}} = \\mathbf{${lastCalc.folkVal.toFixed(3)}} $$
+            `;
+            document.getElementById('math_krumbein').innerHTML = `
+                $$ \\psi_I = \\sqrt[3]{\\frac{${b} \\cdot ${c}}{${a}^2}} = \\mathbf{${lastCalc.krumVal.toFixed(3)}} $$
+            `;
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function closeMathModal() {
+            document.getElementById('mathModal').classList.add('hidden');
+            document.getElementById('mathModal').classList.remove('flex');
+        }
+    </script>
+</body>
+</html>

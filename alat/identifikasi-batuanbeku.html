@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klasifikasi Batuan Beku - PERHIMAGI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Klasifikasi Batuan Beku - PERHIMAGI">
+    <meta property="og:description" content="Alat klasifikasi batuan beku berdasarkan modal mineralogi QAPF (IUGS).">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png">
+    <meta property="og:url" content="https://lib.perhimagi.org/alat/identifikasi-batuanbeku.html">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    <meta property="og:locale" content="id_ID">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax for Formulas -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Diagram Styles */
+        .diagram-label { 
+            font-size: 10px; 
+            fill: #1e293b; 
+            font-weight: 700; 
+            text-anchor: middle; 
+            pointer-events: none;
+            transition: all 0.3s ease;
+            text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+        }
+        .diagram-axis { font-size: 16px; fill: #dc2626; font-weight: 800; }
+        .diagram-region { fill: transparent; stroke: #64748b; stroke-width: 0.8; transition: all 0.2s; }
+        
+        /* Animation */
+        .plot-point { 
+            transition: cx 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), cy 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        }
+
+        /* Custom Radio */
+        .mode-radio:checked + div {
+            background-color: #fef2f2; 
+            border-color: #ef4444; 
+            color: #b91c1c;
+            box-shadow: inset 0 0 0 1px #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+   <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Geologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Klasifikasi Batuan Beku (IUGS)</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-2xl mx-auto">
+                Metode klasifikasi standar IUGS berdasarkan modal mineralogi QAPF (Streckeisen, 1976).
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- KOLOM KIRI: INPUT -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="sliders" class="text-red-600 w-5 h-5"></i> Input Data
+                        </h3>
+                        <button onclick="resetForm()" class="text-xs text-slate-400 hover:text-red-600 underline flex items-center gap-1">
+                            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Mode Selector -->
+                        <div class="bg-slate-50 p-1 rounded-xl border border-slate-100">
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="cursor-pointer relative group">
+                                    <input type="radio" name="rockType" value="plutonic" checked class="mode-radio hidden" onchange="updateDiagramLabels()">
+                                    <div class="flex flex-col items-center justify-center gap-1 p-3 rounded-lg border border-transparent bg-transparent text-slate-500 hover:text-slate-700 transition-all">
+                                        <i data-lucide="box" class="w-5 h-5"></i>
+                                        <span class="text-xs font-bold">Intrusif</span>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer relative group">
+                                    <input type="radio" name="rockType" value="volcanic" class="mode-radio hidden" onchange="updateDiagramLabels()">
+                                    <div class="flex flex-col items-center justify-center gap-1 p-3 rounded-lg border border-transparent bg-transparent text-slate-500 hover:text-slate-700 transition-all">
+                                        <i data-lucide="mountain" class="w-5 h-5"></i>
+                                        <span class="text-xs font-bold">Vulkanik</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Sliders -->
+                        <div class="space-y-5">
+                            <div>
+                                <div class="flex justify-between text-xs mb-2">
+                                    <label class="font-bold text-slate-700 flex items-center gap-1">Quartz (Q) <i data-lucide="info" class="w-3 h-3 text-slate-300"></i></label>
+                                    <span id="valQ" class="font-mono font-bold text-slate-900 bg-slate-100 px-2 rounded">0%</span>
+                                </div>
+                                <input type="range" id="inputQ" min="0" max="100" value="0" class="w-full accent-slate-700 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" oninput="updateValues('Q')">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs mb-2">
+                                    <label class="font-bold text-red-700 flex items-center gap-1">Alkali Feldspar (A)</label>
+                                    <span id="valA" class="font-mono font-bold text-red-700 bg-red-50 px-2 rounded">0%</span>
+                                </div>
+                                <input type="range" id="inputA" min="0" max="100" value="0" class="w-full accent-red-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" oninput="updateValues('A')">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs mb-2">
+                                    <label class="font-bold text-green-700 flex items-center gap-1">Plagioclase (P)</label>
+                                    <span id="valP" class="font-mono font-bold text-green-700 bg-green-50 px-2 rounded">0%</span>
+                                </div>
+                                <input type="range" id="inputP" min="0" max="100" value="0" class="w-full accent-green-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" oninput="updateValues('P')">
+                            </div>
+
+                            <div class="pt-4 border-t border-dashed border-slate-200">
+                                <div class="flex justify-between text-xs mb-2">
+                                    <label class="font-bold text-amber-600 flex items-center gap-1">Feldspathoid (F)</label>
+                                    <span id="valF" class="font-mono font-bold text-amber-600 bg-amber-50 px-2 rounded">0%</span>
+                                </div>
+                                <input type="range" id="inputF" min="0" max="100" value="0" class="w-full accent-amber-500 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" oninput="updateValues('F')">
+                                <p id="qfWarning" class="hidden text-[10px] text-red-500 mt-2 flex items-center gap-1 bg-red-50 p-2 rounded border border-red-100">
+                                    <i data-lucide="alert-triangle" class="w-3 h-3"></i> Q & F tidak bisa hadir bersamaan (Mutual Exclusive)!
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Total Bar -->
+                        <div class="bg-slate-100 p-3 rounded-lg">
+                            <div class="flex justify-between text-xs mb-1 font-medium">
+                                <span class="text-slate-600">Total Normalisasi (Q+A+P+F)</span>
+                                <span id="totalSum" class="text-slate-900 font-bold">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                                <div id="totalBar" class="bg-slate-800 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <button onclick="calculateRock()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex justify-center items-center gap-2 transform active:scale-95 duration-200">
+                            <i data-lucide="activity" class="w-4 h-4"></i> Plotting Diagram
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RESULT CARD -->
+                <div id="resultCard" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="bg-white border border-slate-200 p-6 rounded-xl shadow-xl relative overflow-hidden group">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-red-600"></div>
+                        
+                        <div class="flex gap-4 items-start relative z-10">
+                            <div id="resultIcon" class="w-12 h-12 bg-gradient-to-br from-red-50 to-white text-red-600 rounded-xl border border-red-100 flex items-center justify-center shadow-sm shrink-0">
+                                <!-- Icon -->
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Nama Batuan</p>
+                                <h2 id="resultName" class="text-2xl font-black text-slate-900 leading-none mb-1">Unknown</h2>
+                                <p id="resultSub" class="text-xs text-slate-500 font-medium">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Disclaimer -->
+                        <div class="mt-4 bg-amber-50 border border-amber-100 p-3 rounded-lg flex gap-3 items-start relative z-10">
+                            <i data-lucide="info" class="w-3 h-3 text-amber-500 mt-0.5 shrink-0"></i>
+                            <p class="text-[10px] text-amber-800 leading-relaxed">
+                                <strong>Disclaimer:</strong> Hasil klasifikasi ini dihasilkan secara otomatis berdasarkan input pengguna dan algoritma standar IUGS. Hasil ini sebaiknya digunakan sebagai <em>referensi pendukung</em>. Untuk keperluan akademik atau profesional yang kritis, harap lakukan verifikasi dan perhitungan manual kembali.
+                            </p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="mt-4 grid grid-cols-2 gap-3 relative z-10">
+                            <button onclick="openCalculationModal()" class="flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition">
+                                <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Lihat Hitungan
+                            </button>
+                            <a id="googleSearchBtn" href="#" target="_blank" class="flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition shadow-sm shadow-blue-200">
+                                <i data-lucide="image" class="w-3.5 h-3.5"></i> Cari Gambar
+                            </a>
+                        </div>
+
+                        <!-- BG Decoration -->
+                        <i data-lucide="hexagon" class="absolute -right-4 -bottom-4 w-24 h-24 text-slate-50 stroke-[1.5] group-hover:rotate-12 transition-transform duration-700 ease-out"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: DIAGRAM -->
+            <div class="lg:col-span-8">
+                <div class="bg-white p-2 rounded-xl shadow-sm border border-slate-200 relative flex flex-col min-h-[600px]">
+                    <!-- Label -->
+                    <div class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1.5 rounded-md border border-slate-200 shadow-sm">
+                        <p class="text-xs font-bold text-slate-800">QAPF DIAGRAM</p>
+                        <p class="text-[10px] text-slate-500">IUGS Classification</p>
+                    </div>
+
+                    <!-- SVG Container -->
+                    <div class="w-full h-full mx-auto relative select-none bg-slate-50/50 rounded-lg overflow-hidden flex items-center justify-center">
+                        <svg viewBox="0 0 600 750" width="600" height="750" class="w-full h-auto max-h-[700px]" id="qapfSvg" preserveAspectRatio="xMidYMid meet">
+                            <defs>
+                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                            </defs>
+
+                            <!-- Diagram Backgrounds -->
+                            <path d="M300,50 L50,483 L550,483 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/> <!-- Top QAP -->
+                            <path d="M300,916 L50,483 L550,483 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/> <!-- Bottom FAP -->
+
+                            <!-- Grid/Guide Lines -->
+                            <line x1="50" y1="483" x2="550" y2="483" stroke="#94a3b8" stroke-width="2"/> <!-- A-P Base -->
+                            
+                            <!-- Regions -->
+                            <g id="diagramRegions"></g>
+
+                            <!-- Labels -->
+                            <g id="dynamicLabels"></g>
+
+                            <!-- Axis Labels -->
+                            <text x="300" y="35" text-anchor="middle" class="diagram-axis">Q</text>
+                            <text x="30" y="490" text-anchor="end" class="diagram-axis">A</text>
+                            <text x="570" y="490" text-anchor="start" class="diagram-axis">P</text>
+                            <text x="300" y="680" text-anchor="middle" class="diagram-axis">F</text>
+
+                            <!-- Plot Point -->
+                            <circle id="plotPoint" cx="300" cy="483" r="0" fill="#dc2626" stroke="white" stroke-width="3" class="plot-point shadow-xl" style="filter: url(#glow);">
+                            </circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- CALCULATION MODAL -->
+    <div id="calcModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 flex flex-col max-h-[90vh]">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="calculator" class="w-5 h-5 text-red-600"></i> Perhitungan Normalisasi
+                </h3>
+                <button onclick="closeCalculationModal()" class="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-red-600 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 text-sm text-slate-600">
+                
+                <!-- Step 1 -->
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-2 border-b border-slate-100 pb-1">1. Data Mentah (Input)</h4>
+                    <div class="grid grid-cols-4 gap-2 mt-2 text-center">
+                        <div class="bg-slate-50 p-2 rounded border">Q: <span id="rawQ" class="font-bold text-slate-900">0</span>%</div>
+                        <div class="bg-red-50 p-2 rounded border border-red-100">A: <span id="rawA" class="font-bold text-red-700">0</span>%</div>
+                        <div class="bg-green-50 p-2 rounded border border-green-100">P: <span id="rawP" class="font-bold text-green-700">0</span>%</div>
+                        <div class="bg-amber-50 p-2 rounded border border-amber-100">F: <span id="rawF" class="font-bold text-amber-700">0</span>%</div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-2 border-b border-slate-100 pb-1">2. Total Mineral Felsik</h4>
+                    <!-- Container for Step 2 Math -->
+                    <div id="step2-math" class="bg-slate-50 p-4 rounded-lg border border-slate-200 mt-2 overflow-x-auto flex justify-center">
+                        $$ \text{Total} = Q + A + P + F $$
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-2 border-b border-slate-100 pb-1">3. Hasil Normalisasi (100%)</h4>
+                    <p class="mb-2 text-xs text-slate-500">Rumus: (Nilai / Total) × 100</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200 text-center">
+                            <div id="mathEqQ"></div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200 text-center">
+                            <div id="mathEqA"></div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200 text-center">
+                            <div id="mathEqP"></div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200 text-center">
+                            <div id="mathEqF"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-2 border-b border-slate-100 pb-1">4. Plotting</h4>
+                    <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-100 text-yellow-800 text-xs flex gap-3">
+                        <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 shrink-0"></i>
+                        <p>
+                            Koordinat plotting ditentukan oleh nilai <strong><span id="coord1">Q</span></strong> pada sumbu vertikal dan rasio <strong>A:P</strong> pada sumbu horizontal.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50">
+                <button onclick="closeCalculationModal()" class="w-full py-2.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition shadow-md">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+        <!-- REFERENCES & FOOTER INFO -->
+        <div class="mt-12 pb-8">
+            <!-- References Section -->
+             <div class="max-w-3xl mx-auto px-4 mb-8">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi & Sitasi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Streckeisen, A. L. (1976).</strong> <em>To each plutonic rock its proper name</em>. Earth-Science Reviews, 12(1), 1-33.</li>
+                </ul>
+            </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+    
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- CONSTANTS FOR DIAGRAM LABELS ---
+        const PLUTONIC_LABELS = [
+            {x: 300, y: 90, t: "Quartzolite", s:9},
+            {x: 300, y: 160, t: "Qtz-rich Granitoid", s:9},
+            {x: 160, y: 320, t: "Alk Fsp Granite", s: 9},
+            {x: 255, y: 320, t: "Granite", s:10},
+            {x: 380, y: 320, t: "Granodiorite", s:10},
+            {x: 460, y: 320, t: "Tonalite", s:9},
+            {x: 100, y: 420, t: "Alk Fsp Syenite", s:8},
+            {x: 180, y: 420, t: "Syenite", s:9},
+            {x: 300, y: 420, t: "Monzonite", s:9},
+            {x: 420, y: 420, t: "Monzodiorite", s:9},
+            {x: 520, y: 440, t: "Diorite/Gabbro", s:8},
+            {x: 160, y: 520, t: "Foid Syenite", s:9},
+            {x: 300, y: 520, t: "Foid Monzonite", s:9},
+            {x: 440, y: 520, t: "Foid Diorite", s:9},
+            {x: 300, y: 620, t: "Foidolite", s:9}
+        ];
+
+        const VOLCANIC_LABELS = [
+            {x: 300, y: 180, t: "High-silica Rhyolite", s:9},
+            {x: 160, y: 320, t: "Alk Fsp Rhyolite", s: 9},
+            {x: 255, y: 320, t: "Rhyolite", s:10},
+            {x: 380, y: 320, t: "Dacite", s:10},
+            {x: 460, y: 320, t: "Plagidacite", s:9},
+            {x: 100, y: 420, t: "Alk Fsp Trachyte", s:8},
+            {x: 180, y: 420, t: "Trachyte", s:9},
+            {x: 300, y: 420, t: "Latite", s:9},
+            {x: 420, y: 420, t: "Andesite/Basalt", s:9},
+            {x: 160, y: 520, t: "Phonolite", s:9},
+            {x: 300, y: 520, t: "Tephri-phonolite", s:8},
+            {x: 440, y: 520, t: "Phono-tephrite", s:8},
+            {x: 300, y: 620, t: "Foidite", s:9}
+        ];
+
+        let currentMode = 'plutonic';
+        let lastCalculated = { q:0, a:0, p:0, f:0, total:0, rawQ:0, rawA:0, rawP:0, rawF:0 };
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderDiagramRegions(); 
+            updateDiagramLabels();
+        });
+
+        // --- DRAW LINES (SVG) ---
+        function getBarycentric(q, a, p, f) {
+            const nq = q/100, na = a/100, np = p/100, nf = f/100;
+            const Q = {x: 300, y: 50};
+            const A = {x: 50, y: 483};
+            const P = {x: 550, y: 483};
+            let x, y;
+            if (nf === 0) {
+                x = nq*Q.x + na*A.x + np*P.x;
+                y = nq*Q.y + na*A.y + np*P.y;
+            } else {
+                const visualF_y = 483 + (483-50)*0.6; // Scale F downwards visually
+                const den = na + np;
+                const x_base = den === 0 ? 300 : (A.x*na + P.x*np) / den;
+                y = 483 + (nf * (visualF_y - 483));
+                x = x_base + (300 - x_base) * nf;
+            }
+            return {x, y};
+        }
+
+        function renderDiagramRegions() {
+            const group = document.getElementById('diagramRegions');
+            const lineStyle = "stroke:#94a3b8; stroke-width:0.8; fill:none;";
+            
+            const drawLine = (q1,a1,p1, q2,a2,p2) => {
+                const pt1 = getBarycentric(q1,a1,p1,0);
+                const pt2 = getBarycentric(q2,a2,p2,0);
+                return `<line x1="${pt1.x}" y1="${pt1.y}" x2="${pt2.x}" y2="${pt2.y}" style="${lineStyle}"/>`;
+            };
+            const drawFLine = (f1,a1,p1, f2,a2,p2) => {
+                const pt1 = getBarycentric(0,a1,p1,f1);
+                const pt2 = getBarycentric(0,a2,p2,f2);
+                return `<line x1="${pt1.x}" y1="${pt1.y}" x2="${pt2.x}" y2="${pt2.y}" style="${lineStyle}"/>`;
+            };
+
+            let html = "";
+            // Horizontal
+            html += drawLine(90,10,0, 90,0,10); 
+            html += drawLine(60,40,0, 60,0,40); 
+            html += drawLine(20,80,0, 20,0,80); 
+            html += drawLine(5,95,0, 5,0,95);   
+            // Vertical QAP
+            const b10 = getBarycentric(0,90,10,0); const t10 = getBarycentric(60,36,4,0);
+            html += `<line x1="${b10.x}" y1="${b10.y}" x2="${t10.x}" y2="${t10.y}" style="${lineStyle}"/>`;
+            const b35 = getBarycentric(0,65,35,0); const t35 = getBarycentric(20,52,28,0); 
+            html += `<line x1="${b35.x}" y1="${b35.y}" x2="${t35.x}" y2="${t35.y}" style="${lineStyle}"/>`;
+            const b65 = getBarycentric(0,35,65,0); const t65 = getBarycentric(60,14,26,0);
+            html += `<line x1="${b65.x}" y1="${b65.y}" x2="${t65.x}" y2="${t65.y}" style="${lineStyle}"/>`;
+            const b90 = getBarycentric(0,10,90,0); const t90 = getBarycentric(60,4,36,0);
+            html += `<line x1="${b90.x}" y1="${b90.y}" x2="${t90.x}" y2="${t90.y}" style="${lineStyle}"/>`;
+            // FAP
+            html += drawFLine(10,90,0, 10,0,90);
+            html += drawFLine(60,40,0, 60,0,40);
+            const f_base10 = getBarycentric(0,90,10,0); const f60_10 = getBarycentric(0,36,4,60);
+            html += `<line x1="${f_base10.x}" y1="${f_base10.y}" x2="${f60_10.x}" y2="${f60_10.y}" style="${lineStyle}"/>`;
+            const f_base65 = getBarycentric(0,35,65,0); const f60_65 = getBarycentric(0,14,26,60);
+            html += `<line x1="${f_base65.x}" y1="${f_base65.y}" x2="${f60_65.x}" y2="${f60_65.y}" style="${lineStyle}"/>`;
+            const f_base90 = getBarycentric(0,10,90,0); const f60_90 = getBarycentric(0,4,36,60);
+            html += `<line x1="${f_base90.x}" y1="${f_base90.y}" x2="${f60_90.x}" y2="${f60_90.y}" style="${lineStyle}"/>`;
+
+            group.innerHTML = html;
+        }
+
+        function updateDiagramLabels() {
+            const radios = document.getElementsByName('rockType');
+            for(let r of radios) if(r.checked) currentMode = r.value;
+
+            const labelGroup = document.getElementById('dynamicLabels');
+            labelGroup.innerHTML = ''; 
+
+            const labels = currentMode === 'plutonic' ? PLUTONIC_LABELS : VOLCANIC_LABELS;
+
+            labels.forEach(lbl => {
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", lbl.x);
+                text.setAttribute("y", lbl.y);
+                text.setAttribute("class", "diagram-label");
+                if(lbl.s) text.setAttribute("style", `font-size: ${lbl.s}px`);
+                text.textContent = lbl.t;
+                labelGroup.appendChild(text);
+            });
+
+            if(lastCalculated.total > 0) calculateRock();
+        }
+
+        // --- CORE LOGIC ---
+        function updateValues(type) {
+            const input = document.getElementById(`input${type}`);
+            const display = document.getElementById(`val${type}`);
+            const val = parseInt(input.value) || 0;
+            display.innerText = `${val}%`;
+
+            if (type === 'Q' && val > 0) {
+                document.getElementById('inputF').value = 0;
+                document.getElementById('valF').innerText = "0%";
+            }
+            if (type === 'F' && val > 0) {
+                document.getElementById('inputQ').value = 0;
+                document.getElementById('valQ').innerText = "0%";
+            }
+
+            const qVal = parseInt(document.getElementById('inputQ').value) || 0;
+            const fVal = parseInt(document.getElementById('inputF').value) || 0;
+            const warning = document.getElementById('qfWarning');
+            if(qVal > 0 && fVal > 0) warning.classList.remove('hidden');
+            else warning.classList.add('hidden');
+
+            calculateTotal(); // FIX: Update total bar on slide
+        }
+
+        function calculateTotal() {
+            const q = parseInt(document.getElementById('inputQ').value) || 0;
+            const a = parseInt(document.getElementById('inputA').value) || 0;
+            const p = parseInt(document.getElementById('inputP').value) || 0;
+            const f = parseInt(document.getElementById('inputF').value) || 0;
+            const total = q + a + p + f;
+
+            document.getElementById('totalSum').innerText = `${total}%`;
+            document.getElementById('totalBar').style.width = `${Math.min(total, 100)}%`;
+            
+            // Change color if > 100% (though sliders prevent >100 individually, sum can exceed)
+            if(total > 100) {
+                document.getElementById('totalBar').classList.add('bg-red-500');
+                document.getElementById('totalBar').classList.remove('bg-slate-800');
+            } else {
+                document.getElementById('totalBar').classList.remove('bg-red-500');
+                document.getElementById('totalBar').classList.add('bg-slate-800');
+            }
+        }
+
+        function resetForm() {
+            ['Q', 'A', 'P', 'F'].forEach(t => {
+                document.getElementById(`input${t}`).value = 0;
+                document.getElementById(`val${t}`).innerText = "0%";
+            });
+            calculateTotal(); // Update total bar
+            document.getElementById('plotPoint').setAttribute('r', '0');
+            document.getElementById('resultCard').classList.add('hidden');
+            lastCalculated = {q:0, a:0, p:0, f:0, total:0};
+        }
+
+        function calculateRock() {
+            const q = parseInt(document.getElementById('inputQ').value) || 0;
+            const a = parseInt(document.getElementById('inputA').value) || 0;
+            const p = parseInt(document.getElementById('inputP').value) || 0;
+            const f = parseInt(document.getElementById('inputF').value) || 0;
+            const total = q + a + p + f;
+
+            if (total === 0) { alert("Masukkan nilai mineral terlebih dahulu."); return; }
+
+            // Normalize
+            const normQ = (q / total) * 100;
+            const normA = (a / total) * 100;
+            const normP = (p / total) * 100;
+            const normF = (f / total) * 100;
+
+            lastCalculated = {q:normQ, a:normA, p:normP, f:normF, total:total, rawQ:q, rawA:a, rawP:p, rawF:f};
+
+            // Plotting
+            const pos = getBarycentric(normQ, normA, normP, normF);
+            const point = document.getElementById('plotPoint');
+            point.setAttribute('cx', pos.x);
+            point.setAttribute('cy', pos.y);
+            point.setAttribute('r', '6');
+
+            // Name
+            const name = identifyRockName(normQ, normA, normP, normF, currentMode);
+            displayResult(name, currentMode);
+        }
+
+        function identifyRockName(Q, A, P, F, mode) {
+            const den = A + P;
+            const ratioP = den === 0 ? 0 : (P / den) * 100; 
+
+            if (mode === 'plutonic') {
+                if (Q > 90) return "Quartzolite";
+                if (Q > 60) return "Quartz-rich Granitoid";
+                if (Q > 20) {
+                    if (ratioP < 10) return "Alkali Feldspar Granite";
+                    if (ratioP < 65) return "Granite";
+                    if (ratioP < 90) return "Granodiorite";
+                    return "Tonalite";
+                }
+                if (Q > 5) {
+                    if (ratioP < 10) return "Quartz Alkali Feldspar Syenite";
+                    if (ratioP < 35) return "Quartz Syenite";
+                    if (ratioP < 65) return "Quartz Monzonite";
+                    if (ratioP < 90) return "Quartz Monzodiorite";
+                    return "Quartz Diorite / Gabbro";
+                }
+                if (F < 10) { 
+                    if (ratioP < 10) return "Alkali Feldspar Syenite";
+                    if (ratioP < 35) return "Syenite";
+                    if (ratioP < 65) return "Monzonite";
+                    if (ratioP < 90) return "Monzodiorite";
+                    return "Diorite / Gabbro";
+                }
+                if (F < 60) {
+                    if (ratioP < 10) return "Foid-bearing Alk Fsp Syenite";
+                    if (ratioP < 35) return "Foid-bearing Syenite";
+                    if (ratioP < 65) return "Foid-bearing Monzonite";
+                    if (ratioP < 90) return "Foid-bearing Monzodiorite";
+                    return "Foid-bearing Diorite";
+                }
+                return "Foidolite";
+            } else {
+                if (Q > 20) {
+                    if (ratioP < 10) return "Alkali Feldspar Rhyolite";
+                    if (ratioP < 65) return "Rhyolite";
+                    if (ratioP < 90) return "Dacite";
+                    return "Plagidacite"; 
+                }
+                if (Q >= 0 && F <= 10) {
+                    if (ratioP < 10) return "Alkali Feldspar Trachyte";
+                    if (ratioP < 35) return "Trachyte";
+                    if (ratioP < 65) return "Latite";
+                    if (ratioP < 90) return "Andesite"; 
+                    return "Basalt";
+                }
+                if (F > 10) {
+                    if (ratioP < 10) return "Phonolite";
+                    if (ratioP < 45) return "Tephri-phonolite";
+                    if (ratioP < 90) return "Phono-tephrite";
+                    return "Tephrite / Basanite";
+                }
+                return "Undetermined Volcanic";
+            }
+        }
+
+        function displayResult(name, mode) {
+            const card = document.getElementById('resultCard');
+            card.classList.remove('hidden');
+            document.getElementById('resultName').innerText = name;
+            document.getElementById('resultSub').innerText = mode === 'plutonic' ? 'Batuan Beku Intrusif (Plutonik)' : 'Batuan Beku Vulkanik';
+            
+            const iconContainer = document.getElementById('resultIcon');
+            iconContainer.innerHTML = mode === 'plutonic' 
+                ? `<i data-lucide="box" class="w-6 h-6"></i>` 
+                : `<i data-lucide="mountain" class="w-6 h-6"></i>`;
+            lucide.createIcons();
+
+            const btn = document.getElementById('googleSearchBtn');
+            btn.href = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(name + " rock thin section hand specimen")}`;
+        }
+
+        // --- MODAL LOGIC ---
+        function openCalculationModal() {
+            document.getElementById('calcModal').classList.remove('hidden');
+            document.getElementById('calcModal').classList.add('flex');
+            
+            const { rawQ, rawA, rawP, rawF, total, q, a, p, f } = lastCalculated;
+
+            // Step 1: Raw Data
+            document.getElementById('rawQ').innerText = rawQ;
+            document.getElementById('rawA').innerText = rawA;
+            document.getElementById('rawP').innerText = rawP;
+            document.getElementById('rawF').innerText = rawF;
+
+            // Step 2: Total Formula (Build LaTeX String)
+            document.getElementById('step2-math').innerHTML = `$$ \\text{Total} = ${rawQ} + ${rawA} + ${rawP} + ${rawF} = \\mathbf{${total}} $$`;
+
+            // Step 3: Normalization Formulas
+            const rq = q.toFixed(1), ra = a.toFixed(1), rp = p.toFixed(1), rf = f.toFixed(1);
+            document.getElementById('mathEqQ').innerHTML = `$$ Q' = \\frac{${rawQ}}{${total}} \\times 100 = \\mathbf{${rq}\\%} $$`;
+            document.getElementById('mathEqA').innerHTML = `$$ A' = \\frac{${rawA}}{${total}} \\times 100 = \\mathbf{${ra}\\%} $$`;
+            document.getElementById('mathEqP').innerHTML = `$$ P' = \\frac{${rawP}}{${total}} \\times 100 = \\mathbf{${rp}\\%} $$`;
+            document.getElementById('mathEqF').innerHTML = `$$ F' = \\frac{${rawF}}{${total}} \\times 100 = \\mathbf{${rf}\\%} $$`;
+
+            document.getElementById('coord1').innerText = `Q=${rq}%`;
+
+            // Re-render MathJax
+            if (window.MathJax) {
+                MathJax.typesetPromise([document.getElementById('calcModal')]);
+            }
+        }
+
+        function closeCalculationModal() {
+            document.getElementById('calcModal').classList.add('hidden');
+            document.getElementById('calcModal').classList.remove('flex');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identifikasi Geomorfologi - PERHIMAGI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Identifikasi Geomorfologi - PERHIMAGI">
+    <meta property="og:description" content="Panduan interpretasi citra dan klasifikasi bentuk lahan berdasarkan sistem ITC (Verstappen & Van Zuidam).">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png">
+    <meta property="og:url" content="https://lib.perhimagi.org/alat/identifikasi-geomorfologi.html">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Geologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Identifikasi Geomorfologi</h2>
+            <p class="text-slate-600 mt-2 text-sm">
+                Panduan interpretasi citra dan klasifikasi bentuk lahan berdasarkan sistem ITC (Verstappen & Van Zuidam).
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+
+            <!-- TAB MENU -->
+            <div class="flex border-b border-slate-200 mb-6 overflow-x-auto">
+                <button onclick="switchTab('interpretasi')" id="tab-interpretasi" class="whitespace-nowrap px-4 py-2 text-sm font-bold text-red-600 border-b-2 border-red-600 transition">Interpretasi Citra</button>
+                <button onclick="switchTab('morfometri')" id="tab-morfometri" class="whitespace-nowrap px-4 py-2 text-sm font-medium text-slate-500 hover:text-red-600 transition">Kalkulator Lereng (Van Zuidam)</button>
+                <button onclick="switchTab('genesa')" id="tab-genesa" class="whitespace-nowrap px-4 py-2 text-sm font-medium text-slate-500 hover:text-red-600 transition">Klasifikasi Genesa</button>
+            </div>
+
+            <!-- TAB 1: INTERPRETASI CITRA -->
+            <div id="content-interpretasi" class="fade-in text-slate-700 text-sm leading-relaxed">
+                
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
+                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                        <i data-lucide="layers" class="w-4 h-4"></i> Unsur Interpretasi Citra Non-Foto
+                    </h4>
+                    <p class="mb-2">Citra multispektral (optik) dan radar (SAR) memerlukan pendekatan khusus:</p>
+                    <ul class="list-disc pl-5 space-y-1 text-xs">
+                        <li><strong>Rona/Warna:</strong> Merepresentasikan nilai piksel. Gelap (air/basah), Terang (pasir kuarsa/batuan asam), Merah (vegetasi pada komposit inframerah).</li>
+                        <li><strong>Tekstur:</strong> Kasar (relief tinggi/hutan lebat), Halus (aluvial/lempung), Berbintik (karst).</li>
+                        <li><strong>Pola:</strong> Susunan keruangan seperti pola aliran sungai dan kelurusan (lineament).</li>
+                    </ul>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-slate-900 border-b pb-2">Pola Aliran Sungai</h3>
+                        <ul class="space-y-3">
+                            <li class="flex gap-3">
+                                <div class="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-xs font-bold text-slate-400 border">DEN</div>
+                                <div>
+                                    <strong class="block text-xs text-slate-800 uppercase">Dendritik</strong>
+                                    <span class="text-xs text-slate-500">Batuan homogen, sedimen datar, atau batuan beku masif.</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-xs font-bold text-slate-400 border">TRE</div>
+                                <div>
+                                    <strong class="block text-xs text-slate-800 uppercase">Trellis</strong>
+                                    <span class="text-xs text-slate-500">Batuan sedimen terlipat/miring (selang-seling keras-lunak).</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-xs font-bold text-slate-400 border">RAD</div>
+                                <div>
+                                    <strong class="block text-xs text-slate-800 uppercase">Radial</strong>
+                                    <span class="text-xs text-slate-500">Gunung api (menyebar) atau cekungan (memusat).</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="w-12 h-12 bg-slate-100 rounded flex items-center justify-center text-xs font-bold text-slate-400 border">REC</div>
+                                <div>
+                                    <strong class="block text-xs text-slate-800 uppercase">Rectangular</strong>
+                                    <span class="text-xs text-slate-500">Kontrol kekar/sesar yang dominan (siku-siku).</span>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-slate-900 border-b pb-2">Asosiasi Bentuk Lahan</h3>
+                        <div class="space-y-3">
+                            <div class="p-3 border rounded-lg hover:bg-slate-50 transition">
+                                <span class="text-xs font-bold text-red-600 block mb-1">Vulkanik</span>
+                                <p class="text-xs text-slate-600">Bentuk kerucut + Pola radial + Tekstur kasar di puncak (kawah).</p>
+                            </div>
+                            <div class="p-3 border rounded-lg hover:bg-slate-50 transition">
+                                <span class="text-xs font-bold text-purple-600 block mb-1">Struktural (Lipatan)</span>
+                                <p class="text-xs text-slate-600">Pematang panjang sejajar + Pola Trellis + Bukit asimetris (Hogback/Cuesta).</p>
+                            </div>
+                            <div class="p-3 border rounded-lg hover:bg-slate-50 transition">
+                                <span class="text-xs font-bold text-orange-600 block mb-1">Karst</span>
+                                <p class="text-xs text-slate-600">Bukit membulat/menara + Pola multibasinal (sungai hilang) + Tekstur berbintik.</p>
+                            </div>
+                            <div class="p-3 border rounded-lg hover:bg-slate-50 transition">
+                                <span class="text-xs font-bold text-blue-600 block mb-1">Fluvial</span>
+                                <p class="text-xs text-slate-600">Bentuk meander + Danau tapal kuda (Oxbow) + Dataran rata tekstur halus.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: MORFOMETRI (KALKULATOR LERENG) -->
+            <div id="content-morfometri" class="hidden fade-in">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-5">
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h4 class="text-xs font-bold text-slate-600 uppercase mb-3">Input Data Peta/Lapangan</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Beda Tinggi ($\Delta h$) (m)</label>
+                                    <input type="number" id="calc_dh" class="w-full p-2 border rounded text-sm focus:ring-2 focus:ring-red-500 outline-none" placeholder="Contoh: 150">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Jarak Datar ($d$) (m)</label>
+                                    <input type="number" id="calc_dist" class="w-full p-2 border rounded text-sm focus:ring-2 focus:ring-red-500 outline-none" placeholder="Contoh: 500">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="calcSlope()" class="w-full py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition shadow-md">Hitung & Klasifikasi</button>
+                    </div>
+
+                    <!-- Result Area -->
+                    <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg flex flex-col justify-center relative overflow-hidden">
+                        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-slate-800 rounded-full opacity-50 blur-xl"></div>
+                        
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 text-center relative z-10">Hasil Klasifikasi (Van Zuidam)</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6 relative z-10 text-center">
+                            <div>
+                                <span class="text-xs text-slate-400 block mb-1">Persentase</span>
+                                <span id="res_percent" class="text-2xl font-bold text-white">-</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-400 block mb-1">Derajat</span>
+                                <span id="res_degree" class="text-2xl font-bold text-white">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-slate-700 text-center relative z-10">
+                            <span class="text-xs text-slate-400 block mb-2">Kelas Lereng</span>
+                            <div id="res_class_box" class="inline-block px-4 py-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-600">
+                                -
+                            </div>
+                            <p id="res_relief" class="text-xs text-slate-300 mt-2 italic">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: KLASIFIKASI GENESA -->
+            <div id="content-genesa" class="hidden fade-in text-sm">
+                <p class="text-slate-600 mb-6">Pilih kode satuan berdasarkan genesis (asal-usul) pembentukan:</p>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- S -->
+                    <div class="border border-purple-200 bg-purple-50/30 p-4 rounded-lg hover:border-purple-400 transition group cursor-pointer">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-purple-100 text-purple-700 px-2 py-0.5 rounded text-xs font-bold">S</span>
+                            <h4 class="font-bold text-purple-900">Struktural</h4>
+                        </div>
+                        <ul class="space-y-1 text-xs text-slate-600 ml-1">
+                            <li><strong>S1:</strong> Pegunungan Lipatan</li>
+                            <li><strong>S2:</strong> Pegunungan Patahan</li>
+                            <li><strong>S3:</strong> Cuesta (Lereng asimetris landai)</li>
+                            <li><strong>S4:</strong> Hogback (Lereng asimetris terjal >30&deg;)</li>
+                        </ul>
+                    </div>
+
+                    <!-- V -->
+                    <div class="border border-red-200 bg-red-50/30 p-4 rounded-lg hover:border-red-400 transition group cursor-pointer">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold">V</span>
+                            <h4 class="font-bold text-red-900">Vulkanik</h4>
+                        </div>
+                        <ul class="space-y-1 text-xs text-slate-600 ml-1">
+                            <li><strong>V1:</strong> Kawah/Kepundan</li>
+                            <li><strong>V2:</strong> Kerucut Gunungapi</li>
+                            <li><strong>V3-V5:</strong> Lereng Atas/Tengah/Bawah</li>
+                            <li><strong>V7:</strong> Aliran Lava/Lahar</li>
+                        </ul>
+                    </div>
+
+                    <!-- F -->
+                    <div class="border border-blue-200 bg-blue-50/30 p-4 rounded-lg hover:border-blue-400 transition group cursor-pointer">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-bold">F</span>
+                            <h4 class="font-bold text-blue-900">Fluvial</h4>
+                        </div>
+                        <ul class="space-y-1 text-xs text-slate-600 ml-1">
+                            <li><strong>F1:</strong> Dataran Banjir (Floodplain)</li>
+                            <li><strong>F2:</strong> Tanggul Alam (Natural Levee)</li>
+                            <li><strong>F5:</strong> Kipas Aluvial</li>
+                            <li><strong>F7:</strong> Danau Tapal Kuda (Oxbow Lake)</li>
+                        </ul>
+                    </div>
+
+                    <!-- K -->
+                    <div class="border border-orange-200 bg-orange-50/30 p-4 rounded-lg hover:border-orange-400 transition group cursor-pointer">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs font-bold">K</span>
+                            <h4 class="font-bold text-orange-900">Karst</h4>
+                        </div>
+                        <ul class="space-y-1 text-xs text-slate-600 ml-1">
+                            <li><strong>K1:</strong> Doline (Cekungan tertutup)</li>
+                            <li><strong>K4:</strong> Bukit Kerucut (Conical Hill)</li>
+                            <li><strong>K5:</strong> Bukit Menara (Tower Karst)</li>
+                        </ul>
+                    </div>
+
+                    <!-- M -->
+                    <div class="border border-teal-200 bg-teal-50/30 p-4 rounded-lg hover:border-teal-400 transition group cursor-pointer">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-teal-100 text-teal-700 px-2 py-0.5 rounded text-xs font-bold">M</span>
+                            <h4 class="font-bold text-teal-900">Marin</h4>
+                        </div>
+                        <ul class="space-y-1 text-xs text-slate-600 ml-1">
+                            <li><strong>M1:</strong> Gisik (Beach)</li>
+                            <li><strong>M2:</strong> Beting Gisik (Beach Ridge)</li>
+                            <li><strong>M5:</strong> Tombolo</li>
+                            <li><strong>M8:</strong> Terumbu Karang</li>
+                        </ul>
+                    </div>
+
+                     <!-- D -->
+                     <div class="border border-yellow-200 bg-yellow-50/30 p-4 rounded-lg hover:border-yellow-500 transition group cursor-pointer">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs font-bold">D</span>
+                            <h4 class="font-bold text-yellow-900">Denudasional</h4>
+                        </div>
+                        <ul class="space-y-1 text-xs text-slate-600 ml-1">
+                            <li><strong>D1:</strong> Perbukitan Terkikis</li>
+                            <li><strong>D2:</strong> Peneplain (Dataran nyaris rata)</li>
+                            <li><strong>D4:</strong> Badlands (Lahan kritis)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="mt-6 flex gap-3 items-start text-xs text-slate-500 bg-amber-50 p-3 rounded-lg border border-amber-100 max-w-4xl mx-auto">
+            <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 text-amber-500 shrink-0"></i>
+            <p>
+                <strong>Penting:</strong> Interpretasi citra bersifat kualitatif. Verifikasi lapangan <strong>ground check</strong> wajib dilakukan untuk memastikan kebenaran unit geomorfologi, terutama pada daerah dengan vegetasi lebat atau penutup tanah tebal.
+            </p>
+        </div>
+    </main>
+
+        <!-- REFERENCES & FOOTER INFO -->
+            <!-- References Section -->
+             <div class="max-w-3xl mx-auto px-4 mb-8">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi & Sitasi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Verstappen, H. Th., & Van Zuidam, R. A. (1968/1985).</strong> <em>ITC System of Geomorphological Survey.</em> ITC Enschede.</li>
+                    <li><strong>Van Zuidam, R. A. (1985).</strong> <em>Aerial Photo-Interpretation in Terrain Analysis and Geomorphological Mapping.</em> Smith Publishers.</li>
+                </ul>
+            </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+        
+        function switchTab(tabId) {
+            // Hide all
+            document.getElementById('content-interpretasi').classList.add('hidden');
+            document.getElementById('content-morfometri').classList.add('hidden');
+            document.getElementById('content-genesa').classList.add('hidden');
+
+            // Reset Tabs
+            ['interpretasi', 'morfometri', 'genesa'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                btn.classList.remove('text-red-600', 'border-b-2', 'border-red-600', 'font-bold');
+                btn.classList.add('text-slate-500', 'font-medium');
+            });
+
+            // Activate
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('text-red-600', 'border-b-2', 'border-red-600', 'font-bold');
+            activeBtn.classList.remove('text-slate-500', 'font-medium');
+        }
+
+        function calcSlope() {
+            const dh = parseFloat(document.getElementById('calc_dh').value);
+            const dist = parseFloat(document.getElementById('calc_dist').value);
+
+            if (isNaN(dh) || isNaN(dist) || dist === 0) {
+                alert("Masukkan nilai yang valid!");
+                return;
+            }
+
+            // Calculation
+            const percent = (dh / dist) * 100;
+            const degree = Math.atan(dh / dist) * (180 / Math.PI);
+
+            // Classification (Van Zuidam)
+            let cls = "";
+            let colorClass = ""; // Helper class for color box
+
+            if (percent <= 2) { cls = "Datar (Flat)"; colorClass = "bg-green-700"; }
+            else if (percent <= 7) { cls = "Landai (Gently Sloping)"; colorClass = "bg-green-400"; }
+            else if (percent <= 15) { cls = "Miring (Sloping)"; colorClass = "bg-yellow-400 text-slate-900"; }
+            else if (percent <= 30) { cls = "Miring Agak Terjal (Moderately Steep)"; colorClass = "bg-orange-500"; }
+            else if (percent <= 70) { cls = "Terjal (Steep)"; colorClass = "bg-pink-500"; }
+            else if (percent <= 140) { cls = "Sangat Terjal (Very Steep)"; colorClass = "bg-red-600"; }
+            else { cls = "Curam (Extremely Steep)"; colorClass = "bg-purple-800"; }
+
+            // Relief Classification
+            let reliefCls = "";
+            if (dh < 50) reliefCls = "Relief: Dataran - Bergelombang Lemah";
+            else if (dh < 200) reliefCls = "Relief: Perbukitan (Hilly)";
+            else if (dh < 500) reliefCls = "Relief: Perbukitan Tinggi (High Hilly)";
+            else if (dh < 1000) reliefCls = "Relief: Pegunungan (Mountainous)";
+            else reliefCls = "Relief: Pegunungan Tinggi (High Mountainous)";
+
+            // Update UI
+            document.getElementById('res_percent').innerText = percent.toFixed(1) + "%";
+            document.getElementById('res_degree').innerText = degree.toFixed(1) + "°";
+            
+            const classBox = document.getElementById('res_class_box');
+            classBox.innerText = cls;
+            classBox.className = `inline-block px-4 py-2 rounded-lg font-bold border border-white/20 ${colorClass}`;
+            
+            document.getElementById('res_relief').innerText = reliefCls;
+            document.getElementById('slopeResult').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

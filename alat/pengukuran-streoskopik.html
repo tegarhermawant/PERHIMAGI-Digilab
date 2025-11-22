@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengukuran Stereoskopik - PERHIMAGI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pengukuran Stereoskopik - PERHIMAGI">
+    <meta property="og:description" content="Panduan dan kalkulator interaktif untuk analisis fotogrametri dasar.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png">
+    <meta property="og:url" content="https://lib.perhimagi.org/alat/pengukuran-streoskopik.html">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax for Formulas -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Step Card Styling */
+        .step-card {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid #e2e8f0;
+            padding-bottom: 2rem;
+            margin-bottom: 1rem;
+        }
+        .step-card:last-child { border-left: none; padding-bottom: 0; }
+        
+        .step-number {
+            position: absolute;
+            left: -1.05rem;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: white;
+            border: 2px solid #dc2626;
+            border-radius: 50%;
+            color: #dc2626;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+   <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Geologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Pengukuran Stereoskopik</h2>
+            <p class="text-slate-600 mt-2 text-sm">
+                Panduan dan kalkulator interaktif untuk analisis fotogrametri dasar.
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+
+            <!-- TAB MENU -->
+            <div class="flex border-b border-slate-200 mb-6 overflow-x-auto">
+                <button onclick="switchTab('guide')" id="tab-guide" class="whitespace-nowrap px-4 py-2 text-sm font-bold text-red-600 border-b-2 border-red-600 transition">Panduan Modul</button>
+                <button onclick="switchTab('calc-height')" id="tab-height" class="whitespace-nowrap px-4 py-2 text-sm font-medium text-slate-500 hover:text-red-600 transition">Kalkulator Beda Tinggi ($\Delta h$)</button>
+                <button onclick="switchTab('calc-dist')" id="tab-dist" class="whitespace-nowrap px-4 py-2 text-sm font-medium text-slate-500 hover:text-red-600 transition">Kalkulator Jarak ($D$)</button>
+            </div>
+
+            <!-- TAB CONTENT 1: PANDUAN -->
+            <div id="content-guide" class="fade-in text-slate-700 text-sm leading-relaxed">
+                
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-8">
+                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                        <i data-lucide="info" class="w-4 h-4"></i> Konsep Dasar Paralaks
+                    </h4>
+                    <p class="mb-2">
+                        <strong>Paralaks ($p$)</strong> adalah pergeseran semu posisi suatu objek pada dua foto udara yang saling bertampalan (*overlap*) akibat perubahan posisi kamera.
+                    </p>
+                    <ul class="list-disc pl-5 space-y-1 text-xs">
+                        <li>Semakin tinggi objek, semakin besar pergeseran (paralaks)-nya.</li>
+                        <li>Selisih paralaks ($\Delta p$) dapat dikonversi menjadi Beda Tinggi ($\Delta h$).</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Persiapan Data Foto Udara</h3>
+                    <p class="mb-2">Sebelum memulai, catat data berikut dari tepi foto (fiducial mark):</p>
+                    <ul class="list-disc pl-5 space-y-1 mb-4 bg-slate-50 p-3 rounded border border-slate-100">
+                        <li><strong>Focal Length ($f$):</strong> Panjang fokus kamera (mm).</li>
+                        <li><strong>Flying Height ($H$):</strong> Tinggi terbang pesawat (mdpl).</li>
+                        <li><strong>Basis Foto ($b$):</strong> Jarak rata-rata antar titik pusat foto (Principal Point) pada pasangan stereo.</li>
+                    </ul>
+                    
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Prosedur Pengukuran</h3>
+                    <p class="mb-3">Gunakan <strong>Stereoskop Cermin</strong> dan <strong>Parallax Bar</strong>:</p>
+                    <div class="space-y-3">
+                        <div class="flex gap-3 items-start">
+                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs font-bold shrink-0">A</span>
+                            <p>Letakkan <em>floating mark</em> (titik apung) di dasar objek/lembah. Putar mikrometer hingga titik terlihat "menempel" di tanah. Catat sebagai <strong>$r_{bawah}$</strong>.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs font-bold shrink-0">B</span>
+                            <p>Geser ke puncak objek/bukit. Putar mikrometer hingga titik terlihat "mengapung" pas di puncak. Catat sebagai <strong>$r_{atas}$</strong>.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs font-bold shrink-0">C</span>
+                            <p>Hitung selisih mutlak: $$ \Delta p = |r_{atas} - r_{bawah}| $$</p>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="font-bold text-slate-900 text-base mb-2">Rumus Perhitungan</h3>
+                    <div class="bg-slate-50 p-4 rounded border border-slate-200 overflow-x-auto text-center">
+                        $$ \Delta h = \frac{H' \cdot \Delta p}{b + \Delta p} $$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2 text-center">
+                        $H'$ = Tinggi terbang di atas tanah setempat ($H_{asl} - h_{base}$).
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- TAB CONTENT 2: KALKULATOR BEDA TINGGI -->
+            <div id="content-height" class="hidden fade-in">
+                <div class="grid md:grid-cols-2 gap-8">
+                    
+                    <!-- Input Form -->
+                    <div class="space-y-5">
+                        <div class="bg-red-50 p-3 rounded-lg border border-red-100">
+                            <h4 class="text-xs font-bold text-red-800 uppercase mb-3 flex items-center gap-2">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i> Input Data Lapangan
+                            </h4>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Tinggi Terbang ($H$) (mdpl)</label>
+                                    <input type="number" id="h_terbang" placeholder="Contoh: 3000" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Elevasi Dasar ($h_{base}$) (mdpl)</label>
+                                    <input type="number" id="h_base" placeholder="Contoh: 500" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                    <p class="text-[10px] text-slate-400 mt-1">*Dari peta topografi</p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Basis Foto ($b$) (mm)</label>
+                                    <input type="number" id="basis_foto" placeholder="Contoh: 92" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                            <h4 class="text-xs font-bold text-slate-600 uppercase mb-3">Data Parallax Bar</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Bacaan Bawah ($r_{b}$)</label>
+                                    <input type="number" step="0.01" id="r_bawah" placeholder="mm" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Bacaan Atas ($r_{a}$)</label>
+                                    <input type="number" step="0.01" id="r_atas" placeholder="mm" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="calcHeightDiff()" class="w-full py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition shadow-lg shadow-red-200 flex justify-center items-center gap-2">
+                            <i data-lucide="calculator" class="w-4 h-4"></i> Hitung Beda Tinggi
+                        </button>
+                    </div>
+
+                    <!-- Result Area -->
+                    <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg flex flex-col justify-center relative overflow-hidden">
+                        <!-- Decor -->
+                        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-red-600 rounded-full opacity-20 blur-xl"></div>
+                        
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 text-center relative z-10">Hasil Perhitungan</p>
+                        
+                        <div class="space-y-6 relative z-10">
+                            <div class="flex justify-between text-sm border-b border-slate-700 pb-2">
+                                <span class="text-slate-400">Beda Paralaks ($\Delta p$)</span>
+                                <span id="res_dp" class="font-mono font-bold">-</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-slate-700 pb-2">
+                                <span class="text-slate-400">Tinggi Efektif ($H'$)</span>
+                                <span id="res_h_prime" class="font-mono font-bold">-</span>
+                            </div>
+                            
+                            <div class="text-center pt-2">
+                                <span class="block text-xs text-slate-400 mb-1">Beda Tinggi Objek ($\Delta h$)</span>
+                                <span id="res_dh" class="text-5xl font-black text-white tracking-tight">-</span>
+                                <span class="text-sm font-medium text-red-500 block mt-1">meter</span>
+                            </div>
+                        </div>
+
+                        <!-- Math Formula Display -->
+                        <div id="math_display_height" class="mt-8 bg-slate-800 p-3 rounded-lg text-xs text-slate-300 text-center overflow-x-auto border border-slate-700">
+                            <!-- MathJax injected here -->
+                            <span class="italic opacity-50">Hasil rumus akan muncul di sini...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB CONTENT 3: KALKULATOR JARAK -->
+            <div id="content-dist" class="hidden fade-in">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-5">
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <h4 class="text-xs font-bold text-blue-800 uppercase mb-3 flex items-center gap-2">
+                                <i data-lucide="ruler" class="w-4 h-4"></i> Input Data Jarak
+                            </h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Panjang Fokus ($f$) (mm)</label>
+                                    <input type="number" id="focal_len" value="152" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Tinggi Terbang ($H$) (mdpl)</label>
+                                    <input type="number" id="dist_H" placeholder="Contoh: 3000" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Elevasi Titik ($h_{titik}$) (mdpl)</label>
+                                    <input type="number" id="dist_h_point" placeholder="Contoh: 500" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Jarak di Foto ($d$) (cm)</label>
+                                    <input type="number" step="0.1" id="dist_d_photo" placeholder="Contoh: 5.2" class="w-full p-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="calcDistance()" class="w-full py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 flex justify-center items-center gap-2">
+                            <i data-lucide="calculator" class="w-4 h-4"></i> Hitung Jarak Datar
+                        </button>
+                    </div>
+
+                    <!-- Result Area -->
+                    <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg flex flex-col justify-center relative overflow-hidden">
+                        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-600 rounded-full opacity-20 blur-xl"></div>
+                        
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 text-center relative z-10">Hasil Perhitungan</p>
+                        
+                        <div class="space-y-6 relative z-10">
+                            <div class="flex justify-between text-sm border-b border-slate-700 pb-2">
+                                <span class="text-slate-400">Skala Lokal ($S_{lokal}$)</span>
+                                <span id="res_scale" class="font-mono font-bold">-</span>
+                            </div>
+                            
+                            <div class="text-center pt-2">
+                                <span class="block text-xs text-slate-400 mb-1">Jarak Sebenarnya ($D$)</span>
+                                <span id="res_D" class="text-5xl font-black text-white tracking-tight">-</span>
+                                <span class="text-sm font-medium text-blue-500 block mt-1">meter</span>
+                            </div>
+                        </div>
+
+                         <!-- Math Formula Display -->
+                         <div id="math_display_dist" class="mt-8 bg-slate-800 p-3 rounded-lg text-xs text-slate-300 text-center overflow-x-auto border border-slate-700">
+                            <!-- MathJax injected here -->
+                            <span class="italic opacity-50">Hasil rumus akan muncul di sini...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="mt-6 flex gap-3 items-start text-xs text-slate-500 bg-amber-50 p-3 rounded-lg border border-amber-100 max-w-4xl mx-auto">
+            <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 text-amber-500 shrink-0"></i>
+            <p>
+                <strong>Catatan:</strong> Perhitungan ini menggunakan pendekatan standar fotogrametri sederhana (foto tegak). Hasil lapangan mungkin dipengaruhi oleh kemiringan (tilt) kamera atau distorsi lensa. Selalu verifikasi dengan data peta dasar jika tersedia.
+            </p>
+        </div>
+
+    </main>
+
+        <!-- REFERENCES & FOOTER INFO -->
+            <!-- References Section -->
+             <div class="max-w-3xl mx-auto px-4 mb-8">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi & Sitasi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li>
+                        Wolf, P.R., & Dewitt, B.A. (2000). <em>Elements of Photogrammetry with Applications in GIS</em> (3rd ed.). McGraw-Hill.
+                    </li>
+                    <li>
+                        Lillesand, T.M., Kiefer, R.W., & Chipman, J.W. (2015). <em>Remote Sensing and Image Interpretation</em> (7th ed.). Wiley.
+                    </li>
+                    <li>
+                        Jensen, J.R. (2007). <em>Remote Sensing of the Environment: An Earth Resource Perspective</em> (2nd ed.). Pearson.
+                    </li>
+                    <li>
+                        Sabins, F.F. (1996). <em>Remote Sensing: Principles and Interpretation</em> (3rd ed.). W.H. Freeman.
+                    </li>
+                </ul>
+            </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+        
+        function switchTab(tabId) {
+            // Hide all content
+            document.getElementById('content-guide').classList.add('hidden');
+            document.getElementById('content-height').classList.add('hidden');
+            document.getElementById('content-dist').classList.add('hidden');
+
+            // Reset Tab Styles
+            ['guide', 'height', 'dist'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                btn.classList.remove('text-red-600', 'border-b-2', 'border-red-600', 'font-bold');
+                btn.classList.add('text-slate-500', 'font-medium');
+            });
+
+            // Activate Selected
+            document.getElementById(`content-${tabId === 'calc-height' ? 'height' : tabId === 'calc-dist' ? 'dist' : 'guide'}`).classList.remove('hidden');
+            
+            const activeBtn = document.getElementById(`tab-${tabId === 'calc-height' ? 'height' : tabId === 'calc-dist' ? 'dist' : 'guide'}`);
+            activeBtn.classList.add('text-red-600', 'border-b-2', 'border-red-600', 'font-bold');
+            activeBtn.classList.remove('text-slate-500', 'font-medium');
+        }
+
+        // --- CALCULATION LOGIC ---
+
+        function calcHeightDiff() {
+            const H = parseFloat(document.getElementById('h_terbang').value);
+            const h_base = parseFloat(document.getElementById('h_base').value);
+            const b = parseFloat(document.getElementById('basis_foto').value);
+            const r_bawah = parseFloat(document.getElementById('r_bawah').value);
+            const r_atas = parseFloat(document.getElementById('r_atas').value);
+
+            if ([H, h_base, b, r_bawah, r_atas].some(isNaN)) {
+                alert("Mohon lengkapi semua data input!");
+                return;
+            }
+
+            const dp = Math.abs(r_atas - r_bawah); 
+            const H_prime = H - h_base; 
+            const dh = (H_prime * dp) / (b + dp);
+
+            document.getElementById('res_dp').innerText = dp.toFixed(2) + " mm";
+            document.getElementById('res_h_prime').innerText = H_prime + " m";
+            document.getElementById('res_dh').innerText = dh.toFixed(2);
+
+            const mathDiv = document.getElementById('math_display_height');
+            mathDiv.innerHTML = `$$ \\Delta h = \\frac{${H_prime} \\cdot ${dp.toFixed(2)}}{${b} + ${dp.toFixed(2)}} = \\mathbf{${dh.toFixed(2)} \\text{ m}} $$`;
+            if (window.MathJax) MathJax.typesetPromise([mathDiv]);
+        }
+
+        function calcDistance() {
+            const f = parseFloat(document.getElementById('focal_len').value); 
+            const H = parseFloat(document.getElementById('dist_H').value); 
+            const h = parseFloat(document.getElementById('dist_h_point').value); 
+            const d_photo = parseFloat(document.getElementById('dist_d_photo').value); 
+
+            if ([f, H, h, d_photo].some(isNaN)) {
+                alert("Mohon lengkapi semua data input!");
+                return;
+            }
+
+            const H_eff_mm = (H - h) * 1000;
+            const scaleDenom = H_eff_mm / f; 
+            const D_cm = d_photo * scaleDenom;
+            const D_m = D_cm / 100;
+
+            document.getElementById('res_scale').innerText = `1 : ${Math.round(scaleDenom).toLocaleString()}`;
+            document.getElementById('res_D').innerText = D_m.toFixed(2);
+
+            const mathDiv = document.getElementById('math_display_dist');
+            mathDiv.innerHTML = `
+                $$ S_{lokal} = \\frac{${f}}{(${H} - ${h}) \\times 1000} = 1 : ${Math.round(scaleDenom)} $$
+                $$ D = \\frac{${d_photo} \\text{ cm}}{1/${Math.round(scaleDenom)}} = \\mathbf{${D_m.toFixed(2)} \\text{ m}} $$
+            `;
+            if (window.MathJax) MathJax.typesetPromise([mathDiv]);
+        }
+
+        // Trigger render on load just in case
+        window.addEventListener('load', () => {
+            if (window.MathJax) MathJax.typesetPromise();
+        });
+
+    </script>
+</body>
+</html>

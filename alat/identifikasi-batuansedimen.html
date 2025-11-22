@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klasifikasi Batuan Sedimen - PERHIMAGI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Klasifikasi Batuan Sedimen - PERHIMAGI">
+    <meta property="og:description" content="Alat klasifikasi batuan sedimen berdasarkan tekstur dan komposisi mineral.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png">
+    <meta property="og:url" content="https://lib.perhimagi.org/alat/identifikasi-batuansedimen.html">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Diagram Styles */
+        .diagram-axis { font-size: 14px; fill: #dc2626; font-weight: 800; }
+        .diagram-region { fill: transparent; stroke: #64748b; stroke-width: 1; transition: all 0.2s; cursor: crosshair; }
+        .diagram-region:hover { fill: rgba(220, 38, 38, 0.05); stroke: #dc2626; }
+        .diagram-label { font-size: 10px; fill: #334155; font-weight: 600; text-anchor: middle; pointer-events: none; }
+        
+        /* Animation */
+        .plot-point { 
+            transition: cx 0.5s cubic-bezier(0.22, 1, 0.36, 1), cy 0.5s cubic-bezier(0.22, 1, 0.36, 1); 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Radio/Tabs */
+        .step-card {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid #e2e8f0;
+            padding-bottom: 2rem;
+        }
+        .step-card:last-child { border-left: none; padding-bottom: 0; }
+        
+        .step-number {
+            position: absolute;
+            left: -1.05rem;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: white;
+            border: 2px solid #dc2626;
+            border-radius: 50%;
+            color: #dc2626;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+   <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-3xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Geologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Klasifikasi Batuan Sedimen</h2>
+            <p class="text-slate-600 mt-2 text-sm">
+                Panduan identifikasi sistematis berdasarkan standar klasifikasi geologi.
+            </p>
+        </div>
+
+        <!-- WORKFLOW CONTAINER -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+
+            <!-- STEP 1: KATEGORI UTAMA -->
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Kategori Utama</h3>
+                <p class="text-xs text-slate-500 mb-4">Tentukan jenis batuan dasar menggunakan uji reaksi kimia sederhana.</p>
+                
+                <!-- Guideline Box -->
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mb-4 text-sm text-slate-700 flex gap-3 items-start">
+                    <i data-lucide="flask-conical" class="w-5 h-5 text-blue-600 mt-0.5 shrink-0"></i>
+                    <div>
+                        <strong>Cara Menentukan:</strong> Teteskan larutan HCl 0.1M pada permukaan batuan segar.
+                        <ul class="list-disc pl-4 mt-1 text-xs space-y-1 text-slate-600">
+                            <li><strong>Berbuih (Fizz):</strong> Bereaksi dengan kalsit -> Pilih <b>Karbonat</b>.</li>
+                            <li><strong>Tidak Berbuih:</strong> Tidak bereaksi, dominan silika/lempung -> Pilih <b>Silisiklastik</b>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="cursor-pointer relative">
+                        <input type="radio" name="sedType" value="clastic" checked class="peer hidden" onchange="switchMode()">
+                        <div class="p-4 rounded-xl border-2 border-slate-200 bg-white text-center hover:border-red-200 transition-all peer-checked:border-red-600 peer-checked:bg-red-50">
+                            <i data-lucide="mountain" class="w-6 h-6 mx-auto mb-2 text-slate-400 peer-checked:text-red-600"></i>
+                            <span class="block font-bold text-slate-700 peer-checked:text-red-700">Silisiklastik</span>
+                            <span class="text-xs text-slate-500">Pecahan batuan asal</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer relative">
+                        <input type="radio" name="sedType" value="carbonate" class="peer hidden" onchange="switchMode()">
+                        <div class="p-4 rounded-xl border-2 border-slate-200 bg-white text-center hover:border-red-200 transition-all peer-checked:border-red-600 peer-checked:bg-red-50">
+                            <i data-lucide="shell" class="w-6 h-6 mx-auto mb-2 text-slate-400 peer-checked:text-red-600"></i>
+                            <span class="block font-bold text-slate-700 peer-checked:text-red-700">Karbonat</span>
+                            <span class="text-xs text-slate-500">Reaktif HCl (Fosil/Ooid)</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- STEP 2: VARIAN (DYNAMIC) -->
+            <div class="step-card">
+                <div class="step-number">2</div>
+                
+                <!-- A. SILISIKLASTIK LOGIC -->
+                <div id="clasticWorkflow" class="fade-in">
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">Tekstur & Ukuran Butir</h3>
+                    <p class="text-xs text-slate-500 mb-4">Identifikasi ukuran butir dominan untuk menentukan kelompok batuan.</p>
+                    
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-4 text-sm text-slate-700 flex gap-3 items-start">
+                        <i data-lucide="ruler" class="w-5 h-5 text-slate-500 mt-0.5 shrink-0"></i>
+                        <div>
+                            <strong>Panduan:</strong> Gunakan komparator butir atau loupe.
+                             <ul class="list-disc pl-4 mt-1 text-xs space-y-1 text-slate-600">
+                                <li><strong>> 2 mm:</strong> Terlihat jelas mata telanjang (Kerikil/Kerakal).</li>
+                                <li><strong>1/16 - 2 mm:</strong> Terasa kasar seperti gula pasir.</li>
+                                <li><strong>< 1/16 mm:</strong> Halus, tak terlihat butir, terasa licin/sedikit kasar.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Ukuran Dominan</label>
+                    <select id="grainSize" class="w-full p-3 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-red-500 focus:outline-none mb-6" onchange="updateClasticUI()">
+                        <option value="gravel">Kasar / Brangkal (> 2 mm)</option>
+                        <option value="sand" selected>Pasir (1/16 - 2 mm)</option>
+                        <option value="fine">Halus / Lumpur (< 1/16 mm)</option>
+                    </select>
+
+                    <!-- Sub-step: Sandstone (QFL) -->
+                    <div id="sandOptions" class="space-y-6 border-t border-dashed border-slate-200 pt-4">
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-1">Analisis Batupasir (Pettijohn)</h4>
+                            <p class="text-xs text-slate-500 mb-4">Tentukan persentase matriks dan komposisi mineral butiran.</p>
+                            
+                            <div class="mb-5 bg-slate-50 p-3 rounded border border-slate-100">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <label class="font-bold text-slate-700">1. Kandungan Matriks</label>
+                                    <span id="valMatrix" class="font-mono font-bold text-slate-900">5%</span>
+                                </div>
+                                <input type="range" id="inputMatrix" min="0" max="100" value="5" class="w-full accent-slate-600 h-2 bg-slate-200 rounded-lg cursor-pointer" oninput="updateSandValues()">
+                                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                                    <span>Arenite (<15%)</span>
+                                    <span>Wacke (15-75%)</span>
+                                    <span>Mudrock (>75%)</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 mt-2">
+                                    *Matriks adalah butiran sangat halus (< 0.03mm) yang mengisi sela antar butir pasir.
+                                </p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <p class="text-xs font-bold text-slate-700">2. Komposisi Butir (QFL)</p>
+                                <p class="text-[10px] text-slate-500 -mt-3 mb-2">Estimasi persentase mineral penyusun butiran pasir (Total 100%).</p>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <label class="font-bold text-red-600">Quartz (Q)</label>
+                                        <span id="valQ" class="font-bold text-red-600">100%</span>
+                                    </div>
+                                    <input type="range" id="inputQ" min="0" max="100" value="100" class="w-full accent-red-600 h-2 bg-slate-200 rounded-lg cursor-pointer" oninput="updateSandValues('Q')">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <label class="font-bold text-blue-600">Feldspar (F)</label>
+                                        <span id="valF" class="font-bold text-blue-600">0%</span>
+                                    </div>
+                                    <input type="range" id="inputF" min="0" max="100" value="0" class="w-full accent-blue-600 h-2 bg-slate-200 rounded-lg cursor-pointer" oninput="updateSandValues('F')">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <label class="font-bold text-green-600">Lithic (L)</label>
+                                        <span id="valL" class="font-bold text-green-600">0%</span>
+                                    </div>
+                                    <input type="range" id="inputL" min="0" max="100" value="0" class="w-full accent-green-600 h-2 bg-slate-200 rounded-lg cursor-pointer" oninput="updateSandValues('L')">
+                                </div>
+                            </div>
+
+                            <!-- Mini QFL Diagram -->
+                            <div class="mt-6 bg-slate-50 p-4 rounded-xl border border-slate-200 flex justify-center">
+                                <div class="w-48 h-40 relative">
+                                    <svg viewBox="0 0 500 450" class="w-full h-full overflow-visible">
+                                        <polygon points="250,20 40,420 460,420" fill="white" stroke="#94a3b8" stroke-width="8"/>
+                                        <text x="250" y="0" text-anchor="middle" class="text-xs fill-slate-500 font-bold">Q</text>
+                                        <text x="20" y="440" text-anchor="end" class="text-xs fill-blue-500 font-bold">F</text>
+                                        <text x="480" y="440" text-anchor="start" class="text-xs fill-green-500 font-bold">L</text>
+                                        <circle id="qflPoint" cx="250" cy="20" r="15" fill="#dc2626" stroke="white" stroke-width="4" class="plot-point shadow-lg"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-step: Gravel -->
+                    <div id="gravelOptions" class="hidden space-y-4 border-t border-dashed border-slate-200 pt-4">
+                        <h4 class="font-bold text-slate-800 mb-1">Karakteristik Butiran</h4>
+                        <p class="text-xs text-slate-500 mb-3">Amati bentuk fragmen batuan yang dominan.</p>
+                        <div>
+                            <div class="flex gap-3">
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="gravelShape" value="rounded" checked class="peer hidden" onchange="calculateClastic()">
+                                    <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 text-center peer-checked:bg-red-50 peer-checked:border-red-500 peer-checked:text-red-700 transition">
+                                        <span class="block font-bold">Membundar</span>
+                                        <span class="text-[10px]">Rounded</span>
+                                    </div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="gravelShape" value="angular" class="peer hidden" onchange="calculateClastic()">
+                                    <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 text-center peer-checked:bg-red-50 peer-checked:border-red-500 peer-checked:text-red-700 transition">
+                                        <span class="block font-bold">Menyudut</span>
+                                        <span class="text-[10px]">Angular</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-step: Fine -->
+                    <div id="fineOptions" class="hidden space-y-4 border-t border-dashed border-slate-200 pt-4">
+                        <h4 class="font-bold text-slate-800 mb-1">Karakteristik Fisik</h4>
+                        <p class="text-xs text-slate-500 mb-3">Amati cara batuan pecah dan rasakan teksturnya.</p>
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">1. Tekstur Pecahan</label>
+                            <div class="flex gap-3">
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="fineTexture" value="fissile" checked class="peer hidden" onchange="calculateClastic()">
+                                    <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 text-center peer-checked:bg-red-50 peer-checked:border-red-500 peer-checked:text-red-700 transition">
+                                        <span class="block font-bold">Membelah</span>
+                                        <span class="text-[10px]">Fissile (Berlapis tipis)</span>
+                                    </div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="fineTexture" value="massive" class="peer hidden" onchange="calculateClastic()">
+                                    <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 text-center peer-checked:bg-red-50 peer-checked:border-red-500 peer-checked:text-red-700 transition">
+                                        <span class="block font-bold">Masif</span>
+                                        <span class="text-[10px]">Pejal / Blok</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">2. Perabaan Tangan</label>
+                            <select id="fineSize" class="w-full p-3 border border-slate-300 rounded-lg text-sm bg-white" onchange="calculateClastic()">
+                                <option value="silt">Terasa Kasar/Berpasir (Lanau)</option>
+                                <option value="clay">Terasa Licin/Halus (Lempung)</option>
+                                <option value="mix">Campuran (Agak kasar)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B. KARBONAT LOGIC -->
+                <div id="carbonateWorkflow" class="hidden fade-in">
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">Tekstur Pengendapan (Dunham)</h3>
+                    <p class="text-xs text-slate-500 mb-4">Klasifikasi berdasarkan hubungan antar butir dan matriks lumpur.</p>
+                    
+                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mb-4 text-sm text-slate-700">
+                        <strong>Petunjuk:</strong> Amati hubungan antar butir (fosil/ooid) dan keberadaan lumpur karbonat (mikrit).
+                    </div>
+
+                    <div class="space-y-3 mb-6">
+                        <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                            <input type="radio" name="dunham" value="mud_supported" checked class="mt-1 accent-red-600" onchange="calculateCarbonate()">
+                            <div>
+                                <span class="block text-sm font-bold text-slate-800">Mud Supported</span>
+                                <span class="text-xs text-slate-500">Butiran mengambang dalam lumpur kapur.</span>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                            <input type="radio" name="dunham" value="grain_supported" class="mt-1 accent-red-600" onchange="calculateCarbonate()">
+                            <div>
+                                <span class="block text-sm font-bold text-slate-800">Grain Supported</span>
+                                <span class="text-xs text-slate-500">Butiran saling bersentuhan/menyangga.</span>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                            <input type="radio" name="dunham" value="bound" class="mt-1 accent-red-600" onchange="calculateCarbonate()">
+                            <div>
+                                <span class="block text-sm font-bold text-slate-800">Bound (Terikat)</span>
+                                <span class="text-xs text-slate-500">Organisme tumbuh terikat (cth: Koral).</span>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                            <input type="radio" name="dunham" value="crystalline" class="mt-1 accent-red-600" onchange="calculateCarbonate()">
+                            <div>
+                                <span class="block text-sm font-bold text-slate-800">Crystalline</span>
+                                <span class="text-xs text-slate-500">Tekstur asli hilang (rekristalisasi).</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Dynamic Detail -->
+                    <div id="mudSupportedOptions" class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                        <p class="text-xs font-bold text-slate-700 mb-2">Detail Kandungan Butir</p>
+                        <div class="flex justify-between text-xs mb-1">
+                            <label class="text-slate-600">Persentase Butiran (Grains)</label>
+                            <span id="valCarbGrain" class="font-bold text-slate-800">5%</span>
+                        </div>
+                        <input type="range" id="inputCarbGrain" min="0" max="100" value="5" class="w-full accent-slate-600 h-2 bg-slate-200 rounded-lg cursor-pointer" oninput="calculateCarbonate()">
+                        <p class="text-[10px] text-slate-500 mt-1">Batas klasifikasi Wackestone/Mudstone adalah 10% butiran.</p>
+                    </div>
+
+                    <div id="grainSupportedOptions" class="hidden p-4 bg-slate-50 rounded-lg border border-slate-200">
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Kehadiran Lumpur (Mud)</label>
+                        <div class="flex gap-3">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="carbMud" value="yes" checked class="peer hidden" onchange="calculateCarbonate()">
+                                <div class="p-2 rounded border border-slate-300 bg-white text-center text-sm peer-checked:bg-red-50 peer-checked:border-red-500 peer-checked:text-red-700">
+                                    Ada Lumpur
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="carbMud" value="no" class="peer hidden" onchange="calculateCarbonate()">
+                                <div class="p-2 rounded border border-slate-300 bg-white text-center text-sm peer-checked:bg-red-50 peer-checked:border-red-500 peer-checked:text-red-700">
+                                    Tanpa Lumpur (Clean)
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: HASIL IDENTIFIKASI (BOTTOM) -->
+            <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg mt-8">
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-red-600 rounded-xl shrink-0">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Hasil Identifikasi</p>
+                        <h2 id="resultName" class="text-3xl font-black text-white leading-none mb-3">Quartz Arenite</h2>
+                        <p id="resultDesc" class="text-sm text-slate-300 font-medium leading-relaxed">
+                            Batupasir Arenite dengan komposisi kuarsa sangat dominan (>95%).
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Button Google Search -->
+                <div class="mt-6 pt-4 border-t border-slate-700">
+                    <a id="googleSearchBtn" href="#" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition">
+                        <i data-lucide="image" class="w-4 h-4"></i> Lihat Referensi Gambar
+                    </a>
+                </div>
+                
+                <!-- DISCLAIMER -->
+                <div class="mt-4 flex gap-3 items-start text-xs text-slate-400">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 text-yellow-500 shrink-0"></i>
+                    <p>
+                        <strong>Disclaimer:</strong> Hasil identifikasi ini merupakan estimasi berdasarkan input pengguna dan algoritma standar. Identifikasi batuan yang akurat memerlukan pengamatan langsung di lapangan atau laboratorium oleh ahli geologi. Harap lakukan verifikasi manual sesuai referensi yang berlaku.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- REFERENCES & FOOTER INFO -->
+        <div class="mt-12 pb-8">
+            <!-- References Section -->
+             <div class="max-w-3xl mx-auto px-4 mb-8">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi & Sitasi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Pettijohn, F. J. (1975).</strong> <em>Sedimentary Rocks</em> (3rd ed.). New York: Harper & Row.</li>
+                    <li><strong>Dunham, R. J. (1962).</strong> Classification of carbonate rocks according to depositional texture. In <em>Classification of Carbonate Rocks</em> (pp. 108–121). AAPG Memoir 1.</li>
+                    <li><strong>Wentworth, C. K. (1922).</strong> A Scale of Grade and Class Terms for Clastic Sediments. <em>The Journal of Geology</em>, 30(5), 377–392.</li>
+                    <li><strong>Tucker, M. E. (2001).</strong> <em>Sedimentary Petrology: An Introduction to the Origin of Sedimentary Rocks</em> (3rd ed.). Blackwell Science.</li>
+                </ul>
+            </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+        let mode = 'clastic';
+
+        function switchMode() {
+            const radios = document.getElementsByName('sedType');
+            for(let r of radios) if(r.checked) mode = r.value;
+
+            const clasticDiv = document.getElementById('clasticWorkflow');
+            const carbDiv = document.getElementById('carbonateWorkflow');
+            
+            if (mode === 'clastic') {
+                clasticDiv.classList.remove('hidden');
+                carbDiv.classList.add('hidden');
+                updateClasticUI();
+            } else {
+                clasticDiv.classList.add('hidden');
+                carbDiv.classList.remove('hidden');
+                calculateCarbonate();
+            }
+        }
+
+        // --- CLASTIC LOGIC ---
+        function updateClasticUI() {
+            const grain = document.getElementById('grainSize').value;
+            const gravelDiv = document.getElementById('gravelOptions');
+            const sandDiv = document.getElementById('sandOptions');
+            const fineDiv = document.getElementById('fineOptions');
+
+            gravelDiv.classList.add('hidden');
+            sandDiv.classList.add('hidden');
+            fineDiv.classList.add('hidden');
+
+            if (grain === 'gravel') gravelDiv.classList.remove('hidden');
+            if (grain === 'sand') sandDiv.classList.remove('hidden');
+            if (grain === 'fine') fineDiv.classList.remove('hidden');
+
+            calculateClastic();
+        }
+
+        function updateSandValues(type) {
+            if (type) {
+                const q = parseInt(document.getElementById('inputQ').value);
+                const f = parseInt(document.getElementById('inputF').value);
+                const l = parseInt(document.getElementById('inputL').value);
+                ['Q','F','L'].forEach(k => {
+                    document.getElementById(`val${k}`).innerText = document.getElementById(`input${k}`).value + "%";
+                });
+            }
+            const matVal = document.getElementById('inputMatrix').value;
+            document.getElementById('valMatrix').innerText = matVal + "%";
+            calculateClastic();
+        }
+
+        function calculateClastic() {
+            const grain = document.getElementById('grainSize').value;
+            let name = "Unknown";
+            let desc = "";
+
+            if (grain === 'gravel') {
+                const shape = document.querySelector('input[name="gravelShape"]:checked').value;
+                name = shape === 'rounded' ? "Konglomerat" : "Breksi";
+                desc = `Batuan sedimen klastik kasar (>2mm) dengan fragmen dominan ${shape === 'rounded' ? 'membundar (rounded)' : 'menyudut (angular)'}.`;
+            } 
+            else if (grain === 'fine') {
+                const texture = document.querySelector('input[name="fineTexture"]:checked').value;
+                const size = document.getElementById('fineSize').value;
+                
+                if (texture === 'fissile') {
+                    name = size === 'silt' ? "Silt-Shale" : (size === 'clay' ? "Clay-Shale (Serpih)" : "Shale");
+                } else {
+                    name = size === 'silt' ? "Batulanau (Siltstone)" : (size === 'clay' ? "Batulempung (Claystone)" : "Batulumpur (Mudstone)");
+                }
+                desc = `Batuan sedimen halus dengan tekstur ${texture === 'fissile' ? 'membelah' : 'masif'}.`;
+            } 
+            else if (grain === 'sand') {
+                const matrix = parseInt(document.getElementById('inputMatrix').value);
+                const q = parseInt(document.getElementById('inputQ').value) || 0;
+                const f = parseInt(document.getElementById('inputF').value) || 0;
+                const l = parseInt(document.getElementById('inputL').value) || 0;
+                const total = q + f + l;
+                const normQ = total === 0 ? 0 : (q/total)*100;
+                const normF = total === 0 ? 0 : (f/total)*100;
+                const normL = total === 0 ? 0 : (l/total)*100;
+
+                let textureClass = "";
+                if (matrix < 15) textureClass = "Arenite";
+                else if (matrix < 75) textureClass = "Wacke";
+                else {
+                    name = "Mudstone (Matrix > 75%)";
+                    desc = "Dominasi lumpur melebihi 75%, masuk kategori batuan sedimen halus.";
+                    updateResult(name, desc);
+                    return;
+                }
+
+                if (textureClass === "Arenite") {
+                    if (normQ > 95) name = "Quartz Arenite";
+                    else if (normF > normL) name = normQ > 75 ? "Subarkose" : "Arkose";
+                    else name = normQ > 75 ? "Sublitharenite" : "Litharenite";
+                } else {
+                    if (normQ > 95) name = "Quartz Wacke";
+                    else if (normF > normL) name = "Feldspathic Wacke";
+                    else name = "Lithic Wacke (Greywacke)";
+                }
+
+                desc = `Batupasir tipe ${textureClass} (Matriks ${matrix}%). Komposisi normalisasi: Q=${normQ.toFixed(0)}% F=${normF.toFixed(0)}% L=${normL.toFixed(0)}%.`;
+                plotQFL(normQ, normF, normL);
+            }
+            updateResult(name, desc);
+        }
+
+        function calculateCarbonate() {
+            const texture = document.querySelector('input[name="dunham"]:checked').value;
+            const mudDiv = document.getElementById('mudSupportedOptions');
+            const grainDiv = document.getElementById('grainSupportedOptions');
+            mudDiv.classList.add('hidden');
+            grainDiv.classList.add('hidden');
+
+            let name = "", desc = "";
+
+            if (texture === 'bound') {
+                name = "Boundstone";
+                desc = "Batuan karbonat dimana komponen organik terikat bersama saat pengendapan (cth: Terumbu).";
+            } else if (texture === 'crystalline') {
+                name = "Crystalline Limestone";
+                desc = "Tekstur pengendapan tidak dapat dikenali karena rekristalisasi intensif.";
+            } else if (texture === 'mud_supported') {
+                mudDiv.classList.remove('hidden');
+                const grainPct = parseInt(document.getElementById('inputCarbGrain').value);
+                document.getElementById('valCarbGrain').innerText = grainPct + "%";
+                if (grainPct < 10) {
+                    name = "Mudstone (Carbonate)";
+                    desc = "Tekstur mud-supported dengan butiran (grains) kurang dari 10%.";
+                } else {
+                    name = "Wackestone";
+                    desc = "Tekstur mud-supported dengan butiran (grains) lebih dari 10%.";
+                }
+            } else if (texture === 'grain_supported') {
+                grainDiv.classList.remove('hidden');
+                const hasMud = document.querySelector('input[name="carbMud"]:checked').value === 'yes';
+                if (hasMud) {
+                    name = "Packstone";
+                    desc = "Tekstur grain-supported yang masih mengandung lumpur karbonat (lime mud).";
+                } else {
+                    name = "Grainstone";
+                    desc = "Tekstur grain-supported tanpa lumpur (bersih), biasanya tersemen oleh sparit.";
+                }
+            }
+            updateResult(name, desc);
+        }
+
+        function updateResult(name, desc) {
+            document.getElementById('resultName').innerText = name;
+            document.getElementById('resultDesc').innerText = desc;
+            
+            // Update Google Search Link
+            const btn = document.getElementById('googleSearchBtn');
+            btn.href = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(name + " sedimentary rock")}`;
+        }
+
+        function plotQFL(q, f, l) {
+            const Q = {x: 250, y: 20};
+            const F = {x: 40, y: 420};
+            const L = {x: 460, y: 420};
+            const nq = q/100, nf = f/100, nl = l/100;
+            const x = nq*Q.x + nf*F.x + nl*L.x;
+            const y = nq*Q.y + nf*F.y + nl*L.y;
+            const point = document.getElementById('qflPoint');
+            point.setAttribute('cx', x);
+            point.setAttribute('cy', y);
+        }
+
+        // Initialize
+        updateClasticUI();
+    </script>
+</body>
+</html>
