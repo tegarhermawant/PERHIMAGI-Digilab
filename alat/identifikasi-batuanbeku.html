@@ -103,23 +103,13 @@
                     <i data-lucide="book" class="w-5 h-5"></i> Library
                 </a>
                 <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
-                    <i data-lucide="tool" class="w-5 h-5"></i> Alat
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Alat
                 </a>
-                <a href="tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
                     <i data-lucide="info" class="w-5 h-5"></i> Tentang
                 </a>
             </div>
         </div>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const menuButton = document.querySelector("button.md\\:hidden");
-                const mobileNav = document.getElementById("mobileNavDropdown");
-
-                menuButton.addEventListener("click", () => {
-                    mobileNav.classList.toggle("hidden");
-                });
-            });
-        </script>
     </header>
 
     <!-- MAIN CONTENT -->
@@ -726,6 +716,24 @@
             document.getElementById('calcModal').classList.add('hidden');
             document.getElementById('calcModal').classList.remove('flex');
         }
+    </script>
+
+    <!-- MOBILE MENU SCRIPT & ICON INIT -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuButton = document.getElementById("mobileMenuBtn");
+            const mobileNav = document.getElementById("mobileNavDropdown");
+
+            if (menuButton && mobileNav) {
+                menuButton.addEventListener("click", () => {
+                    mobileNav.classList.toggle("hidden");
+                });
+            }
+        });
     </script>
 </body>
 </html>
