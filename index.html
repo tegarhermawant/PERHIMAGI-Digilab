@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
-                    <a href="perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
                     <a href="index.html" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Library</a>
                     <a href="/alat/" class="hover:text-red-600 transition">Alat</a>
                     <a href="tentang.html" class="hover:text-red-600 transition">Tentang</a>
@@ -87,6 +87,16 @@
                 </a>
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const menuButton = document.querySelector("button.md\\:hidden");
+                const mobileNav = document.getElementById("mobileNavDropdown");
+
+                menuButton.addEventListener("click", () => {
+                    mobileNav.classList.toggle("hidden");
+                });
+            });
+        </script>
     </header>
 
     <!-- === HALAMAN UTAMA (LIBRARY) === -->

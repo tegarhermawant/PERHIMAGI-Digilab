@@ -92,6 +92,16 @@
                 </button>
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const menuButton = document.querySelector("button.md\\:hidden");
+                const mobileNav = document.getElementById("mobileNavDropdown");
+
+                menuButton.addEventListener("click", () => {
+                    mobileNav.classList.toggle("hidden");
+                });
+            });
+        </script>
     </header>
 
     <!-- Mobile Navigation Dropdown (Hidden by default) -->
