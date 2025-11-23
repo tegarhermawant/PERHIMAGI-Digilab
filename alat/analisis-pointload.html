@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uji Beban Titik (Point Load Test) - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-pointload.html">
+    <meta property="og:title" content="Uji Beban Titik (Point Load Test) - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool perhitungan indeks kekuatan beban titik (I_s) dan estimasi kuat tekan uniaksial (UCS) batuan berdasarkan standar ISRM/ASTM.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://perhimagi.org/alat/analisis-pointload.html">
+    <meta property="twitter:title" content="Uji Beban Titik (Point Load Test) - PERHIMAGI Digilab">
+    <meta property="twitter:description" content="Tool perhitungan indeks kekuatan beban titik (I_s) dan estimasi kuat tekan uniaksial (UCS) batuan berdasarkan standar ISRM/ASTM.">
+    <meta property="twitter:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-field { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.875rem; }
+        .input-field:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="home" class="w-5 h-5"></i> Home</a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="book" class="w-5 h-5"></i> Library</a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium"><i data-lucide="wrench" class="w-5 h-5"></i> Alat</a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="info" class="w-5 h-5"></i> Tentang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-1">
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Geoteknik & Mekanika Batuan</span>
+            <h2 class="text-3xl font-bold text-slate-900">Uji Beban Titik (Point Load Test)</h2>
+                        <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Perhitungan indeks kekuatan beban titik (\(I_s\)) dan estimasi kuat tekan uniaksial (UCS) batuan berdasarkan standar ISRM/ASTM.
+            </p>
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Panduan Metode
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="microscope" class="w-5 h-5"></i></div>
+                        Panduan Metode Point Load Test
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg"><i data-lucide="x" class="w-6 h-6 text-slate-500"></i></button>
+                </div>
+                <div class="p-6">
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-amber-50 p-6 rounded-xl border border-amber-200">
+                            <h5 class="font-bold text-slate-900 mb-2">Langkah Pengujian</h5>
+                            <ol class="list-decimal space-y-2 pl-5 text-sm text-slate-700">
+                                <li>Siapkan sampel (Block atau Irregular Lump) dan ukur lebar (W) serta jarak konus (D).</li>
+                                <li>Letakkan sampel di antara dua konus dan pompa secara perlahan hingga pecah.</li>
+                                <li>Catat beban maksimum (P) pada manometer (kN).</li>
+                                <li>Pastikan pecahan melewati kedua titik kontak; bila hanya chipping, data tidak valid.</li>
+                            </ol>
+                        </div>
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                            <h5 class="font-bold text-slate-900 mb-2">Rumus Utama</h5>
+                            <p class="text-sm text-slate-700 mb-2">\(D_{e}^{2} = 1.274 \times W \times D\)</p>
+                            <p class="text-sm text-slate-700 mb-2">\(I_{s} = \frac{P}{D_{e}^{2}}\)</p>
+                            <p class="text-sm text-slate-700 mb-2">\(F = \left(\frac{D_{e}}{50}\right)^{0.45}\)</p>
+                            <p class="text-sm text-slate-700 mb-2">\(I_{s(50)} = F \times I_{s}\)</p>
+                            <p class="text-sm text-slate-700 mb-2">\(UCS \approx k \times I_{s(50)}\) (k≈22)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+            <!-- LEFT: INPUTS -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="font-bold text-slate-900 mb-4">Data Uji</h3>
+                    <!-- Sample Type Selection Buttons -->
+                    <div class="flex space-x-4 mb-4">
+                        <button id="btnBlock" class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300" onclick="setSampleType('block')">
+                            <i data-lucide="square" class="w-5 h-5"></i> Block
+                        </button>
+                        <button id="btnIrregular" class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300" onclick="setSampleType('irregular')">
+                            <i data-lucide="layers" class="w-5 h-5"></i> Irregular
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="block text-sm text-slate-600 mb-1">Beban Maksimum (P) - kN</label>
+                        <input type="number" id="loadP" class="input-field" step="0.01" placeholder="4.5" oninput="calculate()">
+                        <label class="block text-sm text-slate-600 mb-1">Jarak Konus (D) - mm</label>
+                        <input type="number" id="distD" class="input-field" step="0.01" placeholder="40" oninput="calculate()">
+                    </div>
+                    <!-- Width Inputs (will be toggled) -->
+                    <div id="widthBlock" class="space-y-3 mb-3">
+                        <label class="block text-sm text-slate-600 mb-1">Lebar Sampel (W) - mm</label>
+                        <input type="number" id="widthW" class="input-field" step="0.01" placeholder="55" oninput="calculate()">
+                    </div>
+                    <div id="widthIrregular" class="space-y-3 mb-3 hidden">
+                        <label class="block text-sm text-slate-600 mb-1">Lebar Sampel 1 (W1) - mm</label>
+                        <input type="number" id="widthW1" class="input-field" step="0.01" placeholder="55" oninput="calculate()">
+                        <label class="block text-sm text-slate-600 mb-1">Lebar Sampel 2 (W2) - mm</label>
+                        <input type="number" id="widthW2" class="input-field" step="0.01" placeholder="55" oninput="calculate()">
+                    </div>
+                </div>
+                <button onclick="calculate()" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-4 rounded-xl font-bold hover:from-red-700 hover:to-red-800 transition shadow-lg flex items-center justify-center gap-3">
+                    <i data-lucide="calculator" class="w-5 h-5"></i> Hitung Parameter
+                </button>
+            </div>
+
+            <!-- RIGHT: RESULTS -->
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Hasil Point Load Test</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-white/10 rounded-xl p-5 border border-white/10">
+                                                    <p class="text-xs text-slate-400 mb-2">\(I_s\) (MPa)</p>
+                        <p id="res_is" class="text-2xl font-bold text-red-400">-</p>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-5 border border-white/10">
+                        <p class="text-xs text-slate-400 mb-2">\(I_{s(50)}\) (MPa)</p>
+                        <p id="res_is50" class="text-2xl font-bold text-amber-400">-</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-5 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-2">UCS (MPa)</p>
+                            <p id="res_ucs" class="text-2xl font-bold text-blue-400">-</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-5 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-2">Klasifikasi</p>
+                            <p id="res_class" class="text-2xl font-bold text-purple-400">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="detailSection" class="hidden space-y-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-900 mb-3">Perhitungan Detail</h4>
+                        <p class="text-sm text-slate-700" id="detail_calc"></p>
+                    </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
+                        <div>
+                            <p class="font-bold text-amber-900 mb-2">Disclaimer</p>
+                            <p class="text-amber-800">Tool ini dirancang untuk <strong>tujuan edukatif</strong>. Untuk aplikasi rekayasa, konsultasikan dengan ahli geoteknik bersertifikat. Akurasi bergantung pada kualitas data dan prosedur laboratorium.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>ISRM (1985) / ASTM D5731</strong> – Point Load Test Standard.</li>
+                    <li><strong>Bowles, J.E. (1989)</strong> – Physical and Geotechnical Properties of Soils.</li>
+                    <li><strong>Das, B.M.</strong> – Principles of Geotechnical Engineering.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+<script>
+    lucide.createIcons();
+    const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+    const mobileNavDropdown=document.getElementById('mobileNavDropdown');
+    mobileMenuBtn.addEventListener('click',e=>{e.stopPropagation();mobileNavDropdown.classList.toggle('hidden');lucide.createIcons();});
+    document.addEventListener('click',e=>{if(!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)){mobileNavDropdown.classList.add('hidden');}});
+    function toggleGuideModal(){const m=document.getElementById('guideModal');m.classList.toggle('hidden');setTimeout(()=>lucide.createIcons(),100);}
+    // Sample type handling
+    let currentSample='block';
+    function setSampleType(type){
+        currentSample=type;
+        document.getElementById('btnBlock').classList.toggle('bg-red-600', type==='block');
+        document.getElementById('btnBlock').classList.toggle('text-white', type==='block');
+        document.getElementById('btnIrregular').classList.toggle('bg-red-600', type==='irregular');
+        document.getElementById('btnIrregular').classList.toggle('text-white', type==='irregular');
+        document.getElementById('widthBlock').classList.toggle('hidden', type!=='block');
+        document.getElementById('widthIrregular').classList.toggle('hidden', type!=='irregular');
+        calculate();
+    }
+    // Initialize default state
+    setSampleType('block');
+    function calculate(){
+    const P=parseFloat(document.getElementById('loadP').value);
+    const D=parseFloat(document.getElementById('distD').value);
+    let W;
+    if(currentSample === 'block'){
+        W=parseFloat(document.getElementById('widthW').value);
+    } else {
+        const W1=parseFloat(document.getElementById('widthW1').value);
+        const W2=parseFloat(document.getElementById('widthW2').value);
+        if(isNaN(W1) || isNaN(W2)) return;
+        W=(W1+W2)/2;
+    }
+    if([P,D,W].some(isNaN)) return;
+    const De2=1.274*W*D;
+    const De=Math.sqrt(De2);
+    const Is=(P*1000)/De2;
+    const F=Math.pow(De/50,0.45);
+    const Is50=F*Is;
+    const k=22;
+    const UCS=k*Is50;
+    let cls='';
+    if(Is50<0.05) cls='Sangat Lemah';
+    else if(Is50<1) cls='Lemah';
+    else if(Is50<2) cls='Sedang';
+    else if(Is50<4) cls='Kuat';
+    else if(Is50<8) cls='Sangat Kuat';
+    else cls='Ekstrem Kuat';
+    document.getElementById('res_is').textContent=Is.toFixed(3)+' MPa';
+    document.getElementById('res_is50').textContent=Is50.toFixed(3)+' MPa';
+    document.getElementById('res_ucs').textContent=UCS.toFixed(2)+' MPa';
+    document.getElementById('res_class').textContent=cls;
+    // Separate MathJax lines for readability
+    const detail = `
+        <p>\\[ \\text{Tipe Sampel}= ${currentSample.charAt(0).toUpperCase() + currentSample.slice(1)} \\]</p>
+        <p>\\[ D_{e}^{2}= 1.274 \\times W \\times D = ${De2.toFixed(2)} \\text{ mm}^{2} \\]</p>
+        <p>\\[ D_{e}= \\sqrt{D_{e}^{2}} = ${De.toFixed(2)} \\text{ mm} \\]</p>
+        <p>\\[ I_{s}= \\frac{P \\times 1000}{D_{e}^{2}} = ${Is.toFixed(3)} \\text{ MPa} \\]</p>
+        <p>\\[ F= \\left(\\frac{D_{e}}{50}\\right)^{0.45} = ${F.toFixed(3)} \\]</p>
+        <p>\\[ I_{s(50)}= F \\times I_{s} = ${Is50.toFixed(3)} \\text{ MPa} \\]</p>
+        <p>\\[ UCS \\approx k \\times I_{s(50)} = ${UCS.toFixed(2)} \\text{ MPa} \\]</p>
+    `;
+    document.getElementById('detail_calc').innerHTML=detail;
+    document.getElementById('detailSection').classList.remove('hidden');
+    if (window.MathJax) { MathJax.typesetPromise(); }
+    lucide.createIcons();
+}
+</script>
+</body>
+</html>

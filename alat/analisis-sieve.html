@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Saringan (Sieve Analysis) - PERHIMAGI Digilab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        .data-table { width: 100%; }
+        .data-table th {
+            background: #f1f5f9;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .data-table td {
+            padding: 8px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: center;
+        }
+        .data-table input {
+            width: 100%;
+            text-align: center;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        .data-table input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px #bfdbfe;
+        }
+        .data-table input:read-only {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Dropdown -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium">
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Geoteknik & Mekanika Tanah</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Saringan (Sieve Analysis)</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Analisis distribusi ukuran butir tanah dan klasifikasi USCS berdasarkan ASTM D422 / SNI 3423:2008.
+            </p>
+        </div>
+
+        <!-- INPUT SECTION -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="table" class="w-5 h-5 text-red-600"></i>
+                    Data Hasil Uji Saringan
+                </h3>
+                <div class="flex gap-2">
+                    <button onclick="addRow()" class="px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition">
+                        <i data-lucide="plus" class="w-4 h-4 inline"></i> Tambah Baris
+                    </button>
+                    <button onclick="resetTable()" class="px-3 py-1 bg-slate-200 text-slate-700 rounded-lg text-sm hover:bg-slate-300 transition">
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th class="w-8">#</th>
+                            <th>Ukuran Sieve (mm)</th>
+                            <th>Berat Tertahan (g)</th>
+                            <th>% Tertahan</th>
+                            <th>% Kum. Tertahan</th>
+                            <th>% Lolos</th>
+                            <th class="w-8"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody">
+                        <!-- Rows will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button onclick="calculate()" class="mt-6 w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-xl font-bold hover:from-red-700 hover:to-red-800 transition shadow-lg flex items-center justify-center gap-3">
+                <i data-lucide="calculator" class="w-6 h-6"></i>
+                Hitung Analisis
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <div id="resultSection" class="hidden">
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- Parameters Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-red-600"></i>
+                        Parameter Ukuran Butir
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-red-900 font-bold">D₁₀ (Effective Size)</span>
+                                <span id="res_d10" class="font-bold text-red-700">- mm</span>
+                            </div>
+                            <p class="text-xs text-red-700" id="d10_calc">-</p>
+                        </div>
+                        <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-orange-900 font-bold">D₃₀</span>
+                                <span id="res_d30" class="font-bold text-orange-700">- mm</span>
+                            </div>
+                            <p class="text-xs text-orange-700" id="d30_calc">-</p>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-amber-900 font-bold">D₆₀</span>
+                                <span id="res_d60" class="font-bold text-amber-700">- mm</span>
+                            </div>
+                            <p class="text-xs text-amber-700" id="d60_calc">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coefficients Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="target" class="w-5 h-5 text-red-600"></i>
+                        Koefisien Gradasi
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-red-900 font-bold">Cᵤ (Uniformity)</span>
+                                <span id="res_cu" class="font-bold text-red-700">-</span>
+                            </div>
+                            <p class="text-xs text-red-700" id="cu_calc">-</p>
+                        </div>
+                        <div class="p-3 bg-orange-50 rounded-lg border border-orange-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-orange-900 font-bold">Cᶜ (Curvature)</span>
+                                <span id="res_cc" class="font-bold text-orange-700">-</span>
+                            </div>
+                            <p class="text-xs text-orange-700" id="cc_calc">-</p>
+                        </div>
+                        <div id="gradationStatus" class="p-4 bg-gradient-to-r from-slate-50 to-slate-100 rounded-lg border border-slate-300">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Status Gradasi</p>
+                            <p id="res_gradation" class="font-bold text-slate-900 text-lg">-</p>
+                            <p class="text-xs text-slate-600 mt-1" id="gradation_criteria">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fractions Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8">
+                <h4 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="pie-chart" class="w-5 h-5 text-red-600"></i>
+                    Komposisi Fraksi Tanah
+                </h4>
+                <p class="text-xs text-slate-500 mb-4">Berdasarkan saringan No. 4 (4.75mm) dan No. 200 (0.075mm)</p>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="text-center p-5 bg-amber-50 rounded-xl border border-amber-200">
+                        <p class="text-xs text-amber-700 font-bold mb-1 uppercase tracking-wide">Gravel (> 4.75mm)</p>
+                        <p id="res_gravel" class="text-4xl font-black text-amber-700 my-2">-%</p>
+                        <p class="text-xs text-amber-600" id="gravel_calc">-</p>
+                    </div>
+                    <div class="text-center p-5 bg-yellow-50 rounded-xl border border-yellow-200">
+                        <p class="text-xs text-yellow-700 font-bold mb-1 uppercase tracking-wide">Sand (4.75-0.075mm)</p>
+                        <p id="res_sand" class="text-4xl font-black text-yellow-700 my-2">-%</p>
+                        <p class="text-xs text-yellow-600" id="sand_calc">-</p>
+                    </div>
+                    <div class="text-center p-5 bg-slate-100 rounded-xl border border-slate-300">
+                        <p class="text-xs text-slate-700 font-bold mb-1 uppercase tracking-wide">Fines (< 0.075mm)</p>
+                        <p id="res_fines" class="text-4xl font-black text-slate-700 my-2">-%</p>
+                        <p class="text-xs text-slate-600" id="fines_calc">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classification Card -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl shadow-xl p-8">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Klasifikasi USCS</h4>
+                <div class="flex items-center gap-6 mb-6">
+                    <div class="text-center">
+                        <p class="text-xs text-slate-400 mb-1">Simbol</p>
+                        <p id="res_symbol" class="text-5xl font-black text-yellow-400">-</p>
+                    </div>
+                    <div class="flex-1">
+                        <p id="res_classname" class="text-2xl font-bold mb-2">-</p>
+                        <p id="res_classdesc" class="text-sm text-slate-300 leading-relaxed">Lengkapi data untuk melihat klasifikasi</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs mt-6">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                    <div>
+                        <p class="font-bold text-amber-900 mb-2">Disclaimer</p>
+                        <p class="text-amber-800 leading-relaxed">
+                            Tool ini dirancang untuk <strong>tujuan edukatif dan praktikum</strong>. Untuk proyek rekayasa profesional, sebaiknya konsultasikan dengan ahli geoteknik bersertifikat. Akurasi hasil bergantung pada kualitas data input dan prosedur laboratorium yang benar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- References -->
+        <div class="mt-12 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>ASTM D422-63(2007)</strong> <em>Standard Test Method for Particle-Size Analysis of Soils</em></li>
+                    <li><strong>SNI 3423:2008</strong> <em>Cara Uji Analisis Ukuran Butiran Tanah</em></li>
+                    <li><strong>ASTM D2487</strong> <em>Standard Practice for Classification of Soils for Engineering Purposes (Unified Soil Classification System)</em></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNavDropdown = document.getElementById('mobileNavDropdown');
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileNavDropdown.classList.toggle('hidden');
+            lucide.createIcons();
+        });
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)) {
+                mobileNavDropdown.classList.add('hidden');
+            }
+        });
+
+        let rowCount = 0;
+        let sieveData = [];
+
+        // Initialize with default rows
+        function initTable() {
+            const defaultSizes = [19, 9.5, 4.75, 2.36, 1.18, 0.6, 0.3, 0.15, 0.075];
+            defaultSizes.forEach(size => {
+                addRow(size);
+            });
+        }
+
+        function addRow(defaultSize = '') {
+            rowCount++;
+            const tbody = document.getElementById('dataTableBody');
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td class="font-bold text-slate-600">${rowCount}</td>
+                <td><input type="number" step="0.001" class="sieve-size" placeholder="mm" value="${defaultSize}" oninput="onDataChange()"></td>
+                <td><input type="number" step="0.01" class="weight-retained" placeholder="0.00" oninput="onDataChange()"></td>
+                <td><input type="text" class="pct-retained" readonly></td>
+                <td><input type="text" class="pct-cum-retained" readonly></td>
+                <td><input type="text" class="pct-passing" readonly></td>
+                <td><button onclick="deleteRow(this)" class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+            `;
+            lucide.createIcons();
+        }
+
+        function deleteRow(btn) {
+            const row = btn.closest('tr');
+            row.remove();
+            updateRowNumbers();
+            onDataChange();
+        }
+
+        function updateRowNumbers() {
+            const rows = document.querySelectorAll('#dataTableBody tr');
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = index + 1;
+            });
+            rowCount = rows.length;
+        }
+
+        function resetTable() {
+            document.getElementById('dataTableBody').innerHTML = '';
+            rowCount = 0;
+            initTable();
+            document.getElementById('resultSection').classList.add('hidden');
+        }
+
+        function onDataChange() {
+            const rows = document.querySelectorAll('#dataTableBody tr');
+            let totalWeight = 0;
+
+            // Calculate total weight
+            rows.forEach(row => {
+                const weight = parseFloat(row.querySelector('.weight-retained').value) || 0;
+                totalWeight += weight;
+            });
+
+            if (totalWeight === 0) return;
+
+            let cumRetained = 0;
+
+            // Calculate percentages
+            rows.forEach(row => {
+                const weight = parseFloat(row.querySelector('.weight-retained').value) || 0;
+                const pctRetained = (weight / totalWeight) * 100;
+                cumRetained += pctRetained;
+                const pctPassing = 100 - cumRetained;
+
+                row.querySelector('.pct-retained').value = pctRetained.toFixed(2) + '%';
+                row.querySelector('.pct-cum-retained').value = cumRetained.toFixed(2) + '%';
+                row.querySelector('.pct-passing').value = pctPassing.toFixed(2) + '%';
+            });
+        }
+
+        function interpolateLog(pTarget, p1, p2, d1, d2) {
+            if (p1 === p2) return d1;
+            const logD = Math.log10(d2) - ((p2 - pTarget) * (Math.log10(d2) - Math.log10(d1))) / (p2 - p1);
+            return Math.pow(10, logD);
+        }
+
+        function findDx(target, data) {
+            for (let i = 0; i < data.length - 1; i++) {
+                const p1 = data[i].passing;
+                const p2 = data[i + 1].passing;
+                
+                if ((p1 >= target && p2 <= target) || (p1 <= target && p2 >= target)) {
+                    return interpolateLog(target, p1, p2, data[i].size, data[i + 1].size);
+                }
+            }
+            return null;
+        }
+
+        function classifyUSCS(d10, d30, d60, pctGravel, pctSand, pctFines) {
+            if (!d10 || !d60) {
+                return {
+                    symbol: "N/A",
+                    name: "Data Tidak Lengkap",
+                    desc: "D10 atau D60 tidak dapat ditentukan dari data."
+                };
+            }
+
+            const cu = d60 / d10;
+            const cc = d30 ? (d30 * d30) / (d10 * d60) : 0;
+
+            // Fine-grained soil
+            if (pctFines >= 50) {
+                return {
+                    symbol: "ML/CL",
+                    name: "Tanah Berbutir Halus",
+                    desc: "Penggunaan Batas Atterberg (LL & PI) diperlukan untuk klasifikasi lebih lanjut.",
+                    cu, cc
+                };
+            }
+
+            // Coarse-grained soil
+            const isGravel = pctGravel > pctSand;
+            const primaryCode = isGravel ? "G" : "S";
+            const cuThreshold = isGravel ? 4 : 6;
+
+            // Clean (< 5% fines)
+            if (pctFines < 5) {
+                const isWellGraded = (cu >= cuThreshold) && (cc >= 1 && cc <= 3);
+                if (isWellGraded) {
+                    return {
+                        symbol: primaryCode + "W",
+                        name: isGravel ? "Well-Graded Gravel" : "Well-Graded Sand",
+                        desc: isGravel ? "Kerikil bergradasi baik dengan distribusi ukuran butir yang luas." : "Pasir bergradasi baik dengan distribusi ukuran butir yang luas.",
+                        cu, cc
+                    };
+                } else {
+                    return {
+                        symbol: primaryCode + "P",
+                        name: isGravel ? "Poorly-Graded Gravel" : "Poorly-Graded Sand",
+                        desc: isGravel ? "Kerikil bergradasi buruk dengan ukuran butir yang relatif seragam." : "Pasir bergradasi buruk dengan ukuran butir yang relatif seragam.",
+                        cu, cc
+                    };
+                }
+            }
+            // Dirty (> 12% fines)
+            else if (pctFines > 12) {
+                return {
+                    symbol: primaryCode + "M/" + primaryCode + "C",
+                    name: isGravel ? "Silty/Clayey Gravel" : "Silty/Clayey Sand",
+                    desc: "Memerlukan data Batas Atterberg untuk menentukan apakah fines bersifat lanau (M) atau lempung (C).",
+                    cu, cc
+                };
+            }
+            // Borderline (5-12% fines)
+            else {
+                return {
+                    symbol: primaryCode + "W-" + primaryCode + "M / " + primaryCode + "P-" + primaryCode + "C",
+                    name: "Dual Symbol Classification",
+                    desc: "Fraksi fines di zona perbatasan. Memerlukan klasifikasi ganda berdasarkan gradasi dan plastisitas.",
+                    cu, cc
+                };
+            }
+        }
+
+        function calculate() {
+            const rows = document.querySelectorAll('#dataTableBody tr');
+            sieveData = [];
+
+            rows.forEach(row => {
+                const size = parseFloat(row.querySelector('.sieve-size').value);
+                const passingStr = row.querySelector('.pct-passing').value;
+                const passing = parseFloat(passingStr.replace('%', ''));
+                
+                if (!isNaN(size) && !isNaN(passing)) {
+                    sieveData.push({ size, passing });
+                }
+            });
+
+            if (sieveData.length < 3) {
+                alert('Masukkan minimal 3 data sieve yang valid!');
+                return;
+            }
+
+            // Sort by size descending
+            sieveData.sort((a, b) => b.size - a.size);
+
+            // Find D10, D30, D60
+            const d10 = findDx(10, sieveData);
+            const d30 = findDx(30, sieveData);
+            const d60 = findDx(60, sieveData);
+
+            // Calculate Cu and Cc
+            const cu = (d10 && d60) ? (d60 / d10) : null;
+            const cc = (d10 && d30 && d60) ? ((d30 * d30) / (d10 * d60)) : null;
+
+            // Find No.4 and No.200 percentages
+            const pass4_75 = sieveData.find(d => Math.abs(d.size - 4.75) < 0.01)?.passing || 
+                              (sieveData.some(d => d.size > 4.75) && sieveData.some(d => d.size < 4.75) 
+                              ? findDx(sieveData.find(d => d.size > 4.75)?.passing || 100, sieveData) 
+                              : 100);
+            
+            const pass0_075 = sieveData.find(d => Math.abs(d.size - 0.075) < 0.01)?.passing || 0;
+
+            // Calculate fractions
+            const pctGravel = 100 - pass4_75;
+            const pctFines = pass0_075;
+            const pctSand = pass4_75 - pass0_075;
+
+            // Classify
+            const classification = classifyUSCS(d10, d30, d60, pctGravel, pctSand, pctFines);
+
+            // Gradation status
+            let gradStatus = "Unknown";
+            if (classification.cu && classification.cc) {
+                const isGravel = pctGravel > pctSand;
+                const cuThreshold = isGravel ? 4 : 6;
+                gradStatus = (classification.cu >= cuThreshold && classification.cc >= 1 && classification.cc <= 3) 
+                    ? "Well-Graded" : "Poorly-Graded";
+            }
+
+            // Display results with calculation details
+            document.getElementById('res_d10').textContent = d10 ? d10.toFixed(3) + ' mm' : 'N/A';
+            document.getElementById('d10_calc').textContent = d10 ? '10% tanah lolos pada diameter ini (interpolasi logaritmik)' : 'Tidak dapat dihitung dari data';
+            
+            document.getElementById('res_d30').textContent = d30 ? d30.toFixed(3) + ' mm' : 'N/A';
+            document.getElementById('d30_calc').textContent = d30 ? '30% tanah lolos pada diameter ini (interpolasi logaritmik)' : 'Tidak dapat dihitung dari data';
+            
+            document.getElementById('res_d60').textContent = d60 ? d60.toFixed(3) + ' mm' : 'N/A';
+            document.getElementById('d60_calc').textContent = d60 ? '60% tanah lolos pada diameter ini (interpolasi logaritmik)' : 'Tidak dapat dihitung dari data';
+            
+            document.getElementById('res_cu').textContent = cu ? cu.toFixed(2) : 'N/A';
+            document.getElementById('cu_calc').textContent = cu ? `Cᵤ = D₆₀ / D₁₀ = ${d60.toFixed(3)} / ${d10.toFixed(3)} = ${cu.toFixed(2)}` : 'Memerlukan D10 dan D60';
+            
+            document.getElementById('res_cc').textContent = cc ? cc.toFixed(3) : 'N/A';
+            document.getElementById('cc_calc').textContent = cc ? `Cᶜ = (D₃₀)² / (D₁₀ × D₆₀) = ${d30.toFixed(3)}² / (${d10.toFixed(3)} × ${d60.toFixed(3)}) = ${cc.toFixed(3)}` : 'Memerlukan D10, D30, dan D60';
+            
+            document.getElementById('res_gradation').textContent = gradStatus;
+            
+            // Gradation criteria details
+            if (classification.cu && classification.cc) {
+                const isGravel = pctGravel > pctSand;
+                const cuThreshold = isGravel ? 4 : 6;
+                const cuCheck = classification.cu >= cuThreshold ? '✓' : '✗';
+                const ccCheck = (classification.cc >= 1 && classification.cc <= 3) ? '✓' : '✗';
+                document.getElementById('gradation_criteria').textContent = 
+                    `${cuCheck} Cᵤ ${classification.cu >= cuThreshold ? '≥' : '<'} ${cuThreshold} | ${ccCheck} 1 ≤ Cᶜ ≤ 3`;
+            } else {
+                document.getElementById('gradation_criteria').textContent = '-';
+            }
+            
+            document.getElementById('res_gravel').textContent = pctGravel.toFixed(1) + '%';
+            document.getElementById('gravel_calc').textContent = `100% - ${pass4_75.toFixed(1)}% lolos No.4 = ${pctGravel.toFixed(1)}%`;
+            
+            document.getElementById('res_sand').textContent = pctSand.toFixed(1) + '%';
+            document.getElementById('sand_calc').textContent = `${pass4_75.toFixed(1)}% lolos No.4 - ${pass0_075.toFixed(1)}% lolos No.200 = ${pctSand.toFixed(1)}%`;
+            
+            document.getElementById('res_fines').textContent = pctFines.toFixed(1) + '%';
+            document.getElementById('fines_calc').textContent = `${pass0_075.toFixed(1)}% lolos saringan No.200 (0.075mm)`;
+            
+            document.getElementById('res_symbol').textContent = classification.symbol;
+            document.getElementById('res_classname').textContent = classification.name;
+            document.getElementById('res_classdesc').textContent = classification.desc;
+
+            // Show result section
+            document.getElementById('resultSection').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+            }, 200);
+            
+            lucide.createIcons();
+        }
+
+        // Initialize
+        initTable();
+    </script>
+</body>
+</html>

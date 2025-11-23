@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Komposisi Partikel (Provenance) - PERHIMAGI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-komposisipartikel.html">
+    <meta property="og:title" content="Analisis Komposisi Partikel (Provenance) - PERHIMAGI Digilab">
+    <meta property="og:description" content="Kalkulator dan panduan analisis komposisi partikel sedimen (Kuarsa, Feldspar, Litik) untuk interpretasi provenance batuan asal dengan diagram QFL.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://perhimagi.org/alat/analisis-komposisipartikel.html">
+    <meta property="twitter:title" content="Analisis Komposisi Partikel (Provenance) - PERHIMAGI Digilab">
+    <meta property="twitter:description" content="Kalkulator dan panduan analisis komposisi partikel sedimen (Kuarsa, Feldspar, Litik) untuk interpretasi provenance batuan asal dengan diagram QFL.">
+    <meta property="twitter:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Step Card Styles */
+        .step-card {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid #e2e8f0;
+            padding-bottom: 2rem;
+            margin-bottom: 1rem;
+            margin-left: 1.5rem;
+        }
+        .step-card:last-child { border-left: none; padding-bottom: 0; }
+        
+        .step-number {
+            position: absolute;
+            left: -1.05rem;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: white;
+            border: 2px solid #dc2626;
+            border-radius: 50%;
+            color: #dc2626;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        /* Diagram Styles */
+        .diagram-text { font-size: 4px; font-weight: bold; fill: #475569; }
+        .diagram-region { fill: transparent; stroke: #94a3b8; stroke-width: 0.5; }
+        .plot-point { 
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1); 
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Dropdown -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute top-full w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="w-full max-w-4xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Geologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Komposisi Partikel</h2>
+            <p class="text-slate-600 mt-2 text-sm">
+                Identifikasi mineral sedimen (QFL) dan interpretasi <em>provenance</em> batuan asal.
+            </p>
+        </div>
+
+        <div class="bg-white p-4 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+
+            <!-- STEP 1: INPUT DATA -->
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Input Data Point Counting</h3>
+                <p class="text-xs text-slate-500 mb-4">Masukkan jumlah butir yang dihitung dari pengamatan mikroskopis.</p>
+
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6 text-sm">
+                    <h4 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                        <i data-lucide="microscope" class="w-4 h-4"></i> Panduan Identifikasi
+                    </h4>
+                    <div class="grid md:grid-cols-3 gap-4 text-xs">
+                        <div>
+                            <strong class="block text-slate-800">Kuarsa (Q)</strong>
+                            <span class="text-slate-600">Bening, kilap kaca, pecahan konkoidal.</span>
+                        </div>
+                        <div>
+                            <strong class="block text-slate-800">Feldspar (F)</strong>
+                            <span class="text-slate-600">Putih/keruh/pink, tabular, ada belahan.</span>
+                        </div>
+                        <div>
+                            <strong class="block text-slate-800">Litik (L)</strong>
+                            <span class="text-slate-600">Gelap/opak, tekstur batuan terlihat.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1 text-center">Kuarsa (Q)</label>
+                        <input type="number" id="input_Q" class="w-full p-3 border border-slate-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-red-500 outline-none" placeholder="0">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1 text-center">Feldspar (F)</label>
+                        <input type="number" id="input_F" class="w-full p-3 border border-slate-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-red-500 outline-none" placeholder="0">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1 text-center">Litik (L)</label>
+                        <input type="number" id="input_L" class="w-full p-3 border border-slate-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-red-500 outline-none" placeholder="0">
+                    </div>
+                </div>
+
+                <button onclick="calcAndPlot()" class="w-full py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition shadow-md flex justify-center items-center gap-2">
+                    <i data-lucide="calculator" class="w-4 h-4"></i> Hitung & Plot Hasil
+                </button>
+            </div>
+
+            <!-- STEP 2: HASIL & INTERPRETASI -->
+            <div id="resultSection" class="hidden step-card fade-in">
+                <div class="step-number">2</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Hasil Analisis</h3>
+                <p class="text-xs text-slate-500 mb-6">Plot diagram QFL dan interpretasi tatanan tektonik.</p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    
+                    <!-- QFL DIAGRAM -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col items-center justify-center">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-4">Diagram QFL (Dickinson, 1985)</h4>
+                        
+                        <!-- SVG Plot -->
+                        <svg viewBox="0 0 120 100" class="w-full max-w-[300px]">
+                            <!-- Triangle Background -->
+                            <polygon points="50,5 5,86.6 95,86.6" fill="white" stroke="#cbd5e1" stroke-width="0.5"/>
+                            
+                            <!-- Labels Corners -->
+                            <text x="50" y="3" text-anchor="middle" class="diagram-text" style="font-size: 5px; fill: #dc2626;">Q</text>
+                            <text x="2" y="90" text-anchor="start" class="diagram-text" style="font-size: 5px; fill: #dc2626;">F</text>
+                            <text x="98" y="90" text-anchor="end" class="diagram-text" style="font-size: 5px; fill: #dc2626;">L</text>
+
+                            <!-- ZONES DRAWING (User Defined Logic) -->
+                            
+                            <!-- 1. Continental Block Boundary -->
+                            <!-- Line L = 0.15(F+L) => L = 15 - 0.15Q -->
+                            <!-- From Q-peak (50, 5) to (18.5, 86.6) -->
+                            <line x1="50" y1="5" x2="18.5" y2="86.6" stroke="#94a3b8" stroke-width="0.3" stroke-dasharray="2,1" />
+                            
+                            <!-- CB Dividers -->
+                            <!-- Q=45 (CI vs TC) -->
+                            <line x1="32.675" y1="49.88" x2="25.25" y2="49.88" stroke="#94a3b8" stroke-width="0.3" />
+                            <text x="35" y="30" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #2563eb;">CI</text>
+                            
+                            <!-- Q=15 (TC vs BU) -->
+                            <line x1="23.225" y1="74.36" x2="11.75" y2="74.36" stroke="#94a3b8" stroke-width="0.3" />
+                            <text x="22" y="60" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #2563eb;">TC</text>
+                            <text x="15" y="80" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #2563eb;">BU</text>
+
+                            <!-- 2. Magmatic Arc vs Recycled Orogen Boundary -->
+                            <!-- Line 2Q + F = 50 => L = 50 + Q -->
+                            <!-- From (50, 86.6) to (83.75, 66.2) -->
+                            <line x1="50" y1="86.6" x2="83.75" y2="66.2" stroke="#94a3b8" stroke-width="0.3" stroke-dasharray="2,1" />
+
+                            <!-- Magmatic Arc Dividers (Inside L-rich corner) -->
+                            <!-- Q=15 (Undissected vs Transitional) -->
+                            <line x1="70.25" y1="74.36" x2="88.25" y2="74.36" stroke="#94a3b8" stroke-width="0.3" />
+                            <text x="80" y="82" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #dc2626;">UA</text>
+                            <text x="65" y="80" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #dc2626;">TA</text>
+
+                            <!-- Recycled Orogen Dividers -->
+                            <!-- Q=35 (Quartzose vs Transitional) -->
+                            <line x1="29.525" y1="58.04" x2="79.25" y2="58.04" stroke="#94a3b8" stroke-width="0.3" />
+                            <text x="50" y="55" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #d97706;">QR</text>
+
+                            <!-- Q=20 (Transitional vs Lithic) -->
+                            <line x1="24.8" y1="70.28" x2="77" y2="70.28" stroke="#94a3b8" stroke-width="0.3" />
+                            <text x="45" y="65" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #d97706;">TR</text>
+                            <text x="40" y="78" text-anchor="middle" class="diagram-text" style="font-size: 2px; fill: #d97706;">LR</text>
+
+                            <!-- Legend -->
+                            <g transform="translate(90, 5)">
+                                <rect x="0" y="0" width="30" height="50" fill="white" fill-opacity="0.8" />
+                                <text x="0" y="5" class="diagram-text" style="font-size: 2px; font-weight: bold;">Continental Block</text>
+                                <text x="0" y="8" class="diagram-text" style="font-size: 2px;">CI: Craton Interior</text>
+                                <text x="0" y="11" class="diagram-text" style="font-size: 2px;">TC: Trans. Continental</text>
+                                <text x="0" y="14" class="diagram-text" style="font-size: 2px;">BU: Basement Uplift</text>
+                                
+                                <text x="0" y="20" class="diagram-text" style="font-size: 2px; font-weight: bold;">Recycled Orogen</text>
+                                <text x="0" y="23" class="diagram-text" style="font-size: 2px;">QR: Quartzose Recycled</text>
+                                <text x="0" y="26" class="diagram-text" style="font-size: 2px;">TR: Trans. Recycled</text>
+                                <text x="0" y="29" class="diagram-text" style="font-size: 2px;">LR: Lithic Recycled</text>
+
+                                <text x="0" y="35" class="diagram-text" style="font-size: 2px; font-weight: bold;">Magmatic Arc</text>
+                                <text x="0" y="38" class="diagram-text" style="font-size: 2px;">UA: Undissected Arc</text>
+                                <text x="0" y="41" class="diagram-text" style="font-size: 2px;">TA: Transitional Arc</text>
+                            </g>
+
+                            <!-- Plot Point -->
+                            <circle id="qflPoint" cx="50" cy="5" r="2" fill="#dc2626" stroke="white" stroke-width="0.5" class="plot-point opacity-0"/>
+                        </svg>
+                    </div>
+
+                    <!-- INTERPRETATION TEXT -->
+                    <div class="space-y-6">
+                        <!-- Dynamic Result Box -->
+                        <div id="interpBox" class="bg-white border-l-4 border-slate-300 p-4 shadow-sm rounded-r-lg">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Zona Provenance</span>
+                            <h2 id="res_provenance" class="text-xl font-black text-slate-800 mb-2">-</h2>
+                            <p id="res_desc" class="text-sm text-slate-600 leading-relaxed">-</p>
+                        </div>
+
+                        <!-- Calculation Toggle & Info -->
+                        <div>
+                            <div class="flex items-center gap-4 mb-2">
+                                <button onclick="toggleCalc()" class="flex items-center gap-2 text-xs font-bold text-red-600 hover:text-red-700 transition">
+                                    <i data-lucide="chevron-down" id="calcIcon" class="w-4 h-4 transition-transform"></i>
+                                    Lihat Perhitungan Detail
+                                </button>
+                                <button onclick="toggleSDInfo()" class="text-xs text-slate-400 hover:text-slate-600 underline decoration-dotted">
+                                    Info: Cara Hitung SD
+                                </button>
+                            </div>
+                            
+                            <div id="calcDetails" class="hidden bg-slate-900 text-slate-300 p-4 rounded-lg text-xs font-mono space-y-2">
+                                <div class="flex justify-between border-b border-slate-700 pb-1">
+                                    <span>Total Butir ($n$)</span>
+                                    <span id="calc_total" class="text-white">-</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>% Kuarsa ($Q$)</span>
+                                    <span id="calc_Q" class="text-white">-</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>% Feldspar ($F$)</span>
+                                    <span id="calc_F" class="text-white">-</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-700 pb-1">
+                                    <span>% Litik ($L$)</span>
+                                    <span id="calc_L" class="text-white">-</span>
+                                </div>
+                                <div class="pt-1 text-[10px] text-slate-500 italic">
+                                    *Simpangan Baku (SD): Q=±<span id="sd_Q">0</span>%, F=±<span id="sd_F">0</span>%, L=±<span id="sd_L">0</span>%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SD INFO MODAL -->
+        <div id="sdModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="toggleSDInfo()">
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative" onclick="event.stopPropagation()">
+                <button onclick="toggleSDInfo()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Perhitungan Simpangan Baku</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    Nilai Simpangan Baku (Standard Deviation) dihitung menggunakan pendekatan statistik <strong>Van der Plas & Tobi (1965)</strong> untuk analisis point counting:
+                </p>
+                <div class="bg-slate-100 p-4 rounded-lg mb-4 text-center">
+                    <p class="font-mono text-lg font-bold text-slate-800">$$ S = \sqrt{\frac{p(100-p)}{n}} $$</p>
+                </div>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4 mb-4">
+                    <li><strong>$S$</strong> : Simpangan Baku (Standard Deviation) dalam %.</li>
+                    <li><strong>$p$</strong> : Persentase mineral yang dihitung (%).</li>
+                    <li><strong>$n$</strong> : Total jumlah butir yang dihitung.</li>
+                </ul>
+                <p class="text-xs text-slate-400 italic">
+                    Semakin besar jumlah butir ($n$) yang dihitung, semakin kecil nilai error ($S$), sehingga data semakin akurat.
+                </p>
+            </div>
+
+        <!-- REFERENCES -->
+        <div class="max-w-3xl mx-auto px-4 mt-12 mb-8 border-t border-slate-200 pt-8">
+            <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide">Referensi</h4>
+            <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                <li><strong>Dickinson, W.R. (1985).</strong> <em>Interpreting provenance relations from detrital modes of sandstones.</em> In: Zuffa, G.G. (ed), Provenance of Arenites. NATO ASI Series.</li>
+                <li><strong>Van der Plas, L., & Tobi, A.C. (1965).</strong> <em>A chart for judging the reliability of point counting results.</em> American Journal of Science.</li>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+        
+        function calcAndPlot() {
+            const Q = parseFloat(document.getElementById('input_Q').value) || 0;
+            const F = parseFloat(document.getElementById('input_F').value) || 0;
+            const L = parseFloat(document.getElementById('input_L').value) || 0;
+            
+            const total = Q + F + L;
+
+            if (total === 0) {
+                alert("Masukkan jumlah butir minimal satu kategori!");
+                return;
+            }
+
+            // 1. Calculate Percentages
+            const pctQ = (Q / total) * 100;
+            const pctF = (F / total) * 100;
+            const pctL = (L / total) * 100;
+
+            // 2. Calculate Std Dev (Van der Plas)
+            const sdQ = Math.sqrt((pctQ * (100 - pctQ)) / total);
+            const sdF = Math.sqrt((pctF * (100 - pctF)) / total);
+            const sdL = Math.sqrt((pctL * (100 - pctL)) / total);
+
+            // 3. Update Calculation Details
+            document.getElementById('calc_total').innerText = total;
+            document.getElementById('calc_Q').innerText = pctQ.toFixed(1) + "%";
+            document.getElementById('calc_F').innerText = pctF.toFixed(1) + "%";
+            document.getElementById('calc_L').innerText = pctL.toFixed(1) + "%";
+            
+            document.getElementById('sd_Q').innerText = sdQ.toFixed(1);
+            document.getElementById('sd_F').innerText = sdF.toFixed(1);
+            document.getElementById('sd_L').innerText = sdL.toFixed(1);
+
+            // 4. Determine Provenance (User Defined Logic)
+            let provenance = "Tidak Terdefinisi";
+            let desc = "Komposisi tidak masuk dalam zona umum.";
+            let colorClass = "border-slate-300";
+
+            // Logic 1: Continental Block
+            // Condition: L < 0.15 * (F + L)
+            // Note: F + L = 100 - Q
+            if (pctL < 0.15 * (pctF + pctL)) {
+                if (pctQ > 45) {
+                    provenance = "Craton Interior";
+                    desc = "Sumber dari interior benua yang sangat stabil. Dominasi kuarsa (Q > 45%) dengan sedikit feldspar/litik.";
+                    colorClass = "border-blue-600";
+                } else if (pctQ > 15) {
+                    provenance = "Transitional Continental";
+                    desc = "Sumber dari kerak benua stabil namun mulai terpengaruh pengangkatan. Kuarsa menengah (15-45%).";
+                    colorClass = "border-blue-400";
+                } else {
+                    provenance = "Basement Uplift";
+                    desc = "Sumber dari blok batuan dasar yang terangkat cepat. Kaya feldspar, kuarsa rendah (< 15%).";
+                    colorClass = "border-blue-300";
+                }
+            } else {
+                // Logic 2: Magmatic Arc vs Recycled Orogen
+                // Boundary: 2Q + F = 50
+                const val_boundary = (2 * pctQ) + pctF;
+
+                if (val_boundary < 50) {
+                    // Magmatic Arc
+                    if (pctQ < 15 && pctL > 50) {
+                        provenance = "Undissected Arc";
+                        desc = "Busur vulkanik muda. Dominasi litik vulkanik (L > 50%), kuarsa sangat rendah.";
+                        colorClass = "border-red-600";
+                    } else if (pctQ > 30) {
+                        // Note: This condition might be unreachable given 2Q+F < 50 implies Q < 25
+                        provenance = "Dissected Arc";
+                        desc = "Busur vulkanik tua yang tererosi dalam. Kaya feldspar/kuarsa.";
+                        colorClass = "border-red-400";
+                    } else {
+                        provenance = "Transitional Arc";
+                        desc = "Peralihan antara busur vulkanik muda dan tua.";
+                        colorClass = "border-red-300";
+                    }
+                } else {
+                    // Recycled Orogen
+                    if (pctQ > 35) {
+                        provenance = "Quartzose Recycled";
+                        desc = "Orogen daur ulang kaya kuarsa (Q > 35%). Batuan sedimen/metamorf matang.";
+                        colorClass = "border-orange-600";
+                    } else if (pctQ < 20) {
+                        provenance = "Lithic Recycled";
+                        desc = "Orogen daur ulang kaya litik (Q < 20%). Batuan sedimen/metamorf belum matang.";
+                        colorClass = "border-orange-400";
+                    } else {
+                        provenance = "Transitional Recycled";
+                        desc = "Peralihan orogen daur ulang (Q 20-35%).";
+                        colorClass = "border-orange-300";
+                    }
+                }
+            }
+
+            const interpBox = document.getElementById('interpBox');
+            interpBox.className = `bg-white border-l-4 p-4 shadow-sm rounded-r-lg ${colorClass}`;
+            document.getElementById('res_provenance').innerText = provenance;
+            document.getElementById('res_desc').innerText = desc;
+
+            // 5. Plot on SVG
+            // Normalized fractions (0-1)
+            const q = pctQ / 100;
+            const f = pctF / 100;
+            const l = pctL / 100;
+
+            // Formula: P = q*Vq + f*Vf + l*Vl
+            // Q (Top): 50, 5
+            // F (Left): 5, 86.6
+            // L (Right): 95, 86.6
+            const x = (q * 50) + (f * 5) + (l * 95);
+            const y = (q * 5) + (f * 86.6) + (l * 86.6);
+
+            const point = document.getElementById('qflPoint');
+            point.setAttribute('cx', x);
+            point.setAttribute('cy', y);
+            point.classList.remove('opacity-0');
+
+            // Show Result Section
+            document.getElementById('resultSection').classList.remove('hidden');
+            
+            // Scroll to result
+            setTimeout(() => {
+                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        function toggleCalc() {
+            const details = document.getElementById('calcDetails');
+            const icon = document.getElementById('calcIcon');
+            details.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function toggleSDInfo() {
+            const modal = document.getElementById('sdModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Mobile Menu Logic
+        (function() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            
+            if(btn && menu) {
+                btn.onclick = function(e) {
+                    e.stopPropagation();
+                    menu.classList.toggle('hidden');
+                };
+                
+                document.addEventListener('click', function(e) {
+                    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                        menu.classList.add('hidden');
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

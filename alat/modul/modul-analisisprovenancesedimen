@@ -1,0 +1,115 @@
+# MODUL PANDUAN: ANALISIS KOMPOSISI PARTIKEL SEDIMEN
+**Referensi:** Laporan Praktikum Sedimentografi Stratigrafi Acara 6 - Tegar Hermawan T.
+[cite_start]**Tujuan:** Mengetahui variasi mineral, frekuensi, dan interpretasi *provenance* (batuan asal)[cite: 1068].
+
+---
+
+## 1. PENDAHULUAN
+Komposisi partikel sedimen memberikan petunjuk langsung mengenai batuan sumber (*source rock*), relief daerah asal, dan iklim saat pelapukan terjadi.
+
+[cite_start]**Komponen Utama Sedimen:** [cite: 1094]
+1.  **Kuarsa ($Qt$):** Mineral paling stabil, resisten terhadap pelapukan.
+2.  **Feldspar ($F$):** Kurang stabil dibanding kuarsa, mencirikan batuan beku/metamorf.
+3.  **Litik ($L$):** Fragmen batuan (beku, sedimen, atau metamorf) yang belum terurai menjadi mineral tunggal.
+
+---
+
+## 2. ALAT DAN BAHAN
+[cite_start]Sebelum analisis, persiapkan peralatan berikut: [cite: 1073-1087]
+* **Alat Utama:** Mikroskop binokuler, Jarum/tusuk gigi (untuk menghitung butir), Plate/Cawan.
+* **Bahan:** Sampel pasir kering (ukuran ayakan mesh 60 disarankan), Plastik sampel.
+* **Pendukung:** Kamera (dokumentasi), Alat tulis, Kalkulator.
+
+---
+
+## 3. PROSEDUR ANALISIS (STEP-BY-STEP)
+
+### Langkah 1: Persiapan Sampel
+1.  Siapkan sampel sedimen pasir yang sudah bersih dan kering.
+2.  [cite_start]Ambil sampel yang berukuran seragam (idealnya fraksi **Mesh 60**) agar identifikasi lebih mudah[cite: 1130].
+
+### Langkah 2: Pengamatan Mikroskopis (Counting)
+Metode yang digunakan adalah *Point Counting* atau perhitungan butir per medan pandang.
+
+1.  Taburkan sedikit sampel secara merata di atas *plate* atau kaca preparat.
+2.  Letakkan di bawah mikroskop binokuler.
+3.  Tentukan satu **Medan Pandang (View Field)** secara acak.
+4.  Hitung jumlah butir untuk masing-masing kategori:
+    * [cite_start]**Kuarsa (Q):** Bening/transparan, kilap kaca, pecahan konkoidal[cite: 1120].
+    * [cite_start]**Feldspar (F):** Putih susu/keruh/pink, bentuk tabular/prismatik[cite: 1121].
+    * [cite_start]**Litik (L):** Butiran gelap/opak, tekstur batuan masih terlihat[cite: 1094].
+5.  [cite_start]Hitung minimal **25 butir per medan pandang**[cite: 1131].
+6.  Geser preparat untuk mendapatkan medan pandang baru. Ulangi hingga mendapatkan total butiran yang cukup representatif (misal: >100 butir total).
+
+> [cite_start]**Tips:** Dokumentasikan (foto) setiap medan pandang sebelum menghitung untuk verifikasi ulang[cite: 1132].
+
+---
+
+## 4. PERHITUNGAN DATA (KUANTITATIF)
+
+Setelah mendapatkan data mentah, lakukan rekapitulasi total.
+
+### A. Menghitung Frekuensi Relatif (%)
+Rumus persentase untuk setiap mineral:
+
+$$\text{Persentase Mineral } X = \left( \frac{\text{Jumlah Butir } X}{\text{Total Seluruh Butir}} \right) \times 100\%$$
+
+[cite_start]*Contoh Kasus (LP 1):* [cite: 1208-1212]
+* Kuarsa = 62 butir
+* Total Butir = 126
+* $\text{Persentase Kuarsa} = (62 / 126) \times 100\% = 49.2\%$
+
+### B. Menghitung Simpangan Baku (Standard Deviation)
+Gunakan **Diagram Van der Plas** untuk menentukan *error margin* atau simpangan baku berdasarkan jumlah total butiran ($n$) dan persentase mineral ($p$).
+
+1.  Plot nilai $n$ (Total butir) pada sumbu vertikal diagram.
+2.  Tarik garis melengkung sesuai persentase mineral ($p$).
+3.  Baca nilai simpangan baku pada garis putus-putus yang memotong titik temu tersebut.
+
+*Contoh:*
+[cite_start]Jika $n=126$ dan $p=49.2\%$ (Kuarsa), maka simpangan bakunya sekitar **9.2%** [cite: 1240-1242].
+
+---
+
+## 5. INTERPRETASI PROVENANCE (QFL PLOT)
+
+Gunakan **Diagram Segitiga Dickinson (1985)** untuk menentukan tatanan tektonik batuan asal.
+
+### Langkah-Langkah Ploting:
+1.  Siapkan diagram segitiga Q-F-L.
+    * **Sudut Atas (Qt):** Total Kuarsa.
+    * **Sudut Kiri (F):** Total Feldspar.
+    * **Sudut Kanan (L):** Total Litik.
+2.  Normalisasi data jika total persentase belum 100% (biasanya sudah otomatis 100% jika dihitung dari frekuensi).
+3.  Plot titik temu ketiga persentase tersebut dalam segitiga.
+
+### [cite_start]Zona Provenance Utama: [cite: 1336-1354]
+* **Continental Block:**
+    * *Craton Interior:* Dominan Kuarsa (sangat stabil).
+    * *Transitional Continental:* Kuarsa tinggi, Feldspar sedang.
+    * *Basement Uplift:* Feldspar tinggi (sumber granit terangkat).
+* **Recycled Orogen:**
+    * Kaya Kuarsa dan Litik, miskin Feldspar. Batuan sedimen/metamorf yang terangkat dan tererosi kembali.
+* **Magmatic Arc:**
+    * *Undissected Arc:* Dominan Litik vulkanik (gunung api muda).
+    * *Transitional Arc:* Campuran Litik dan Feldspar.
+    * *Dissected Arc:* Kaya Feldspar dan Litik (akar gunung api yang tererosi dalam).
+
+---
+
+## 6. STUDI KASUS & CONTOH HASIL
+
+Berdasarkan Laporan Tegar Hermawan T. (Kelompok 12):
+
+### [cite_start]Kasus LP 1 (Hilir) [cite: 1393, 1401]
+* **Data:** Kuarsa (49.2%), Feldspar (38.9%), Litik (11.9%).
+* **Plot QFL:** Masuk area **Recycled Orogen**.
+* **Interpretasi:** Sumber material berasal dari pegunungan lipatan atau batuan lama yang terangkat kembali. Dominasi kuarsa menunjukkan kestabilan atau transportasi jauh.
+
+### [cite_start]Kasus LP 2 (Hulu) [cite: 1398, 1403]
+* **Data:** Kuarsa (28.2%), Feldspar (27.2%), Litik (44.7%).
+* **Plot QFL:** Masuk area **Dissected Arc**.
+* **Interpretasi:** Sumber material berasal dari busur vulkanik yang tererosi. Tingginya litik menunjukkan jarak transportasi dekat (belum hancur) dan pengaruh aktivitas tektonik/vulkanik aktif.
+
+---
+*Modul ini disusun sebagai panduan praktis analisis petrografi sedimen klastik.*

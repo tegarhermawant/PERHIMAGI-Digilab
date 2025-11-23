@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Karakteristik Tanah - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-tanah.html">
+    <meta property="og:title" content="Analisis Karakteristik Tanah - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool pengujian densitas, specific gravity, kadar air, angka pori, porositas, dan derajat kejenuhan tanah menggunakan Drive Cylinder & Pycnometer Method.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://perhimagi.org/alat/analisis-tanah.html">
+    <meta property="twitter:title" content="Analisis Karakteristik Tanah - PERHIMAGI Digilab">
+    <meta property="twitter:description" content="Tool pengujian densitas, specific gravity, kadar air, angka pori, porositas, dan derajat kejenuhan tanah menggunakan Drive Cylinder & Pycnometer Method.">
+    <meta property="twitter:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        .input-field {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+        .input-field:read-only {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Dropdown -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium">
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Geoteknik & Mekanika Tanah</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Karakteristik Tanah</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Pengujian densitas, specific gravity, dan parameter hubungan berat-volume tanah menggunakan Drive Cylinder & Pycnometer Method.
+            </p>
+            
+            <!-- Button to open guide -->
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Panduan Metode Pengujian
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <!-- Modal Header -->
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center z-10">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                            <i data-lucide="microscope" class="w-5 h-5"></i>
+                        </div>
+                        Panduan Metode Pengujian Karakteristik Tanah
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                        <i data-lucide="x" class="w-6 h-6 text-slate-500"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="p-6">
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <!-- Drive Cylinder Method -->
+                        <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-2 bg-red-600 text-white rounded-lg">
+                                    <i data-lucide="cylinder" class="w-5 h-5"></i>
+                                </div>
+                                <h5 class="font-bold text-slate-900">Drive Cylinder Method</h5>
+                            </div>
+                            <p class="text-xs font-bold text-red-700 mb-2">Pengukuran Densitas In-Situ</p>
+                            <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+                                <li>Siapkan silinder logam (drive cylinder) dengan diameter dan tinggi yang diketahui</li>
+                                <li>Dorong silinder ke dalam tanah hingga penuh untuk mendapat sampel undisturbed</li>
+                                <li>Keluarkan silinder dan ratakan kedua ujungnya</li>
+                                <li>Timbang sampel tanah beserta silinder (Mt)</li>
+                                <li>Ukur panjang (L) dan diameter (D) sampel dengan jangka sorong</li>
+                                <li>Hitung volume: \(V = \frac{1}{4}\pi D^2 L\)</li>
+                                <li>Hitung densitas: \(\rho = \frac{M_t}{V}\)</li>
+                            </ol>
+                        </div>
+
+                        <!-- Pycnometer Method -->
+                        <div class="bg-amber-50 p-6 rounded-xl border border-amber-200">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-2 bg-amber-600 text-white rounded-lg">
+                                    <i data-lucide="flask-round" class="w-5 h-5"></i>
+                                </div>
+                                <h5 class="font-bold text-slate-900">Pycnometer Method</h5>
+                            </div>
+                            <p class="text-xs font-bold text-amber-700 mb-2">Pengukuran Specific Gravity (Gs)</p>
+                            <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+                                <li>Timbang piknometer kosong dan kering (Wp)</li>
+                                <li>Masukkan tanah kering oven ±10 gram ke piknometer</li>
+                                <li>Timbang piknometer + tanah (Wps)</li>
+                                <li>Isi piknometer dengan air destilasi hingga penuh</li>
+                                <li>Buang udara terperangkap dengan vakum/degassing</li>
+                                <li>Timbang piknometer + tanah + air (Wb)</li>
+                                <li>Kosongkan, bersihkan, isi penuh dengan air saja</li>
+                                <li>Timbang piknometer + air (Wa)</li>
+                                <li>Hitung: \(G_s = \frac{W_o}{W_o + (W_a - W_b)}\) dimana \(W_o = W_{ps} - W_p\)</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Water Content Method -->
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 bg-blue-600 text-white rounded-lg">
+                                <i data-lucide="droplet" class="w-5 h-5"></i>
+                            </div>
+                            <h5 class="font-bold text-slate-900">Water Content Test</h5>
+                        </div>
+                        <p class="text-xs font-bold text-blue-700 mb-2">Pengukuran Kadar Air</p>
+                        <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+                            <li>Timbang cawan kosong yang sudah diberi nomor (Mc)</li>
+                            <li>Masukkan sampel tanah basah ke cawan, timbang (Mcms)</li>
+                            <li>Keringkan dalam oven 105-110°C selama 24 jam</li>
+                            <li>Dinginkan dalam desikator, timbang (Mcds)</li>
+                            <li>Hitung: \(w = \frac{M_{cms} - M_{cds}}{M_{cds} - M_c} \times 100\%\)</li>
+                        </ol>
+                    </div>
+
+                    <!-- Interpretation Guide -->
+                    <div class="bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-xl border border-slate-300">
+                        <h5 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="info" class="w-5 h-5 text-slate-600"></i>
+                            Interpretasi Hasil
+                        </h5>
+                        <div class="grid md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <p class="font-bold text-purple-700 mb-1">Angka Pori (e)</p>
+                                <p class="text-xs text-slate-600">Rasio volume pori terhadap volume butiran padat. Tanah padat: e &lt; 0.6, Lepas: e &gt; 0.9</p>
+                            </div>
+                            <div>
+                                <p class="font-bold text-pink-700 mb-1">Porositas (n)</p>
+                                <p class="text-xs text-slate-600">Persentase volume pori dari total. Rendah: &lt;25%, Sedang: 25-40%, Tinggi: &gt;40%</p>
+                            </div>
+                            <div>
+                                <p class="font-bold text-yellow-700 mb-1">Derajat Kejenuhan (Sr)</p>
+                                <p class="text-xs text-slate-600">Sr ≈ 100%: Jenuh air, 50-90%: Lembab, &lt;50%: Kering/tidak jenuh</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+                            <strong>⚠️ Catatan Penting:</strong> Specific gravity (Gs) mineral tanah umumnya berkisar 2.60-2.75. Nilai di luar rentang ini mungkin mengindikasikan kandungan organik tinggi (Gs &lt; 2.5) atau mineral berat (Gs &gt; 2.8).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+            <!-- LEFT COLUMN: INPUTS -->
+            <div class="space-y-6">
+                <!-- SECTION A: Drive Cylinder Data -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                            <i data-lucide="cylinder" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900">A. Data Sampel (Drive Cylinder)</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Massa Sampel Tanah (M<sub>t</sub>) - gram</label>
+                            <input type="number" id="mass_total" class="input-field" step="0.01" placeholder="60" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Panjang Sampel (L) - cm</label>
+                            <input type="number" id="length" class="input-field" step="0.01" placeholder="4.5" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Diameter Sampel (D) - cm</label>
+                            <input type="number" id="diameter" class="input-field" step="0.01" placeholder="3.0" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION B: Water Content Data -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="droplet" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900">B. Data Kadar Air (Water Content)</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Berat Cawan Kosong (M<sub>c</sub>) - gram</label>
+                            <input type="number" id="can_empty" class="input-field" step="0.01" placeholder="6.5" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Berat Cawan + Tanah Basah (M<sub>cms</sub>) - gram</label>
+                            <input type="number" id="can_wet" class="input-field" step="0.01" placeholder="11.5" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Berat Cawan + Tanah Kering (M<sub>cds</sub>) - gram</label>
+                            <input type="number" id="can_dry" class="input-field" step="0.01" placeholder="10.7" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION C: Specific Gravity (Pycnometer) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-amber-100 text-amber-600 rounded-lg">
+                            <i data-lucide="flask-round" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900">C. Data Specific Gravity (Pycnometer)</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Masukkan data salah satu sampel</p>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Berat Piknometer Kosong (W<sub>p</sub>) - gram</label>
+                            <input type="number" id="pykno_empty" class="input-field" step="0.01" placeholder="32.9" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Berat Piknometer + Tanah Kering (W<sub>ps</sub>) - gram</label>
+                            <input type="number" id="pykno_soil" class="input-field" step="0.01" placeholder="42.9" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Berat Piknometer + Tanah + Air (W<sub>b</sub>) - gram</label>
+                            <input type="number" id="pykno_soilwater" class="input-field" step="0.01" placeholder="89.1" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Berat Piknometer + Air (W<sub>a</sub>) - gram</label>
+                            <input type="number" id="pykno_water" class="input-field" step="0.01" placeholder="83.5" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="calculate()" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-4 rounded-xl font-bold hover:from-red-700 hover:to-red-800 transition shadow-lg flex items-center justify-center gap-3">
+                    <i data-lucide="calculator" class="w-5 h-5"></i>
+                    Hitung Semua Parameter
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- RIGHT COLUMN: RESULTS -->
+            <div class="space-y-6">
+                <!-- Result Summary Card -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Hasil Analisis</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/10 rounded-xl p-4 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-1">Kadar Air (w)</p>
+                            <p id="res_w" class="text-2xl font-bold text-red-400">-%</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-4 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-1">Specific Gravity (Gs)</p>
+                            <p id="res_gs" class="text-2xl font-bold text-amber-400">-</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-4 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-1">Bulk Density</p>
+                            <p id="res_bulk" class="text-2xl font-bold text-blue-400">- g/cm³</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-4 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-1">Dry Density</p>
+                            <p id="res_dry" class="text-2xl font-bold text-teal-400">- g/cm³</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-4 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-1">Angka Pori (e)</p>
+                            <p id="res_e" class="text-2xl font-bold text-purple-400">-</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-4 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-1">Porositas (n)</p>
+                            <p id="res_n" class="text-2xl font-bold text-pink-400">-%</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl p-4">
+                        <p class="text-xs text-yellow-300 mb-1 font-bold">Derajat Kejenuhan (Sr)</p>
+                        <p id="res_sr" class="text-3xl font-black text-yellow-400">-%</p>
+                        <p id="sr_interp" class="text-xs text-yellow-200 mt-2">-</p>
+                    </div>
+                </div>
+
+                <!-- Detailed Calculations -->
+                <div id="detailSection" class="hidden space-y-4">
+                    <!-- Volume & Densitas -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="box" class="w-4 h-4 text-red-600"></i>
+                            Volume & Densitas
+                        </h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between p-2 bg-slate-50 rounded">
+                                <span class="text-slate-600">Volume (V)</span>
+                                <span id="calc_vol" class="font-mono text-slate-900">-</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-red-50 rounded">
+                                <span class="text-red-700 font-medium">ρ total</span>
+                                <span id="calc_bulk" class="font-mono text-red-700">-</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-blue-50 rounded">
+                                <span class="text-blue-700 font-medium">ρ kering</span>
+                                <span id="calc_dry" class="font-mono text-blue-700">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Water Content -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="droplets" class="w-4 h-4 text-blue-600"></i>
+                            Kadar Air
+                        </h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between p-2 bg-slate-50 rounded">
+                                <span class="text-slate-600">Berat Air (Mw)</span>
+                                <span id="calc_mw" class="font-mono text-slate-900">-</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-slate-50 rounded">
+                                <span class="text-slate-600">Berat Tanah Kering (Ms)</span>
+                                <span id="calc_ms" class="font-mono text-slate-900">-</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-blue-50 rounded">
+                                <span class="text-blue-700 font-medium">w = Mw / Ms × 100%</span>
+                                <span id="calc_w" class="font-mono text-blue-700">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hubungan Parameter -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="network" class="w-4 h-4 text-purple-600"></i>
+                            Parameter Hubungan
+                        </h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="p-2 bg-purple-50 rounded">
+                                <p class="text-purple-700 font-mono" id="calc_e_formula">-</p>
+                            </div>
+                            <div class="p-2 bg-pink-50 rounded">
+                                <p class="text-pink-700 font-mono" id="calc_n_formula">-</p>
+                            </div>
+                            <div class="p-2 bg-yellow-50 rounded">
+                                <p class="text-yellow-700 font-mono" id="calc_sr_formula">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-amber-900 mb-2">Disclaimer</p>
+                            <p class="text-amber-800 leading-relaxed">
+                                Tool ini dirancang untuk <strong>tujuan edukatif dan praktikum</strong>. Untuk proyek rekayasa profesional, sebaiknya konsultasikan dengan ahli geoteknik bersertifikat. Akurasi hasil bergantung pada kualitas data input dan prosedur laboratorium yang benar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- References -->
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>ASTM D2216</strong> <em>Standard Test Methods for Laboratory Determination of Water (Moisture) Content of Soil and Rock</em></li>
+                    <li><strong>ASTM D854</strong> <em>Standard Test Methods for Specific Gravity of Soil Solids by Water Pycnometer</em></li>
+                    <li><strong>ASTM D7263</strong> <em>Standard Test Methods for Laboratory Determination of Density (Unit Weight) of Soil Specimens</em></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNavDropdown = document.getElementById('mobileNavDropdown');
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileNavDropdown.classList.toggle('hidden');
+            lucide.createIcons();
+        });
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)) {
+                mobileNavDropdown.classList.add('hidden');
+            }
+        });
+
+        // Toggle Guide Modal
+        function toggleGuideModal() {
+            const modal = document.getElementById('guideModal');
+            modal.classList.toggle('hidden');
+            // Re-render icons when modal opens
+            setTimeout(() => lucide.createIcons(), 100);
+        }
+
+        function calculate() {
+            // Get all inputs
+            const Mt = parseFloat(document.getElementById('mass_total').value);
+            const L = parseFloat(document.getElementById('length').value);
+            const D = parseFloat(document.getElementById('diameter').value);
+            
+            const Mc = parseFloat(document.getElementById('can_empty').value);
+            const Mcms = parseFloat(document.getElementById('can_wet').value);
+            const Mcds = parseFloat(document.getElementById('can_dry').value);
+            
+            const Wp = parseFloat(document.getElementById('pykno_empty').value);
+            const Wps = parseFloat(document.getElementById('pykno_soil').value);
+            const Wb = parseFloat(document.getElementById('pykno_soilwater').value);
+            const Wa = parseFloat(document.getElementById('pykno_water').value);
+
+            // Check if all required inputs are filled
+            if ([Mt, L, D, Mc, Mcms, Mcds, Wp, Wps, Wb, Wa].some(isNaN)) {
+                return; // Don't calculate if any input is missing
+            }
+
+            // === 1. KADAR AIR (w) ===
+            const Mw = Mcms - Mcds; // Berat air
+            const Ms = Mcds - Mc; // Berat tanah kering
+            const w = (Mw / Ms) * 100; // Kadar air (%)
+
+            // === 2. VOLUME & DENSITAS ===
+            const V = (1/4) * Math.PI * Math.pow(D, 2) * L; // Volume silinder (cm³)
+            const rho_total = Mt / V; // Bulk density (g/cm³)
+            const rho_dry = rho_total /  (1 + (w / 100)); // Dry density (g/cm³)
+
+            // === 3. SPECIFIC GRAVITY (Gs) ===
+            const Wo = Wps - Wp; // Berat tanah kering
+            const Gs = Wo / (Wo + (Wa - Wb)); // Specific gravity
+
+            // === 4. ANGKA PORI (e) ===
+            const rho_water = 1.0; // Densitas air (g/cm³)
+            const e = (Gs * (1 + (w/100)) * (rho_water / rho_total)) - 1;
+
+            // === 5. POROSITAS (n) ===
+            const n = e / (1 + e); // Porositas (desimal)
+
+            // === 6. DERAJAT KEJENUHAN (Sr) ===
+            const Sr = ((w/100) * Gs) / e; // Derajat kejenuhan (desimal)
+
+            // === DISPLAY RESULTS ===
+            document.getElementById('res_w').textContent = w.toFixed(2) + '%';
+            document.getElementById('res_gs').textContent = Gs.toFixed(2);
+            document.getElementById('res_bulk').textContent = rho_total.toFixed(2) + ' g/cm³';
+            document.getElementById('res_dry').textContent = rho_dry.toFixed(2) + ' g/cm³';
+            document.getElementById('res_e').textContent = e.toFixed(3);
+            document.getElementById('res_n').textContent = (n * 100).toFixed(1) + '%';
+            document.getElementById('res_sr').textContent = (Sr * 100).toFixed(1) + '%';
+
+            // Interpretasi kejenuhan
+            let srInterp = '';
+            if (Sr >= 0.9) {
+                srInterp = '✓ Tanah jenuh air sepenuhnya (seluruh pori terisi air)';
+            } else if (Sr >= 0.5) {
+                srInterp = 'Tanah dalam kondisi lembab (sebagian besar pori terisi air)';
+            } else {
+                srInterp = 'Tanah dalam kondisi kering (sebagian kecil pori terisi air)';
+            }
+            document.getElementById('sr_interp').textContent = srInterp;
+
+            // === DETAILED CALCULATIONS ===
+            document.getElementById('calc_vol').textContent = `V = ¼πD²L = ${V.toFixed(2)} cm³`;
+            document.getElementById('calc_bulk').textContent = `ρ = Mt/V = ${Mt}/${V.toFixed(2)} = ${rho_total.toFixed(2)} g/cm³`;
+            document.getElementById('calc_dry').textContent = `ρd = ρ/(1 + w/100) = ${rho_dry.toFixed(2)} g/cm³`;
+            
+            document.getElementById('calc_mw').textContent = `${Mcms} - ${Mcds} = ${Mw.toFixed(2)} g`;
+            document.getElementById('calc_ms').textContent = `${Mcds} - ${Mc} = ${Ms.toFixed(2)} g`;
+            document.getElementById('calc_w').textContent = `${Mw.toFixed(2)}/${Ms.toFixed(2)} × 100% = ${w.toFixed(2)}%`;
+            
+            document.getElementById('calc_e_formula').textContent = `e = Gs(1+w)ρw/ρ - 1 = ${e.toFixed(3)}`;
+            document.getElementById('calc_n_formula').textContent = `n = e/(1+e) = ${e.toFixed(3)}/${(1+e).toFixed(3)} = ${(n*100).toFixed(1)}%`;
+            document.getElementById('calc_sr_formula').textContent = `Sr = wGs/e = ${(w/100).toFixed(3)}×${Gs.toFixed(2)}/${e.toFixed(3)} = ${(Sr*100).toFixed(1)}%`;
+
+            // Show detail section
+            document.getElementById('detailSection').classList.remove('hidden');
+            
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

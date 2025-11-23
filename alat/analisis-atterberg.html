@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Batas Atterberg (LL & PL) - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-atterberg.html">
+    <meta property="og:title" content="Analisis Batas Atterberg (LL & PL) - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool perhitungan Liquid Limit (LL), Plastic Limit (PL), dan Plasticity Index (PI) untuk klasifikasi tanah kohesif menggunakan One Point Method.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://perhimagi.org/alat/analisis-atterberg.html">
+    <meta property="twitter:title" content="Analisis Batas Atterberg (LL & PL) - PERHIMAGI Digilab">
+    <meta property="twitter:description" content="Tool perhitungan Liquid Limit (LL), Plastic Limit (PL), dan Plasticity Index (PI) untuk klasifikasi tanah kohesif menggunakan One Point Method.">
+    <meta property="twitter:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        /* Input Table Styles */
+        .lab-table input {
+            width: 100%;
+            background: transparent;
+            text-align: right;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            padding-right: 0.5rem;
+        }
+        .lab-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .lab-table tr:last-child td { border-bottom: none; }
+        .lab-table input:focus { border-bottom: 2px solid #dc2626; }
+        
+        /* Auto-calculated fields */
+        .calc-field {
+            color: #64748b;
+            font-weight: 600;
+        }
+        .calc-row { background-color: #f8fafc; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Dropdown -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium">
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Tools Geologi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Batas Atterberg</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-2xl mx-auto">
+                Perhitungan Liquid Limit (LL) Metode <em>One Point</em> dan Plastic Limit (PL) untuk klasifikasi tanah USCS.
+            </p>
+            
+            <!-- Button to open guide -->
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+                Panduan Metode Pengujian
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <!-- Modal Header -->
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center z-10">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                            <i data-lucide="flask-conical" class="w-5 h-5"></i>
+                        </div>
+                        Panduan Metode Pengujian Atterberg
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                        <i data-lucide="x" class="w-6 h-6 text-slate-500"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="p-6">
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <!-- Liquid Limit Method -->
+                        <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-2 bg-red-600 text-white rounded-lg">
+                                    <i data-lucide="flask-conical" class="w-5 h-5"></i>
+                                </div>
+                                <h5 class="font-bold text-slate-900">Liquid Limit Test</h5>
+                            </div>
+                            <p class="text-xs font-bold text-red-700 mb-2">Metode Casagrande (One Point Method)</p>
+                            <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+                                <li>Siapkan sampel tanah yang lolos saringan No. 40 (0.425 mm)</li>
+                                <li>Campur tanah dengan air hingga pasta homogen</li>
+                                <li>Tempatkan di cawan Casagrande, buat alur dengan grooving tool</li>
+                                <li>Putar <em>crank</em> dengan kecepatan 2 putaran/detik</li>
+                                <li>Hitung jumlah ketukan (N) hingga alur menutup sepanjang 12.7 mm</li>
+                                <li>Ambil sampel dari bagian yang menutup untuk uji kadar air</li>
+                                <li><strong>Catatan:</strong> Rentang ideal N = 20–30 ketukan</li>
+                            </ol>
+                        </div>
+
+                        <!-- Plastic Limit Method -->
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-2 bg-blue-600 text-white rounded-lg">
+                                    <i data-lucide="hand" class="w-5 h-5"></i>
+                                </div>
+                                <h5 class="font-bold text-slate-900">Plastic Limit Test</h5>
+                            </div>
+                            <p class="text-xs font-bold text-blue-700 mb-2">Metode Gulungan (Rolling Method)</p>
+                            <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+                                <li>Gunakan sampel tanah yang sama dengan uji LL</li>
+                                <li>Bentuk bola tanah kecil (~10 gram)</li>
+                                <li>Gulung tanah di atas plat kaca dengan telapak tangan</li>
+                                <li>Gulung hingga membentuk silinder diameter ±3 mm (1/8 inci)</li>
+                                <li>PL tercapai saat gulungan mulai <strong>retak/hancur</strong> pada diameter tersebut</li>
+                                <li>Kumpulkan pecahan untuk uji kadar air</li>
+                                <li><strong>Ulangi</strong> 2-3 kali untuk konsistensi</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Interpretation Guide -->
+                    <div class="bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-xl border border-slate-300">
+                        <h5 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="info" class="w-5 h-5 text-slate-600"></i>
+                            Interpretasi Hasil
+                        </h5>
+                        <div class="grid md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <p class="font-bold text-green-700 mb-1">PI &lt; 7 (Plastisitas Rendah)</p>
+                                <p class="text-xs text-slate-600">Lanau atau lempung dengan sedikit aktivitas plastis. Contoh: ML, CL-ML</p>
+                            </div>
+                            <div>
+                                <p class="font-bold text-indigo-700 mb-1">7 ≤ PI ≤ 17 (Sedang)</p>
+                                <p class="text-xs text-slate-600">Lempung plastisitas sedang. Contoh: CL (Lean Clay)</p>
+                            </div>
+                            <div>
+                                <p class="font-bold text-red-700 mb-1">PI &gt; 17 (Tinggi)</p>
+                                <p class="text-xs text-slate-600">Lempung plastisitas tinggi dengan potensi kembang-susut besar. Contoh: CH (Fat Clay)</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+                            <strong>⚠️ Catatan Penting:</strong> Jika PI negatif atau PL &gt; LL, tanah diklasifikasikan sebagai <strong>NP (Non-Plastic)</strong> — biasanya pasir atau lanau murni tanpa kohesi.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- LEFT COLUMN: INPUTS -->
+            <div class="lg:col-span-7 space-y-8">
+                
+                <!-- LIQUID LIMIT FORM -->
+                <div class="bg-white p-0 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="flask-conical" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-slate-900">Liquid Limit (Batas Cair)</h3>
+                        </div>
+                        <button onclick="resetLL()" class="text-xs text-slate-400 hover:text-red-600 underline">Reset</button>
+                    </div>
+
+                    <table class="w-full text-sm lab-table">
+                        <tbody id="ll_table">
+                            <tr>
+                                <td class="font-medium text-slate-700 w-2/3">Jumlah Ketukan (N)</td>
+                                <td><input type="number" id="ll_n" class="ll-input font-bold text-slate-900" placeholder="25"></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-slate-700">1. Berat Cawan (gr)</td>
+                                <td><input type="number" id="ll_wc" class="ll-input" step="0.01" placeholder="0.00"></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-slate-700">2. Berat Cawan + Sampel Basah (gr)</td>
+                                <td><input type="number" id="ll_ww" class="ll-input" step="0.01" placeholder="0.00"></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-slate-700">3. Berat Cawan + Sampel Kering (gr)</td>
+                                <td><input type="number" id="ll_wd" class="ll-input" step="0.01" placeholder="0.00"></td>
+                            </tr>
+                            <!-- Auto Calculated -->
+                            <tr class="calc-row">
+                                <td class="text-slate-500 italic pl-6 border-l-4 border-slate-200">4. Berat Air (gr)</td>
+                                <td><input type="text" class="calc-field" id="ll_res_water" readonly value="-"></td>
+                            </tr>
+                            <tr class="calc-row">
+                                <td class="text-slate-500 italic pl-6 border-l-4 border-slate-200">5. Berat Tanah Kering (gr)</td>
+                                <td><input type="text" class="calc-field" id="ll_res_soil" readonly value="-"></td>
+                            </tr>
+                            <tr class="calc-row bg-red-50/50">
+                                <td class="text-slate-700 font-bold pl-6 border-l-4 border-red-300">6. Water Content (%)</td>
+                                <td><input type="text" class="calc-field text-red-600" id="ll_res_wc" readonly value="-"></td>
+                            </tr>
+                            <tr class="bg-red-600 text-white">
+                                <td class="font-bold pl-6">7. Liquid Limit (LL)</td>
+                                <td><input type="text" class="calc-field text-white font-black bg-transparent" id="ll_final" readonly value="-"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PLASTIC LIMIT FORM -->
+                <div class="bg-white p-0 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i data-lucide="hand" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-slate-900">Plastic Limit (Batas Plastis)</h3>
+                        </div>
+                        <button onclick="resetPL()" class="text-xs text-slate-400 hover:text-blue-600 underline">Reset</button>
+                    </div>
+
+                    <table class="w-full text-sm lab-table">
+                        <tbody id="pl_table">
+                            <tr>
+                                <td class="font-medium text-slate-700 w-2/3">1. Berat Cawan (gr)</td>
+                                <td><input type="number" id="pl_wc" class="pl-input" step="0.01" placeholder="0.00"></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-slate-700">2. Berat Cawan + Sampel Basah (gr)</td>
+                                <td><input type="number" id="pl_ww" class="pl-input" step="0.01" placeholder="0.00"></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-slate-700">3. Berat Cawan + Sampel Kering (gr)</td>
+                                <td><input type="number" id="pl_wd" class="pl-input" step="0.01" placeholder="0.00"></td>
+                            </tr>
+                            <!-- Auto Calculated -->
+                            <tr class="calc-row">
+                                <td class="text-slate-500 italic pl-6 border-l-4 border-slate-200">4. Berat Air (gr)</td>
+                                <td><input type="text" class="calc-field" id="pl_res_water" readonly value="-"></td>
+                            </tr>
+                            <tr class="calc-row">
+                                <td class="text-slate-500 italic pl-6 border-l-4 border-slate-200">5. Berat Tanah Kering (gr)</td>
+                                <td><input type="text" class="calc-field" id="pl_res_soil" readonly value="-"></td>
+                            </tr>
+                            <tr class="calc-row bg-blue-50/50">
+                                <td class="text-slate-700 font-bold pl-6 border-l-4 border-blue-300">6. Water Content (%)</td>
+                                <td><input type="text" class="calc-field text-blue-600" id="pl_res_wc" readonly value="-"></td>
+                            </tr>
+                            <tr class="bg-blue-600 text-white">
+                                <td class="font-bold pl-6">7. Plastic Limit (PL)</td>
+                                <td><input type="text" class="calc-field text-white font-black bg-transparent" id="pl_final" readonly value="-"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: RESULTS -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- FINAL RESULT CARD -->
+                <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-red-600 rounded-full opacity-20 blur-xl"></div>
+                    
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8 border-b border-slate-700 pb-4">Hasil Analisis Akhir</h3>
+                    
+                    <!-- PI Calculation Display -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-sm text-slate-300">Plasticity Index (PI)</span>
+                            <span class="text-xs text-slate-500 font-mono">LL - PL = PI</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-3xl font-bold font-mono">
+                            <span id="disp_LL" class="text-red-400 opacity-50">0</span>
+                            <span class="text-slate-600">-</span>
+                            <span id="disp_PL" class="text-blue-400 opacity-50">0</span>
+                            <span class="text-slate-600">=</span>
+                            <span id="final_PI" class="text-4xl font-black text-white">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Classification -->
+                    <div class="bg-white/10 rounded-xl p-5 border border-white/10">
+                        <p class="text-xs text-slate-400 mb-2 uppercase font-bold">Klasifikasi Tanah (USCS)</p>
+                        <h4 id="final_class" class="text-2xl font-bold text-yellow-400 mb-2">-</h4>
+                        <p id="final_desc" class="text-sm text-slate-300 leading-relaxed">
+                            Lengkapi data Liquid Limit dan Plastic Limit untuk melihat klasifikasi.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Reference -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm text-xs text-slate-500">
+                    <p class="mb-2 font-bold text-slate-700">Catatan Rumus:</p>
+                    <ul class="space-y-1 list-disc pl-4">
+                        <li>Liquid Limit (One Point Method): \(LL = w \times \left(\frac{N}{25}\right)^{0.121}\)</li>
+                        <li>Plastic Limit: \(PL = w\) (kadar air saat diameter gulungan 3 mm mulai retak)</li>
+                        <li>Plasticity Index: \(PI = LL - PL\)</li>
+                    </ul>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-amber-900 mb-2">Disclaimer</p>
+                            <p class="text-amber-800 leading-relaxed">
+                                Tool ini dirancang untuk <strong>tujuan edukatif dan praktikum</strong>. Untuk proyek rekayasa profesional, sebaiknya konsultasikan dengan ahli geoteknik bersertifikat. Akurasi hasil bergantung pada kualitas data input dan prosedur laboratorium yang benar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+<!-- REFERENCES & FOOTER INFO -->
+        <div class="mt-12 pb-8">
+            <!-- References Section -->
+             <div class="max-w-3xl mx-auto px-4 mb-8">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi & Sitasi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Atterberg, L. (1926).</strong> <em>Studies in the Texture of Soils</em>. Journal of Geology, 34(4), 361–374.</li>
+                </ul>
+            </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm mt-auto">
+        <p>&copy; 2025 PERHIMAGI - Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNavDropdown = document.getElementById('mobileNavDropdown');
+
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileNavDropdown.classList.toggle('hidden');
+            lucide.createIcons();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)) {
+                mobileNavDropdown.classList.add('hidden');
+            }
+        });
+
+        // Toggle Guide Modal
+        function toggleGuideModal() {
+            const modal = document.getElementById('guideModal');
+            modal.classList.toggle('hidden');
+            // Re-render icons when modal opens
+            setTimeout(() => lucide.createIcons(), 100);
+        }
+
+        // Data Storage
+        let val_LL = 0;
+        let val_PL = 0;
+
+        // Event Listeners
+        document.querySelectorAll('.ll-input').forEach(input => {
+            input.addEventListener('input', calculateLL);
+        });
+        document.querySelectorAll('.pl-input').forEach(input => {
+            input.addEventListener('input', calculatePL);
+        });
+
+        // --- LIQUID LIMIT CALCULATION ---
+        function calculateLL() {
+            const N = parseFloat(document.getElementById('ll_n').value);
+            const wc = parseFloat(document.getElementById('ll_wc').value);
+            const ww = parseFloat(document.getElementById('ll_ww').value);
+            const wd = parseFloat(document.getElementById('ll_wd').value);
+
+            if ([wc, ww, wd].some(isNaN)) return;
+
+            // 4. Berat Air
+            const w_water = ww - wd;
+            document.getElementById('ll_res_water').value = w_water.toFixed(2);
+
+            // 5. Berat Tanah Kering
+            const w_dry = wd - wc;
+            document.getElementById('ll_res_soil').value = w_dry.toFixed(2);
+
+            // 6. Water Content
+            if (w_dry > 0) {
+                const w_content = (w_water / w_dry) * 100;
+                document.getElementById('ll_res_wc').value = w_content.toFixed(2) + "%";
+
+                // 7. Liquid Limit (One Point)
+                if (!isNaN(N) && N > 0) {
+                    const LL = w_content * Math.pow((N / 25), 0.121);
+                    document.getElementById('ll_final').value = LL.toFixed(2) + "%";
+                    val_LL = LL;
+                    updateFinal();
+                }
+            }
+        }
+
+        function resetLL() {
+            document.querySelectorAll('.ll-input').forEach(i => i.value = '');
+            document.getElementById('ll_res_water').value = '-';
+            document.getElementById('ll_res_soil').value = '-';
+            document.getElementById('ll_res_wc').value = '-';
+            document.getElementById('ll_final').value = '-';
+            val_LL = 0;
+            updateFinal();
+        }
+
+        // --- PLASTIC LIMIT CALCULATION ---
+        function calculatePL() {
+            const wc = parseFloat(document.getElementById('pl_wc').value);
+            const ww = parseFloat(document.getElementById('pl_ww').value);
+            const wd = parseFloat(document.getElementById('pl_wd').value);
+
+            if ([wc, ww, wd].some(isNaN)) return;
+
+            const w_water = ww - wd;
+            document.getElementById('pl_res_water').value = w_water.toFixed(2);
+
+            const w_dry = wd - wc;
+            document.getElementById('pl_res_soil').value = w_dry.toFixed(2);
+
+            if (w_dry > 0) {
+                const w_content = (w_water / w_dry) * 100;
+                document.getElementById('pl_res_wc').value = w_content.toFixed(2) + "%";
+                
+                // For PL, result IS the water content
+                document.getElementById('pl_final').value = w_content.toFixed(2) + "%";
+                val_PL = w_content;
+                updateFinal();
+            }
+        }
+
+        function resetPL() {
+            document.querySelectorAll('.pl-input').forEach(i => i.value = '');
+            document.getElementById('pl_res_water').value = '-';
+            document.getElementById('pl_res_soil').value = '-';
+            document.getElementById('pl_res_wc').value = '-';
+            document.getElementById('pl_final').value = '-';
+            val_PL = 0;
+            updateFinal();
+        }
+
+        // --- FINAL CALCULATION ---
+        function updateFinal() {
+            // Display current values
+            document.getElementById('disp_LL').innerText = val_LL > 0 ? val_LL.toFixed(1) : "0";
+            document.getElementById('disp_PL').innerText = val_PL > 0 ? val_PL.toFixed(1) : "0";
+
+            if (val_LL > 0 && val_PL > 0) {
+                const PI = val_LL - val_PL;
+                document.getElementById('final_PI').innerText = PI.toFixed(2) + "%";
+                
+                // Classification Logic
+                const A_line = 0.73 * (val_LL - 20);
+                let cls = "", desc = "";
+
+                if (PI < 0) {
+                    cls = "NP (Non-Plastic)";
+                    desc = "Tanah non-kohesif (pasir/lanau murni).";
+                } else if (val_LL < 50) {
+                    // Low Plasticity
+                    if (PI > 7 && PI > A_line) {
+                        cls = "CL (Lean Clay)";
+                        desc = "Lempung inorganik plastisitas rendah-sedang.";
+                    } else if (PI < 4 || PI < A_line) {
+                        cls = "ML / OL";
+                        desc = "Lanau inorganik (ML) atau lempung organik (OL).";
+                    } else {
+                        cls = "CL-ML";
+                        desc = "Lempung berlanau (Silty Clay).";
+                    }
+                } else {
+                    // High Plasticity
+                    if (PI > A_line) {
+                        cls = "CH (Fat Clay)";
+                        desc = "Lempung inorganik plastisitas tinggi.";
+                    } else {
+                        cls = "MH / OH";
+                        desc = "Lanau inorganik (MH) atau lempung organik (OH).";
+                    }
+                }
+
+                document.getElementById('final_class').innerText = cls;
+                document.getElementById('final_desc').innerText = desc;
+            } else {
+                document.getElementById('final_PI').innerText = "-";
+                document.getElementById('final_class').innerText = "-";
+                document.getElementById('final_desc').innerText = "Lengkapi data LL dan PL.";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uji Geser Langsung (Direct Shear Test) - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-directshear.html">
+    <meta property="og:title" content="Uji Geser Langsung (Direct Shear Test) - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool perhitungan parameter kekuatan geser tanah (kohesi dan sudut geser dalam) menggunakan metode Direct Shear Test berdasarkan kriteria Mohr-Coulomb.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    <meta property="og:site_name" content="PERHIMAGI Digital Library">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://perhimagi.org/alat/analisis-directshear.html">
+    <meta property="twitter:title" content="Uji Geser Langsung (Direct Shear Test) - PERHIMAGI Digilab">
+    <meta property="twitter:description" content="Tool perhitungan parameter kekuatan geser tanah (kohesi dan sudut geser dalam) menggunakan metode Direct Shear Test berdasarkan kriteria Mohr-Coulomb.">
+    <meta property="twitter:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        .input-field {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Dropdown -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium">
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-1">
+        
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Geoteknik & Mekanika Tanah</span>
+            <h2 class="text-3xl font-bold text-slate-900">Uji Geser Langsung (Direct Shear Test)</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Penentuan parameter kekuatan geser tanah (kohesi <em>c</em> dan sudut geser dalam φ) menggunakan kriteria kegagalan Mohr-Coulomb.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+            <!-- LEFT COLUMN: INPUTS -->
+            <div class="space-y-6">
+                <!-- Info Card -->
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-5 text-sm">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="info" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-blue-900 mb-1">Petunjuk Pengisian Data</p>
+                            <p class="text-blue-800 text-xs leading-relaxed">
+                                Masukkan data dari <strong>3 sampel uji</strong> dengan beban normal berbeda. Setiap sampel memerlukan: Beban Normal, Luas Penampang, dan Tegangan Geser Maksimum yang diperoleh dari pengujian.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample 1 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center font-bold">
+                            1
+                        </div>
+                        <h3 class="font-bold text-slate-900">Sampel 1 (Beban Tinggi)</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Beban Normal - kg</label>
+                            <input type="number" id="load1" class="input-field" step="0.01" placeholder="2.0" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Luas Penampang (A) - mm²</label>
+                            <input type="number" id="area1" class="input-field" step="0.001" placeholder="3317" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Tegangan Geser Maksimum (τ<sub>max</sub>) - kPa</label>
+                            <input type="number" id="tau1" class="input-field" step="0.00001" placeholder="0.00543" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample 2 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center font-bold">
+                            2
+                        </div>
+                        <h3 class="font-bold text-slate-900">Sampel 2 (Beban Sedang)</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Beban Normal - kg</label>
+                            <input type="number" id="load2" class="input-field" step="0.01" placeholder="1.0" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Luas Penampang (A) - mm²</label>
+                            <input type="number" id="area2" class="input-field" step="0.001" placeholder="3317" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Tegangan Geser Maksimum (τ<sub>max</sub>) - kPa</label>
+                            <input type="number" id="tau2" class="input-field" step="0.00001" placeholder="0.00305" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample 3 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center font-bold">
+                            3
+                        </div>
+                        <h3 class="font-bold text-slate-900">Sampel 3 (Beban Rendah)</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Beban Normal - kg</label>
+                            <input type="number" id="load3" class="input-field" step="0.01" placeholder="0.5" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Luas Penampang (A) - mm²</label>
+                            <input type="number" id="area3" class="input-field" step="0.001" placeholder="3317" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="text-sm text-slate-600 mb-1 block">Tegangan Geser Maksimum (τ<sub>max</sub>) - kPa</label>
+                            <input type="number" id="tau3" class="input-field" step="0.00001" placeholder="0.00350" oninput="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="calculate()" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-4 rounded-xl font-bold hover:from-red-700 hover:to-red-800 transition shadow-lg flex items-center justify-center gap-3">
+                    <i data-lucide="calculator" class="w-5 h-5"></i>
+                    Hitung Parameter Geser
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- RIGHT COLUMN: RESULTS -->
+            <div class="space-y-6">
+                <!-- Main Results Card -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Parameter Kekuatan Geser</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-white/10 rounded-xl p-5 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-2">Kohesi (c)</p>
+                            <p id="res_cohesion" class="text-3xl font-black text-red-400">- kPa</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-5 border border-white/10">
+                            <p class="text-xs text-slate-400 mb-2">Sudut Geser (φ)</p>
+                            <p id="res_phi" class="text-3xl font-black text-amber-400">-°</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl p-5">
+                        <p class="text-xs text-yellow-300 mb-2 font-bold uppercase tracking-wide">Klasifikasi Kepadatan</p>
+                        <p id="density_class" class="text-2xl font-bold text-yellow-400 mb-2">-</p>
+                        <p class="text-xs text-yellow-200" id="density_desc">Berdasarkan Bowles (1989)</p>
+                    </div>
+                </div>
+
+                <!-- Calculation Details -->
+                <div id="detailSection" class="hidden space-y-4">
+                    <!-- Normal Stress Values -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="activity" class="w-4 h-4 text-red-600"></i>
+                            Tegangan Normal (σn)
+                        </h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between p-2 bg-red-50 rounded">
+                                <span class="text-red-700">Sampel 1</span>
+                                <span id="sigma1" class="font-mono text-red-700">- kPa</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-orange-50 rounded">
+                                <span class="text-orange-700">Sampel 2</span>
+                                <span id="sigma2" class="font-mono text-orange-700">- kPa</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-amber-50 rounded">
+                                <span class="text-amber-700">Sampel 3</span>
+                                <span id="sigma3" class="font-mono text-amber-700">- kPa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Regression Info -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="trending-up" class="w-4 h-4 text-purple-600"></i>
+                            Persamaan Mohr-Coulomb
+                        </h4>
+                        <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                            <p class="text-xs text-purple-700 mb-2">Persamaan Regresi Linear:</p>
+                            <p id="mohr_equation" class="text-sm font-mono text-purple-900 font-bold">τ = c + σn tan φ</p>
+                            <p id="slope_calc" class="text-xs text-purple-700 mt-3">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Soil Type Interpretation -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i data-lucide="layers" class="w-4 h-4 text-blue-600"></i>
+                            Interpretasi Jenis Tanah
+                        </h4>
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <p id="soil_type" class="text-sm text-blue-900 leading-relaxed">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-amber-900 mb-2">Disclaimer</p>
+                            <p class="text-amber-800 leading-relaxed">
+                                Tool ini dirancang untuk <strong>tujuan edukatif dan praktikum</strong>. Untuk proyek rekayasa profesional, sebaiknya konsultasikan dengan ahli geoteknik bersertifikat. Akurasi hasil bergantung pada kualitas data input dan prosedur laboratorium yang benar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- References -->
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>ASTM D3080</strong> <em>Standard Test Method for Direct Shear Test of Soils Under Consolidated Drained Conditions</em></li>
+                    <li><strong>Bowles, J.E. (1989)</strong> <em>Physical and Geotechnical Properties of Soils</em></li>
+                    <li><strong>Das, B.M.</strong> <em>Principles of Geotechnical Engineering</em></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        lucide.createIcons();
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNavDropdown = document.getElementById('mobileNavDropdown');
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileNavDropdown.classList.toggle('hidden');
+            lucide.createIcons();
+        });
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)) {
+                mobileNavDropdown.classList.add('hidden');
+            }
+        });
+
+        function calculate() {
+            // Get inputs
+            const load1 = parseFloat(document.getElementById('load1').value);
+            const area1 = parseFloat(document.getElementById('area1').value);
+            const tau1 = parseFloat(document.getElementById('tau1').value);
+            
+            const load2 = parseFloat(document.getElementById('load2').value);
+            const area2 = parseFloat(document.getElementById('area2').value);
+            const tau2 = parseFloat(document.getElementById('tau2').value);
+            
+            const load3 = parseFloat(document.getElementById('load3').value);
+            const area3 = parseFloat(document.getElementById('area3').value);
+            const tau3 = parseFloat(document.getElementById('tau3').value);
+
+            // Check if all inputs are filled
+            if ([load1, area1, tau1, load2, area2, tau2, load3, area3, tau3].some(isNaN)) {
+                return;
+            }
+
+            // Calculate normal stresses (σn = Load / Area, convert to kPa)
+            // Assuming load in kg, area in mm², convert to kPa: (load * 9.81) / area
+            const g = 9.81; // m/s²
+            const sigma1 = (load1 * g) / area1; // kPa
+            const sigma2 = (load2 * g) / area2;
+            const sigma3 = (load3 * g) / area3;
+
+            // Display sigma values
+            document.getElementById('sigma1').textContent = sigma1.toFixed(5) + ' kPa';
+            document.getElementById('sigma2').textContent = sigma2.toFixed(5) + ' kPa';
+            document.getElementById('sigma3').textContent = sigma3.toFixed(5) + ' kPa';
+
+            // Linear regression to find c and φ
+            // Using samples 1 and 3 (highest and lowest) for best fit
+            // Slope = tan(φ) = (τ2 - τ1) / (σ2 - σ1)
+            const slope = (tau1 - tau3) / (sigma1 - sigma3);
+            const phi = Math.atan(slope) * (180 / Math.PI); // Convert to degrees
+            
+            // Intercept = c (cohesion)
+            const c = tau1 - (slope * sigma1);
+
+            // Display results
+            document.getElementById('res_cohesion').textContent = c.toFixed(4) + ' kPa';
+            document.getElementById('res_phi').textContent = phi.toFixed(2) + '°';
+
+            // Classify based on φ (Bowles 1989)
+            let densityClass = '';
+            let densityDesc = '';
+            if (phi < 30) {
+                densityClass = 'Sangat Lepas';
+                densityDesc = 'Very Loose - Tanah memiliki kepadatan sangat rendah';
+            } else if (phi >= 30 && phi < 35) {
+                densityClass = 'Lepas';
+                densityDesc = 'Loose - Tanah memiliki kepadatan rendah';
+            } else if (phi >= 35 && phi < 40) {
+                densityClass = 'Agak Padat';
+                densityDesc = 'Medium Dense - Tanah memiliki kepadatan sedang';
+            } else if (phi >= 40 && phi < 45) {
+                densityClass = 'Padat';
+                densityDesc = 'Dense - Tanah memiliki kepadatan tinggi';
+            } else {
+                densityClass = 'Sangat Padat';
+                densityDesc = 'Very Dense - Tanah memiliki kepadatan sangat tinggi';
+            }
+
+            document.getElementById('density_class').textContent = densityClass;
+            document.getElementById('density_desc').textContent = densityDesc + ' - Bowles (1989)';
+
+            // Mohr-Coulomb equation
+            document.getElementById('mohr_equation').textContent = `τ = ${c.toFixed(4)} + σn × ${slope.toFixed(4)}`;
+            document.getElementById('slope_calc').textContent = `tan φ = ${slope.toFixed(4)} → φ = arctan(${slope.toFixed(4)}) = ${phi.toFixed(2)}°`;
+
+            // Soil type interpretation
+            let soilType = '';
+            if (c < 0.01) {
+                soilType = `Kohesi sangat kecil (c = ${c.toFixed(4)} kPa) dan sudut geser φ = ${phi.toFixed(2)}° mengindikasikan tanah bukan lempung murni maupun pasir murni. Tanah dikategorikan sebagai <strong>Tanah Lanau</strong> (silt) dengan karakteristik kohesi rendah.`;
+            } else if (c >= 0.01 && c < 10) {
+                soilType = `Kohesi rendah (c = ${c.toFixed(4)} kPa) dengan sudut geser φ = ${phi.toFixed(2)}° mengindikasikan tanah berbutir halus dengan sedikit kandungan lempung. Dikategorikan sebagai <strong>Lanau atau Lempung Berpasir</strong>.`;
+            } else {
+                soilType = `Kohesi tinggi (c = ${c.toFixed(4)} kPa) mengindikasikan tanah kohesif, kemungkinan <strong>Lempung</strong> dengan sudut geser dalam φ = ${phi.toFixed(2)}°.`;
+            }
+            document.getElementById('soil_type').innerHTML = soilType;
+
+            // Show detail section
+            document.getElementById('detailSection').classList.remove('hidden');
+            
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
