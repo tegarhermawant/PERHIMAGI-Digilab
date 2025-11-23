@@ -68,10 +68,10 @@
                 </button>
             </div>
         </div>
-    </header>
+
 
         <!-- Mobile Navigation Dropdown (Hidden by default) -->
-        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute w-full left-0 z-50 slide-down">
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute top-full w-full left-0 z-50 slide-down">
             <div class="flex flex-col p-4 space-y-3">
                 <a href="https://perhimagi.org" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
                     <i data-lucide="home" class="w-5 h-5"></i> Home
@@ -670,11 +670,7 @@
                 if (currentPage < totalPages) { currentPage++; renderGrid(); renderPagination(); }
             });
 
-            // --- MOBILE MENU TOGGLE LOGIC (NEW) ---
-            document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-                const menu = document.getElementById('mobileNavDropdown');
-                menu.classList.toggle('hidden');
-            });
+
 
             document.getElementById('openMobileFilter').addEventListener('click', () => {
                 document.getElementById('mobileFilterDrawer').classList.remove('hidden');
@@ -821,16 +817,24 @@
         lucide.createIcons();
 
         // Mobile Menu Logic
-        document.addEventListener("DOMContentLoaded", function () {
+        (function() {
             const menuButton = document.getElementById("mobileMenuBtn");
             const mobileNav = document.getElementById("mobileNavDropdown");
 
             if (menuButton && mobileNav) {
-                menuButton.addEventListener("click", () => {
+                menuButton.onclick = function(e) {
+                    e.stopPropagation(); // Prevent bubbling issues
                     mobileNav.classList.toggle("hidden");
+                };
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!menuButton.contains(e.target) && !mobileNav.contains(e.target) && !mobileNav.classList.contains('hidden')) {
+                        mobileNav.classList.add('hidden');
+                    }
                 });
             }
-        });
+        })();
     </script>
 
 </body>
