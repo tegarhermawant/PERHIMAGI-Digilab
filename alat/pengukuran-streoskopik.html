@@ -47,6 +47,7 @@
             border-left: 2px solid #e2e8f0;
             padding-bottom: 2rem;
             margin-bottom: 1rem;
+            margin-left: 1rem; /* Added to prevent number cutoff */
         }
         .step-card:last-child { border-left: none; padding-bottom: 0; }
         
@@ -68,7 +69,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
 
    <!-- HEADER -->
     <header class="bg-white shadow-sm sticky top-0 z-40">
@@ -88,7 +89,7 @@
                     <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
                     <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
                 </div>
-                <button class="md:hidden p-2 text-slate-600">
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600">
                     <i data-lucide="menu"></i>
                 </button>
             </div>
@@ -111,7 +112,7 @@
                     <i data-lucide="info" class="w-5 h-5"></i> Tentang
                 </a>
             </div>
-        </div>]
+        </div>
     </header>
 
     <!-- MAIN CONTENT -->
@@ -125,7 +126,7 @@
             </p>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+        <div class="bg-white p-4 md:p-8 rounded-2xl shadow-sm border border-slate-200">
 
             <!-- TAB MENU -->
             <div class="flex border-b border-slate-200 mb-6 overflow-x-auto">
