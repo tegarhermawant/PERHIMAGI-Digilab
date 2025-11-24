@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengukuran Debit Sungai - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/pengukuran-debit.html">
+    <meta property="og:title" content="Pengukuran Debit Sungai - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool perhitungan debit sungai dan estimasi parameter akuifer (Transmisivitas & Konduktivitas Hidrolik).">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-field { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; }
+        .input-field:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .section-title { font-size: 0.875rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem; }
+        .result-card { background: white; border-radius: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .result-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+        .result-value { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .result-unit { font-size: 0.75rem; color: #94a3b8; font-weight: 500; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="home" class="w-5 h-5"></i> Home</a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="book" class="w-5 h-5"></i> Library</a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium"><i data-lucide="wrench" class="w-5 h-5"></i> Alat</a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="info" class="w-5 h-5"></i> Tentang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Hidrogeologi & Lingkungan</span>
+            <h2 class="text-3xl font-bold text-slate-900">Pengukuran Debit Sungai</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Perhitungan debit aliran sungai ($Q$) dan estimasi parameter akuifer (Transmisivitas & Konduktivitas Hidrolik) berdasarkan interaksi air permukaan-air tanah.
+            </p>
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Panduan Modul
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="waves" class="w-5 h-5"></i></div>
+                        Panduan Debit & Akuifer
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg"><i data-lucide="x" class="w-6 h-6 text-slate-500"></i></button>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">1. Debit Sungai ($Q$)</h4>
+                        <p class="text-sm text-slate-600 mb-2">Volume air yang mengalir per satuan waktu.</p>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center mb-2">\[ Q = k \times v \times A \]</p>
+                            <ul class="list-disc pl-5 space-y-1 text-slate-600">
+                                <li>$k$: Konstanta kekasaran (0.8 - 0.9)</li>
+                                <li>$v$: Kecepatan aliran rata-rata ($m/s$)</li>
+                                <li>$A$: Luas penampang basah ($m^2$)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">2. Parameter Akuifer ($T$ & $K$)</h4>
+                        <p class="text-sm text-slate-600 mb-2">Estimasi sifat hidrolik akuifer dari selisih debit antar titik (Baseflow Analysis).</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Transmisivitas ($T$):</p>
+                                <p>\[ T = \frac{Q_{sisi}}{L} \times \text{Faktor} \]</p>
+                                <p class="text-xs text-slate-400 mt-1">Dimana $Q_{sisi} = Q_{diff}/2$ (asumsi 2 sisi)</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Konduktivitas Hidrolik ($K$):</p>
+                                <p>\[ K = \frac{T}{b} \]</p>
+                                <p class="text-xs text-slate-400 mt-1">$b$ = Tebal akuifer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN: INPUTS (5 cols) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- 1. Discharge Calculation -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">A. Perhitungan Debit ($Q$)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">1. Konstanta Sungai ($k$)</label>
+                            <input type="number" id="q_k" class="input-field" placeholder="0.8 - 0.9" step="0.01" value="0.9">
+                            <p class="text-[10px] text-slate-400 mt-1">Biasanya 0.85 atau 0.9 tergantung kekasaran dasar sungai.</p>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">2. Kecepatan Aliran Rata-rata ($v$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="q_v" class="input-field" placeholder="Contoh: 13.14" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold">m/s</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">3. Luas Penampang Basah ($A$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="q_a" class="input-field" placeholder="Contoh: 59.58" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold">m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Aquifer Parameters -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">B. Parameter Akuifer (Estimasi)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">1. Selisih Debit ($Q_{diff}$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="aq_qdiff" class="input-field" placeholder="Contoh: 0.1574" step="0.0001">
+                                <span class="text-sm text-slate-500 font-bold">m³/s</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Debit masuk/keluar akuifer ($Q_{hilir} - Q_{hulu}$).</p>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">2. Jarak Titik Pengamatan ($L$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="aq_l" class="input-field" placeholder="Contoh: 2500" step="1">
+                                <span class="text-sm text-slate-500 font-bold">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">3. Tebal Akuifer ($b$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="aq_b" class="input-field" placeholder="Contoh: 30" step="1">
+                                <span class="text-sm text-slate-500 font-bold">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">4. Faktor Gradien/Geometri</label>
+                            <input type="number" id="aq_factor" class="input-field" placeholder="Default: 75" value="75">
+                            <p class="text-[10px] text-slate-400 mt-1">Faktor empiris (rasio $1/i$). Default modul: 75.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: RESULTS (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- 1. Discharge Result -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil Perhitungan Debit</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Debit Aliran ($Q$)</p>
+                            <div class="text-4xl font-black text-red-600 mb-1" id="res_q_m3">-</div>
+                            <p class="text-xs font-bold text-slate-400">m³/detik</p>
+                        </div>
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Konversi Liter</p>
+                            <div class="text-4xl font-black text-red-600 mb-1" id="res_q_l">-</div>
+                            <p class="text-xs font-bold text-slate-400">Liter/detik</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Aquifer Result -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-slate-100 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-slate-700 border-slate-200 relative z-10">Parameter Akuifer</h3>
+                    
+                    <div class="space-y-4 relative z-10">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="result-card">
+                                <p class="result-label">Debit Harian Total ($Q_{day}$)</p>
+                                <p id="res_q_day" class="result-value text-lg">-</p>
+                                <p class="result-unit">m³/hari</p>
+                            </div>
+                            <div class="result-card">
+                                <p class="result-label">Debit Per Sisi ($Q_{side}$)</p>
+                                <p id="res_q_side" class="result-value text-lg">-</p>
+                                <p class="result-unit">m³/hari</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="result-card bg-slate-50 border-slate-100">
+                                <p class="result-label text-slate-600">Transmisivitas ($T$)</p>
+                                <p id="res_t" class="result-value text-slate-700">-</p>
+                                <p class="result-unit text-slate-500">m²/hari</p>
+                            </div>
+                            <div class="result-card bg-slate-50 border-slate-100">
+                                <p class="result-label text-slate-600">Konduktivitas Hidrolik ($K$)</p>
+                                <p id="res_k" class="result-value text-slate-700">-</p>
+                                <p class="result-unit text-slate-500">m/hari</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-1">Interpretasi Permeabilitas</p>
+                            <p class="font-medium text-slate-800" id="res_interp">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Calculation Process -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="section-title text-slate-700 border-slate-200 mb-0">Proses Perhitungan</h3>
+                        <button onclick="toggleCalcProcess()" class="text-xs font-bold text-slate-500 hover:text-red-600 transition flex items-center gap-1">
+                            <span id="calcToggleText">Tampilkan</span>
+                            <i data-lucide="chevron-down" id="calcToggleIcon" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="calcProcess" class="hidden space-y-4 text-sm">
+                        <!-- Discharge Calculation -->
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                            <p class="font-bold text-red-700 mb-2">1. Perhitungan Debit ($Q$)</p>
+                            <div class="space-y-2 text-slate-700">
+                                <p class="font-mono text-xs bg-white p-2 rounded border">$Q = k \times v \times A$</p>
+                                <div id="calc_discharge_steps" class="text-xs space-y-1 pl-3">
+                                    <p>Masukkan nilai untuk melihat perhitungan...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aquifer Calculation -->
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <p class="font-bold text-slate-700 mb-2">2. Perhitungan Parameter Akuifer</p>
+                            <div class="space-y-3 text-slate-700">
+                                <div>
+                                    <p class="text-xs font-semibold mb-1">Konversi ke Debit Harian:</p>
+                                    <p class="font-mono text-xs bg-white p-2 rounded border">$Q_{day} = Q_{diff} \times 86400$</p>
+                                    <div id="calc_qday_steps" class="text-xs space-y-1 pl-3 mt-1">
+                                        <p>Masukkan nilai untuk melihat perhitungan...</p>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <p class="text-xs font-semibold mb-1">Debit Per Sisi (Asumsi 2 sisi):</p>
+                                    <p class="font-mono text-xs bg-white p-2 rounded border">$Q_{side} = Q_{day} / 2$</p>
+                                    <div id="calc_qside_steps" class="text-xs space-y-1 pl-3 mt-1">
+                                        <p>Masukkan nilai untuk melihat perhitungan...</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-semibold mb-1">Transmisivitas ($T$):</p>
+                                    <p class="font-mono text-xs bg-white p-2 rounded border">$T = \frac{Q_{side}}{L} \times \text{Faktor}$</p>
+                                    <div id="calc_t_steps" class="text-xs space-y-1 pl-3 mt-1">
+                                        <p>Masukkan nilai untuk melihat perhitungan...</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-semibold mb-1">Konduktivitas Hidrolik ($K$):</p>
+                                    <p class="font-mono text-xs bg-white p-2 rounded border">$K = \frac{T}{b}$</p>
+                                    <div id="calc_k_steps" class="text-xs space-y-1 pl-3 mt-1">
+                                        <p>Masukkan nilai untuk melihat perhitungan...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-slate-400"></i>
+                        <div>
+                            <p class="font-bold text-slate-700 mb-2">Disclaimer</p>
+                            <p class="text-slate-600">
+                                Tool ini menggunakan asumsi penyederhanaan (seperti aliran baseflow steady-state dan homogenitas akuifer). Hasil perhitungan hanya berupa estimasi kasar untuk keperluan praktikum.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Fetter, C.W. (2001)</strong> – <em>Applied Hydrogeology</em>.</li>
+                    <li><strong>Tegar Hermawan T.</strong> – <em>Laporan Praktikum Hidrogeologi Acara 1: Pengukuran Debit Sungai</em>.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+<script>
+    // MathJax Config for inline math
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+
+    lucide.createIcons();
+    const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+    const mobileNavDropdown=document.getElementById('mobileNavDropdown');
+    mobileMenuBtn.addEventListener('click',e=>{e.stopPropagation();mobileNavDropdown.classList.toggle('hidden');lucide.createIcons();});
+    document.addEventListener('click',e=>{if(!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)){mobileNavDropdown.classList.add('hidden');}});
+    function toggleGuideModal(){const m=document.getElementById('guideModal');m.classList.toggle('hidden');setTimeout(()=>lucide.createIcons(),100);}
+
+    // Toggle Calculation Process
+    function toggleCalcProcess() {
+        const calcProcess = document.getElementById('calcProcess');
+        const toggleText = document.getElementById('calcToggleText');
+        const toggleIcon = document.getElementById('calcToggleIcon');
+        
+        calcProcess.classList.toggle('hidden');
+        toggleText.textContent = calcProcess.classList.contains('hidden') ? 'Tampilkan' : 'Sembunyikan';
+        
+        setTimeout(() => {
+            lucide.createIcons();
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }, 100);
+    }
+
+    // --- LIVE UPDATES ---
+    const allInputs = document.querySelectorAll('input');
+    allInputs.forEach(input => {
+        input.addEventListener('input', calculateAll);
+    });
+
+    function calculateAll() {
+        // 1. Discharge Calc
+        const k = parseFloat(document.getElementById('q_k').value);
+        const v = parseFloat(document.getElementById('q_v').value);
+        const a = parseFloat(document.getElementById('q_a').value);
+
+        if (!isNaN(k) && !isNaN(v) && !isNaN(a)) {
+            const q_m3 = k * v * a;
+            const q_l = q_m3 * 1000;
+            
+            document.getElementById('res_q_m3').textContent = q_m3.toFixed(4);
+            document.getElementById('res_q_l').textContent = q_l.toFixed(2);
+
+            // Update discharge calculation steps
+            document.getElementById('calc_discharge_steps').innerHTML = `
+                <p>$Q = ${k} \\times ${v} \\times ${a}$</p>
+                <p>$Q = ${q_m3.toFixed(4)}$ m³/s</p>
+                <p>$Q = ${q_l.toFixed(2)}$ L/s</p>
+            `;
+        } else {
+            document.getElementById('res_q_m3').textContent = "-";
+            document.getElementById('res_q_l').textContent = "-";
+            document.getElementById('calc_discharge_steps').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+        }
+
+        // 2. Aquifer Calc
+        const q_diff = parseFloat(document.getElementById('aq_qdiff').value);
+        const l = parseFloat(document.getElementById('aq_l').value);
+        const b = parseFloat(document.getElementById('aq_b').value);
+        const factor = parseFloat(document.getElementById('aq_factor').value) || 75;
+
+        if (!isNaN(q_diff) && !isNaN(l) && !isNaN(b)) {
+            const q_day = q_diff * 86400; // m3/s to m3/day
+            const q_side = q_day / 2; // Assume 2 sides
+            
+            const t = (q_side / l) * factor;
+            const k_val = t / b;
+
+            document.getElementById('res_q_day').textContent = q_day.toFixed(2);
+            document.getElementById('res_q_side').textContent = q_side.toFixed(2);
+            document.getElementById('res_t').textContent = t.toFixed(2);
+            document.getElementById('res_k').textContent = k_val.toFixed(2);
+
+            // Update aquifer calculation steps
+            document.getElementById('calc_qday_steps').innerHTML = `
+                <p>$Q_{day} = ${q_diff} \\times 86400$</p>
+                <p>$Q_{day} = ${q_day.toFixed(2)}$ m³/hari</p>
+            `;
+
+            document.getElementById('calc_qside_steps').innerHTML = `
+                <p>$Q_{side} = ${q_day.toFixed(2)} / 2$</p>
+                <p>$Q_{side} = ${q_side.toFixed(2)}$ m³/hari</p>
+            `;
+
+            document.getElementById('calc_t_steps').innerHTML = `
+                <p>$T = \\frac{${q_side.toFixed(2)}}{${l}} \\times ${factor}$</p>
+                <p>$T = ${(q_side / l).toFixed(4)} \\times ${factor}$</p>
+                <p>$T = ${t.toFixed(2)}$ m²/hari</p>
+            `;
+
+            document.getElementById('calc_k_steps').innerHTML = `
+                <p>$K = \\frac{${t.toFixed(2)}}{${b}}$</p>
+                <p>$K = ${k_val.toFixed(2)}$ m/hari</p>
+            `;
+
+            // Interpretation
+            let interp = "";
+            if (k_val > 100) interp = "Sangat Tinggi (Kerikil bersih)";
+            else if (k_val > 10) interp = "Tinggi (Pasir bersih, Kerikil)";
+            else if (k_val > 1) interp = "Sedang (Pasir halus)";
+            else if (k_val > 0.1) interp = "Rendah (Pasir lanauan)";
+            else if (k_val > 0.001) interp = "Sangat Rendah (Lanau)";
+            else interp = "Impermeabel (Lempung)";
+            
+            document.getElementById('res_interp').textContent = interp;
+
+        } else {
+            document.getElementById('res_q_day').textContent = "-";
+            document.getElementById('res_q_side').textContent = "-";
+            document.getElementById('res_t').textContent = "-";
+            document.getElementById('res_k').textContent = "-";
+            document.getElementById('res_interp').textContent = "-";
+
+            document.getElementById('calc_qday_steps').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_qside_steps').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_t_steps').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_k_steps').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+        }
+
+        // Re-render MathJax if calculation process is visible
+        if (!document.getElementById('calcProcess').classList.contains('hidden')) {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+    }
+</script>
+</body>
+</html>

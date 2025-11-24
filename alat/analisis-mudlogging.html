@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drilling & Mudlogging Analysis - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-mudlogging.html">
+    <meta property="og:title" content="Drilling & Mudlogging Analysis - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool analisis hidrolika pemboran, volume lubang, waktu sirkulasi, dan pengendalian sumur (well control).">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-field { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; }
+        .input-field:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .section-title { font-size: 0.875rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem; }
+        .result-card { background: white; border-radius: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .result-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+        .result-value { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .result-unit { font-size: 0.75rem; color: #94a3b8; font-weight: 500; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="home" class="w-5 h-5"></i> Home</a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="book" class="w-5 h-5"></i> Library</a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium"><i data-lucide="wrench" class="w-5 h-5"></i> Alat</a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="info" class="w-5 h-5"></i> Tentang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Geologi Minyak dan Gas Bumi</span>
+            <h2 class="text-3xl font-bold text-slate-900">Drilling & Mudlogging Analysis</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Analisis hidrolika lumpur, volume sumur, waktu sirkulasi, dan parameter pengendalian sumur (Well Control).
+            </p>
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Panduan Modul
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="droplet" class="w-5 h-5"></i></div>
+                        Panduan Hidrolika & Well Control
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg"><i data-lucide="x" class="w-6 h-6 text-slate-500"></i></button>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">1. Volume & Kapasitas</h4>
+                        <p class="text-sm text-slate-600 mb-2">Menghitung volume lubang dan anulus berdasarkan geometri sumur.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Kapasitas (bbl/ft):</p>
+                                <p>\[ Kap = \frac{ID^2}{1029.4} \]</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Volume Anulus:</p>
+                                <p>\[ V_{an} = V_{hole} - V_{disp} \]</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">2. Sirkulasi & Hidrolika</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Debit Pompa (Q):</p>
+                                <p>\[ Q = POP \times SPM \]</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Lag Time (Bottoms Up):</p>
+                                <p>\[ T_{lag} = \frac{V_{anulus}}{Q} \]</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Annular Velocity (AV):</p>
+                                <p>\[ AV = \frac{24.5 \times Q_{gpm}}{D_{hole}^2 - D_{pipe}^2} \]</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">ECD:</p>
+                                <p>\[ ECD = MW + \frac{APL}{0.052 \times TVD} \]</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">3. Well Control</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Tekanan Formasi (Pf):</p>
+                                <p>\[ Pf = (0.052 \times MW \times TVD) + SIDPP \]</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <p class="font-semibold">Kill Mud Weight (KMW):</p>
+                                <p>\[ KMW = \frac{Pf}{0.052 \times TVD} \]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN: INPUTS (5 cols) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- 1. Hole Geometry -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title">A. Hole Geometry (Geometri Lubang)</h3>
+                    <div class="space-y-4">
+                        <!-- Conductor -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-3 text-xs font-bold text-slate-500">Conductor Pipe (0 - Depth)</div>
+                            <div><label class="text-[10px] text-slate-400">Outside Diameter (in)</label><input type="number" id="condOD" class="input-field" placeholder="49"></div>
+                            <div><label class="text-[10px] text-slate-400">Inside Diameter (in)</label><input type="number" id="condID" class="input-field" placeholder="46"></div>
+                            <div><label class="text-[10px] text-slate-400">Depth (ft)</label><input type="number" id="condDepth" class="input-field" placeholder="65"></div>
+                        </div>
+                        <!-- Casing 1 -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-3 text-xs font-bold text-slate-500">Casing 1</div>
+                            <div><label class="text-[10px] text-slate-400">Outside Diameter (in)</label><input type="number" id="csg1OD" class="input-field" placeholder="37"></div>
+                            <div><label class="text-[10px] text-slate-400">Inside Diameter (in)</label><input type="number" id="csg1ID" class="input-field" placeholder="33"></div>
+                            <div><label class="text-[10px] text-slate-400">Depth (ft)</label><input type="number" id="csg1Depth" class="input-field" placeholder="3500"></div>
+                        </div>
+                        <!-- Casing 2 -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-3 text-xs font-bold text-slate-500">Casing 2</div>
+                            <div><label class="text-[10px] text-slate-400">Outside Diameter (in)</label><input type="number" id="csg2OD" class="input-field" placeholder="32"></div>
+                            <div><label class="text-[10px] text-slate-400">Inside Diameter (in)</label><input type="number" id="csg2ID" class="input-field" placeholder="29.125"></div>
+                            <div><label class="text-[10px] text-slate-400">Depth (ft)</label><input type="number" id="csg2Depth" class="input-field" placeholder="7000"></div>
+                        </div>
+                        <!-- Open Hole -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-3 text-xs font-bold text-slate-500">Open Hole (Bit Size)</div>
+                            <div class="col-span-2"><label class="text-[10px] text-slate-400">Bit Size (in)</label><input type="number" id="ohSize" class="input-field" placeholder="18.25"></div>
+                            <div><label class="text-[10px] text-slate-400">Depth (ft)</label><input type="number" id="ohDepth" class="input-field" placeholder="8000"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Drill String -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title">B. Drill String (Rangkaian Pipa)</h3>
+                    <div class="space-y-4">
+                        <!-- Drill Pipe -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-3 text-xs font-bold text-slate-500">Drill Pipe (DP)</div>
+                            <div><label class="text-[10px] text-slate-400">Outside Diameter (in)</label><input type="number" id="dpOD" class="input-field" placeholder="14.5"></div>
+                            <div><label class="text-[10px] text-slate-400">Inside Diameter (in)</label><input type="number" id="dpID" class="input-field" placeholder="12.5"></div>
+                            <div><label class="text-[10px] text-slate-400">Length (ft)</label><input type="number" id="dpLen" class="input-field" placeholder="7950"></div>
+                        </div>
+                        <!-- Drill Collar -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-3 text-xs font-bold text-slate-500">Drill Collar (DC)</div>
+                            <div><label class="text-[10px] text-slate-400">Outside Diameter (in)</label><input type="number" id="dcOD" class="input-field" placeholder="17.15"></div>
+                            <div><label class="text-[10px] text-slate-400">Inside Diameter (in)</label><input type="number" id="dcID" class="input-field" placeholder="14.5"></div>
+                            <div><label class="text-[10px] text-slate-400">Length (ft)</label><input type="number" id="dcLen" class="input-field" placeholder="50"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Pump & Mud Data -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title">C. Pump & Mud Data (Pompa & Lumpur)</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="text-xs text-slate-500">Pump Speed (Strokes Per Minute)</label><input type="number" id="spm" class="input-field" placeholder="100"></div>
+                        <div><label class="text-xs text-slate-500">Output (Gallons Per Stroke)</label><input type="number" id="pop" class="input-field" placeholder="8"></div>
+                        <div><label class="text-xs text-slate-500">Mud Weight (Pounds Per Gallon)</label><input type="number" id="mw" class="input-field" placeholder="12.5"></div>
+                        <div><label class="text-xs text-slate-500">Yield Point (lb/100ft²)</label><input type="number" id="yp" class="input-field" placeholder="12"></div>
+                    </div>
+                </div>
+
+                <!-- 4. Well Control Data -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title">D. Well Control Data</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="text-xs text-slate-500">Shut-In Casing Pressure (psi)</label><input type="number" id="sicp" class="input-field" placeholder="400"></div>
+                        <div><label class="text-xs text-slate-500">Shut-In Drill Pipe Pressure (psi)</label><input type="number" id="sidpp" class="input-field" placeholder="300"></div>
+                        <div><label class="text-xs text-slate-500">Pit Gain (bbl)</label><input type="number" id="pitGain" class="input-field" placeholder="15"></div>
+                        <div><label class="text-xs text-slate-500">Kill Mud Vol (bbl)</label><input type="number" id="killVol" class="input-field" placeholder="100"></div>
+                    </div>
+                </div>
+
+                <button onclick="calculateAll()" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition shadow-lg flex items-center justify-center gap-2">
+                    <i data-lucide="calculator" class="w-5 h-5"></i> Hitung Analisis
+                </button>
+            </div>
+
+            <!-- RIGHT COLUMN: RESULTS (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- 1. Volume & Capacities -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-blue-600 border-blue-100">1. Volume & Kapasitas</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="result-card">
+                            <p class="result-label">Total Hole Volume</p>
+                            <p id="res_holeVol" class="result-value">-</p>
+                            <p class="result-unit">bbl</p>
+                        </div>
+                        <div class="result-card">
+                            <p class="result-label">Displacement</p>
+                            <p id="res_dispVol" class="result-value">-</p>
+                            <p class="result-unit">bbl</p>
+                        </div>
+                        <div class="result-card bg-blue-50 border-blue-100">
+                            <p class="result-label text-blue-600">Total Annulus Volume</p>
+                            <p id="res_annVol" class="result-value text-blue-700">-</p>
+                            <p class="result-unit text-blue-500">bbl</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Circulation -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-emerald-600 border-emerald-100">2. Waktu Sirkulasi</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="result-card">
+                            <p class="result-label">Flow Rate</p>
+                            <p id="res_flowRate" class="result-value">-</p>
+                            <p class="result-unit">GPM / bbl/min</p>
+                        </div>
+                        <div class="result-card bg-emerald-50 border-emerald-100">
+                            <p class="result-label text-emerald-600">Lag Time</p>
+                            <p id="res_lagTime" class="result-value text-emerald-700">-</p>
+                            <p class="result-unit text-emerald-500">menit</p>
+                        </div>
+                        <div class="result-card">
+                            <p class="result-label">Cycle Time</p>
+                            <p id="res_cycleTime" class="result-value">-</p>
+                            <p class="result-unit">menit</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Hydraulics -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-amber-600 border-amber-100">3. Hidrolika (Open Hole - DC)</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="result-card">
+                            <p class="result-label">Annular Velocity</p>
+                            <p id="res_av" class="result-value">-</p>
+                            <p class="result-unit">ft/min</p>
+                        </div>
+                        <div class="result-card bg-amber-50 border-amber-100">
+                            <p class="result-label text-amber-600">Effective Circulating Density</p>
+                            <p id="res_ecd" class="result-value text-amber-700">-</p>
+                            <p class="result-unit text-amber-500">PPG</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Well Control -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-red-600 border-red-100">4. Well Control</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div class="result-card">
+                            <p class="result-label">Formation Pressure</p>
+                            <p id="res_pf" class="result-value">-</p>
+                            <p class="result-unit">psi</p>
+                        </div>
+                        <div class="result-card bg-red-50 border-red-100">
+                            <p class="result-label text-red-600">Kill Mud Weight</p>
+                            <p id="res_kmw" class="result-value text-red-700">-</p>
+                            <p class="result-unit text-red-500">PPG</p>
+                        </div>
+                        <div class="result-card">
+                            <p class="result-label">Barite Needed</p>
+                            <p id="res_barite" class="result-value">-</p>
+                            <p class="result-unit">lbs/bbl</p>
+                        </div>
+                        <div class="result-card">
+                            <p class="result-label">Kick Type</p>
+                            <p id="res_kickType" class="result-value text-sm">-</p>
+                            <p class="result-unit">Est. Gradient</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
+                        <div>
+                            <p class="font-bold text-amber-900 mb-2">Disclaimer</p>
+                            <p class="text-amber-800">
+                                Tool ini disusun untuk keperluan praktikum dan edukasi semata. Perhitungan di lapangan harus mempertimbangkan faktor keselamatan, standar perusahaan, dan kondisi aktual sumur.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Bourgoyne Jr, A. T. et al. (1986)</strong> – <em>Applied Drilling Engineering</em>, SPE Textbook Series.</li>
+                    <li><strong>API RP 13D</strong> – <em>Recommended Practice on the Rheology and Hydraulics of Oil-Well Drilling Fluids</em>.</li>
+                    <li><strong>Tegar Hermawan T.</strong> – <em>Laporan Praktikum Geologi Minyak & Gas Bumi: Analisis Mud Logging</em>.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+<script>
+    lucide.createIcons();
+    const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+    const mobileNavDropdown=document.getElementById('mobileNavDropdown');
+    mobileMenuBtn.addEventListener('click',e=>{e.stopPropagation();mobileNavDropdown.classList.toggle('hidden');lucide.createIcons();});
+    document.addEventListener('click',e=>{if(!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)){mobileNavDropdown.classList.add('hidden');}});
+    function toggleGuideModal(){const m=document.getElementById('guideModal');m.classList.toggle('hidden');setTimeout(()=>lucide.createIcons(),100);}
+
+    function calculateAll() {
+        // --- 1. GET INPUTS ---
+        // Hole Geometry
+        const condID = parseFloat(document.getElementById('condID').value);
+        const condDepth = parseFloat(document.getElementById('condDepth').value);
+        
+        const csg1ID = parseFloat(document.getElementById('csg1ID').value);
+        const csg1Depth = parseFloat(document.getElementById('csg1Depth').value);
+        
+        const csg2ID = parseFloat(document.getElementById('csg2ID').value);
+        const csg2Depth = parseFloat(document.getElementById('csg2Depth').value);
+        
+        const ohSize = parseFloat(document.getElementById('ohSize').value);
+        const ohDepth = parseFloat(document.getElementById('ohDepth').value);
+
+        // Drill String
+        const dpOD = parseFloat(document.getElementById('dpOD').value);
+        const dpLen = parseFloat(document.getElementById('dpLen').value);
+        const dcOD = parseFloat(document.getElementById('dcOD').value);
+        const dcLen = parseFloat(document.getElementById('dcLen').value);
+
+        // Pump & Mud
+        const spm = parseFloat(document.getElementById('spm').value);
+        const pop = parseFloat(document.getElementById('pop').value); // GPS
+        const mw = parseFloat(document.getElementById('mw').value);
+        const yp = parseFloat(document.getElementById('yp').value);
+
+        // Well Control
+        const sicp = parseFloat(document.getElementById('sicp').value);
+        const sidpp = parseFloat(document.getElementById('sidpp').value);
+        const pitGain = parseFloat(document.getElementById('pitGain').value);
+
+        // Check if any required input is NaN
+        if ([condID, condDepth, csg1ID, csg1Depth, csg2ID, csg2Depth, ohSize, ohDepth, dpOD, dpLen, dcOD, dcLen, spm, pop, mw, yp, sicp, sidpp, pitGain].some(isNaN)) {
+            // Optional: You could clear results or show a message, but for now we just return
+            // to avoid showing NaNs or incorrect calculations based on partial data.
+            // However, to keep the UI clean on load (since we removed default values),
+            // we should probably just return silently if data is missing.
+            return;
+        }
+
+        // --- 2. CALCULATIONS ---
+        
+        // A. Volumes
+        // Capacities (bbl/ft) = ID^2 / 1029.4
+        const capCond = (condID**2)/1029.4;
+        const capCsg1 = (csg1ID**2)/1029.4;
+        const capCsg2 = (csg2ID**2)/1029.4;
+        const capOH = (ohSize**2)/1029.4;
+
+        // Hole Volumes
+        const vCond = capCond * condDepth;
+        const vCsg1 = capCsg1 * (csg1Depth - condDepth);
+        const vCsg2 = capCsg2 * (csg2Depth - csg1Depth);
+        const vOH = capOH * (ohDepth - csg2Depth);
+        const totalHoleVol = vCond + vCsg1 + vCsg2 + vOH;
+
+        // Displacement
+        const dispDP = ((dpOD**2)/1029.4) * dpLen;
+        const dispDC = ((dcOD**2)/1029.4) * dcLen;
+        const totalDisp = dispDP + dispDC;
+
+        // Annulus Volume
+        const totalAnnVol = totalHoleVol - totalDisp;
+
+        // B. Circulation
+        const flowRateGPM = pop * spm;
+        const flowRateBblMin = flowRateGPM / 42;
+        
+        const lagTime = totalAnnVol / flowRateBblMin;
+        const cycleTime = totalHoleVol / flowRateBblMin; // Simplified approximation
+
+        // C. Hydraulics (Open Hole - DC Section)
+        // AV = (24.5 * Q_gpm) / (Dh^2 - Dp^2)
+        const av = (24.5 * flowRateGPM) / (ohSize**2 - dcOD**2);
+        
+        // ECD = MW + (APL / (0.052 * TVD))
+        // APL approx = (YP * L) / (225 * (Dh - Dp)) for OH-DC section
+        // Note: This is a simplified APL for just the DC section in OH
+        const apl = (yp * (ohDepth - csg2Depth)) / (225 * (ohSize - dcOD)); // Using OH length
+        // Better approximation from module example: APL = 93 psi (constant used in module)
+        // Let's use the formula but note it's an estimation.
+        // Re-calculating APL based on module example logic:
+        // Example used L=1000, Dh=18.25, Dp=17.15, YP=12 -> APL ~ 93.
+        // Our L = 8000-7000 = 1000. So calculation should match.
+        const ecd = mw + (apl / (0.052 * ohDepth));
+
+        // D. Well Control
+        // Pf = (0.052 * MW * TVD) + SIDPP
+        const pf = (0.052 * mw * ohDepth) + sidpp;
+        
+        // KMW = Pf / (0.052 * TVD)
+        const kmw = pf / (0.052 * ohDepth);
+        
+        // Barite = (1470 * (KMW - MW)) / (35 - KMW)
+        const barite = (1470 * (kmw - mw)) / (35 - kmw);
+
+        // Kick Analysis
+        // Length of Kick = Gain / Annulus Cap DC
+        // Annulus Cap DC = (Dh^2 - Dp^2)/1029.4
+        const annCapDC = (ohSize**2 - dcOD**2)/1029.4;
+        const lenKick = pitGain / annCapDC;
+        
+        // Kick Gradient = MW - ((SICP - SIDPP) / (0.052 * Lk))
+        const kickGrad = mw - ((sicp - sidpp) / (0.052 * lenKick));
+        
+        let kickType = "Unknown";
+        if (kickGrad < 3) kickType = "Gas";
+        else if (kickGrad < 8) kickType = "Oil/Mix";
+        else kickType = "Salt Water";
+
+        // --- 3. UPDATE UI ---
+        document.getElementById('res_holeVol').textContent = totalHoleVol.toFixed(2);
+        document.getElementById('res_dispVol').textContent = totalDisp.toFixed(2);
+        document.getElementById('res_annVol').textContent = totalAnnVol.toFixed(2);
+
+        document.getElementById('res_flowRate').textContent = `${flowRateGPM.toFixed(0)} / ${flowRateBblMin.toFixed(1)}`;
+        document.getElementById('res_lagTime').textContent = lagTime.toFixed(1);
+        document.getElementById('res_cycleTime').textContent = cycleTime.toFixed(1);
+
+        document.getElementById('res_av').textContent = av.toFixed(1);
+        document.getElementById('res_ecd').textContent = ecd.toFixed(2);
+
+        document.getElementById('res_pf').textContent = pf.toFixed(0);
+        document.getElementById('res_kmw').textContent = kmw.toFixed(2);
+        document.getElementById('res_barite').textContent = barite.toFixed(1);
+        document.getElementById('res_kickType').textContent = `${kickType} (${kickGrad.toFixed(1)} ppg)`;
+    }
+
+    // Initial calc
+    calculateAll();
+</script>
+</body>
+</html>

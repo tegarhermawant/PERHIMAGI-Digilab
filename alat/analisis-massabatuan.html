@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Massa Batuan (RMR & GSI) - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-massabatuan.html">
+    <meta property="og:title" content="Analisis Massa Batuan (RMR & GSI) - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool klasifikasi massa batuan menggunakan metode Rock Mass Rating (RMR) dan Geological Strength Index (GSI).">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-field { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; }
+        .input-field:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .section-title { font-size: 0.875rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem; }
+        .result-card { background: white; border-radius: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .result-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+        .result-value { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .result-unit { font-size: 0.75rem; color: #94a3b8; font-weight: 500; }
+        select.input-field { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="home" class="w-5 h-5"></i> Home</a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="book" class="w-5 h-5"></i> Library</a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium"><i data-lucide="wrench" class="w-5 h-5"></i> Alat</a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="info" class="w-5 h-5"></i> Tentang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Geoteknik & Mekanika Tanah Batuan</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Massa Batuan (RMR & GSI)</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Klasifikasi massa batuan menggunakan metode Rock Mass Rating (Bieniawski, 1989) dan Geological Strength Index (GSI).
+            </p>
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Panduan Modul
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="layers" class="w-5 h-5"></i></div>
+                        Panduan RMR & GSI
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg"><i data-lucide="x" class="w-6 h-6 text-slate-500"></i></button>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">1. Rock Mass Rating (RMR)</h4>
+                        <p class="text-sm text-slate-600 mb-2">Sistem klasifikasi massa batuan berdasarkan 6 parameter (Bieniawski, 1989):</p>
+                        <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
+                            <li><strong>Kuat Tekan (UCS):</strong> Kekuatan batuan utuh.</li>
+                            <li><strong>RQD:</strong> Kualitas inti bor (% utuh >10cm).</li>
+                            <li><strong>Spasi Diskontinuitas:</strong> Jarak antar kekar.</li>
+                            <li><strong>Kondisi Diskontinuitas:</strong> Kekasaran, bukaan, pelapukan, dll.</li>
+                            <li><strong>Air Tanah:</strong> Tekanan air dalam pori/kekar.</li>
+                            <li><strong>Orientasi (Adjustment):</strong> Koreksi berdasarkan arah penggalian vs kemiringan kekar.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">2. Kelas Massa Batuan (RMR)</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-200 text-slate-700">
+                                    <tr>
+                                        <th class="p-2 rounded-tl-lg">Rating</th>
+                                        <th class="p-2">Kelas</th>
+                                        <th class="p-2 rounded-tr-lg">Deskripsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 bg-white">
+                                    <tr><td class="p-2">81 - 100</td><td class="p-2 font-bold">I</td><td class="p-2">Very Good Rock</td></tr>
+                                    <tr><td class="p-2">61 - 80</td><td class="p-2 font-bold">II</td><td class="p-2">Good Rock</td></tr>
+                                    <tr><td class="p-2">41 - 60</td><td class="p-2 font-bold">III</td><td class="p-2">Fair Rock</td></tr>
+                                    <tr><td class="p-2">21 - 40</td><td class="p-2 font-bold">IV</td><td class="p-2">Poor Rock</td></tr>
+                                    <tr><td class="p-2">< 21</td><td class="p-2 font-bold">V</td><td class="p-2">Very Poor Rock</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">3. Geological Strength Index (GSI)</h4>
+                        <p class="text-sm text-slate-600">Sistem klasifikasi visual berdasarkan struktur geologi dan kondisi permukaan diskontinuitas (Hoek & Brown).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN: INPUTS (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- RMR INPUTS -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">A. Parameter RMR (Rock Mass Rating)</h3>
+                    <div class="space-y-4">
+                        <!-- 1. UCS -->
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">1. Kuat Tekan Batuan Utuh (UCS)</label>
+                            <select id="rmr_ucs" class="input-field">
+                                <option value="15">> 250 MPa (Point Load >10 MPa)</option>
+                                <option value="12">100 - 250 MPa (PL 4-10 MPa)</option>
+                                <option value="7">50 - 100 MPa (PL 2-4 MPa)</option>
+                                <option value="4" selected>25 - 50 MPa (PL 1-2 MPa)</option>
+                                <option value="2">5 - 25 MPa</option>
+                                <option value="1">1 - 5 MPa</option>
+                                <option value="0">< 1 MPa</option>
+                            </select>
+                        </div>
+
+                        <!-- 2. RQD -->
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">2. Rock Quality Designation (RQD %)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="rmr_rqd_val" class="input-field" placeholder="Contoh: 85" min="0" max="100">
+                                <div class="w-24 bg-slate-100 flex items-center justify-center rounded border border-slate-200 text-sm font-bold text-slate-500" id="rmr_rqd_score">Rating: -</div>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Rating: 90-100%(20), 75-90%(17), 50-75%(13), 25-50%(8), <25%(3)</p>
+                        </div>
+
+                        <!-- 3. Spacing -->
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">3. Spasi Diskontinuitas (m)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="rmr_spacing_val" class="input-field" placeholder="Contoh: 0.5" step="0.01">
+                                <div class="w-24 bg-slate-100 flex items-center justify-center rounded border border-slate-200 text-sm font-bold text-slate-500" id="rmr_spacing_score">Rating: -</div>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Rating: >2m(20), 0.6-2m(15), 0.2-0.6m(10), 0.06-0.2m(8), <0.06m(5)</p>
+                        </div>
+
+                        <!-- 4. Condition -->
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <label class="text-xs font-bold text-slate-500 block mb-2">4. Kondisi Diskontinuitas (Detail)</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                <div>
+                                    <span class="block text-slate-400 mb-1">Kemenerusan (Persistence)</span>
+                                    <select id="cond_pers" class="input-field text-xs">
+                                        <option value="6">< 1 m (Sangat Rendah)</option>
+                                        <option value="4" selected>1 - 3 m (Rendah)</option>
+                                        <option value="2">3 - 10 m (Sedang)</option>
+                                        <option value="1">10 - 20 m (Tinggi)</option>
+                                        <option value="0">> 20 m (Sangat Tinggi)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-400 mb-1">Lebar Bukaan (Aperture)</span>
+                                    <select id="cond_aper" class="input-field text-xs">
+                                        <option value="6">Tertutup (None)</option>
+                                        <option value="5">< 0.1 mm</option>
+                                        <option value="4" selected>0.1 - 1.0 mm</option>
+                                        <option value="1">1 - 5 mm</option>
+                                        <option value="0">> 5 mm</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-400 mb-1">Kekasaran (Roughness)</span>
+                                    <select id="cond_rough" class="input-field text-xs">
+                                        <option value="6">Sangat Kasar (Very Rough)</option>
+                                        <option value="5" selected>Kasar (Rough)</option>
+                                        <option value="3">Agak Kasar (Slightly Rough)</option>
+                                        <option value="1">Halus (Smooth)</option>
+                                        <option value="0">Cermin Sesar (Slickensided)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-400 mb-1">Material Pengisi (Infilling)</span>
+                                    <select id="cond_fill" class="input-field text-xs">
+                                        <option value="6" selected>Tidak Ada (None)</option>
+                                        <option value="4">Keras < 5 mm</option>
+                                        <option value="2">Keras > 5 mm</option>
+                                        <option value="2">Lunak < 5 mm</option>
+                                        <option value="0">Lunak > 5 mm</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-400 mb-1">Pelapukan (Weathering)</span>
+                                    <select id="cond_weath" class="input-field text-xs">
+                                        <option value="6">Segar (Unweathered)</option>
+                                        <option value="5" selected>Agak Lapuk (Slightly)</option>
+                                        <option value="3">Lapuk Sedang (Moderately)</option>
+                                        <option value="1">Sangat Lapuk (Highly)</option>
+                                        <option value="0">Hancur (Decomposed)</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-end">
+                                    <div class="w-full bg-white p-2 rounded border border-slate-200 text-center font-bold text-slate-600">
+                                        Sub-Total: <span id="cond_total" class="text-red-600">24</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Groundwater -->
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">5. Kondisi Air Tanah</label>
+                            <select id="rmr_water" class="input-field">
+                                <option value="15">Kering (Dry)</option>
+                                <option value="10" selected>Lembab (Damp)</option>
+                                <option value="7">Basah (Wet)</option>
+                                <option value="4">Menetes (Dripping)</option>
+                                <option value="0">Mengalir (Flowing)</option>
+                            </select>
+                        </div>
+
+                        <!-- 6. Orientation -->
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">6. Orientasi Diskontinuitas (Adjustment untuk Lereng)</label>
+                            <select id="rmr_orient" class="input-field">
+                                <option value="0">Sangat Menguntungkan (Very Favorable)</option>
+                                <option value="-5" selected>Menguntungkan (Favorable)</option>
+                                <option value="-25">Sedang (Fair)</option>
+                                <option value="-50">Merugikan (Unfavorable)</option>
+                                <option value="-60">Sangat Merugikan (Very Unfavorable)</option>
+                            </select>
+                            <p class="text-[10px] text-slate-400 mt-1">Catatan: Nilai adjustment di atas khusus untuk Lereng (Slopes).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GSI INPUTS -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">B. Parameter GSI (Geological Strength Index)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Kondisi Permukaan (Surface)</label>
+                            <select id="gsi_surface" class="input-field">
+                                <option value="VG">Very Good (Kasar, Segar)</option>
+                                <option value="G">Good (Kasar, Sedikit Lapuk)</option>
+                                <option value="F" selected>Fair (Halus, Agak Lapuk)</option>
+                                <option value="P">Poor (Cermin Sesar, Sangat Lapuk)</option>
+                                <option value="VP">Very Poor (Lempung, Hancur)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Struktur Batuan (Structure)</label>
+                            <select id="gsi_struct" class="input-field">
+                                <option value="B">Blocky (Kekar Lebar, Masif)</option>
+                                <option value="VB" selected>Very Blocky (Kekar Rapat)</option>
+                                <option value="BD">Blocky/Disturbed (Terganggu)</option>
+                                <option value="D">Disintegrated (Hancur)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: RESULTS (5 cols) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- RMR RESULT -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil RMR</h3>
+                    
+                    <div class="text-center py-4 relative z-10">
+                        <p class="text-sm text-slate-500 mb-1">Total Rating (RMR)</p>
+                        <div class="text-5xl font-black text-red-600 mb-2" id="res_rmr_val">-</div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-sm" id="res_rmr_class">Kelas -</div>
+                    </div>
+
+                    <div class="mt-4 space-y-3 relative z-10">
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <p class="text-xs font-bold text-slate-500 uppercase">Deskripsi</p>
+                            <p class="font-medium text-slate-800" id="res_rmr_desc">-</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <p class="text-xs font-bold text-slate-500 uppercase">Kohesi (Est.)</p>
+                            <p class="font-medium text-slate-800" id="res_cohesion">-</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <p class="text-xs font-bold text-slate-500 uppercase">Sudut Geser Dalam (Est.)</p>
+                            <p class="font-medium text-slate-800" id="res_friction">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GSI RESULT -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil GSI</h3>
+                    
+                    <div class="text-center py-4 relative z-10">
+                        <p class="text-sm text-slate-500 mb-1">GSI Value (Est.)</p>
+                        <div class="text-5xl font-black text-red-600 mb-2" id="res_gsi_val">-</div>
+                        <p class="text-xs text-slate-400">Berdasarkan matriks Hoek & Brown</p>
+                    </div>
+                </div>
+
+                <!-- RECOMMENDATION -->
+                <div class="bg-slate-50 rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-slate-700 border-slate-200">Rekomendasi Teknis</h3>
+                    <p class="text-sm text-slate-900 leading-relaxed" id="res_recommendation">
+                        Lakukan perhitungan untuk melihat rekomendasi.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-slate-400"></i>
+                        <div>
+                            <p class="font-bold text-slate-700 mb-2">Disclaimer</p>
+                            <p class="text-slate-600">
+                                Tool ini disusun untuk keperluan praktikum dan edukasi. Penilaian parameter (terutama GSI dan Kondisi Kekar) bersifat subjektif dan memerlukan pengalaman lapangan.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Bieniawski, Z.T. (1989)</strong> – <em>Engineering Rock Mass Classifications</em>.</li>
+                    <li><strong>Hoek, E. & Brown, E.T. (1997)</strong> – <em>Practical Estimates of Rock Mass Strength</em>.</li>
+                    <li><strong>Tegar Hermawan T.</strong> – <em>Laporan Praktikum Geologi Teknik Acara 6: Klasifikasi Massa Batuan</em>.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+<script>
+    lucide.createIcons();
+    const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+    const mobileNavDropdown=document.getElementById('mobileNavDropdown');
+    mobileMenuBtn.addEventListener('click',e=>{e.stopPropagation();mobileNavDropdown.classList.toggle('hidden');lucide.createIcons();});
+    document.addEventListener('click',e=>{if(!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)){mobileNavDropdown.classList.add('hidden');}});
+    function toggleGuideModal(){const m=document.getElementById('guideModal');m.classList.toggle('hidden');setTimeout(()=>lucide.createIcons(),100);}
+
+    // --- LIVE UPDATES ---
+    // Add event listeners to all inputs
+    const allInputs = document.querySelectorAll('input, select');
+    allInputs.forEach(input => {
+        input.addEventListener('input', calculateAll);
+        input.addEventListener('change', calculateAll);
+    });
+
+    // --- RMR LOGIC ---
+    
+    // Sub-parameter listeners to update total condition score
+    const condSelects = ['cond_pers', 'cond_aper', 'cond_rough', 'cond_fill', 'cond_weath'];
+    condSelects.forEach(id => {
+        document.getElementById(id).addEventListener('change', updateConditionTotal);
+    });
+
+    function updateConditionTotal() {
+        let total = 0;
+        condSelects.forEach(id => {
+            total += parseInt(document.getElementById(id).value || 0);
+        });
+        document.getElementById('cond_total').textContent = total;
+        // Trigger main calc after updating sub-total
+        calculateAll();
+        return total;
+    }
+
+    function updateRqdRating() {
+        const val = parseFloat(document.getElementById('rmr_rqd_val').value);
+        let score = 0;
+        if (!isNaN(val)) {
+            if (val >= 90) score = 20;
+            else if (val >= 75) score = 17;
+            else if (val >= 50) score = 13;
+            else if (val >= 25) score = 8;
+            else score = 3;
+        }
+        document.getElementById('rmr_rqd_score').textContent = `Rating: ${score}`;
+        return score;
+    }
+
+    function updateSpacingRating() {
+        const val = parseFloat(document.getElementById('rmr_spacing_val').value);
+        let score = 0;
+        if (!isNaN(val)) {
+            if (val > 2) score = 20;
+            else if (val >= 0.6) score = 15;
+            else if (val >= 0.2) score = 10;
+            else if (val >= 0.06) score = 8;
+            else score = 5;
+        }
+        document.getElementById('rmr_spacing_score').textContent = `Rating: ${score}`;
+        return score;
+    }
+
+    function getGSI(surface, struct) {
+        // Approximate GSI values based on Hoek-Brown Chart center points
+        const matrix = {
+            'VG': {'B': 75, 'VB': 65, 'BD': 55, 'D': 45},
+            'G':  {'B': 65, 'VB': 55, 'BD': 45, 'D': 35},
+            'F':  {'B': 50, 'VB': 45, 'BD': 35, 'D': 25},
+            'P':  {'B': 40, 'VB': 35, 'BD': 25, 'D': 20},
+            'VP': {'B': 30, 'VB': 25, 'BD': 20, 'D': 10}
+        };
+        return matrix[surface][struct];
+    }
+
+    function calculateAll() {
+        // 1. RMR Calculation
+        const ucs = parseInt(document.getElementById('rmr_ucs').value);
+        const rqd = updateRqdRating();
+        const spacing = updateSpacingRating();
+        
+        // Recalculate condition total to be safe
+        let condition = 0;
+        condSelects.forEach(id => {
+            condition += parseInt(document.getElementById(id).value || 0);
+        });
+        
+        const water = parseInt(document.getElementById('rmr_water').value);
+        const orient = parseInt(document.getElementById('rmr_orient').value);
+
+        const rmr = ucs + rqd + spacing + condition + water + orient;
+        
+        // RMR Interpretation
+        let rmrClass = '', desc = '', cohesion = '', friction = '', rec = '';
+        
+        if (rmr >= 81) {
+            rmrClass = 'I'; desc = 'Very Good Rock'; cohesion = '> 400 kPa'; friction = '> 45°';
+            rec = 'Sangat stabil. Umumnya tidak memerlukan penyangga, mungkin hanya spot bolting sesekali.';
+        } else if (rmr >= 61) {
+            rmrClass = 'II'; desc = 'Good Rock'; cohesion = '300 - 400 kPa'; friction = '35° - 45°';
+            rec = 'Stabil. Penyangga ringan seperti spot bolting dan wire mesh mungkin diperlukan di area tertentu.';
+        } else if (rmr >= 41) {
+            rmrClass = 'III'; desc = 'Fair Rock'; cohesion = '200 - 300 kPa'; friction = '25° - 35°';
+            rec = 'Stabilitas sedang. Waspada longsoran bidang/baji. Perlu pola bolting sistematis dan shotcrete tipis.';
+        } else if (rmr >= 21) {
+            rmrClass = 'IV'; desc = 'Poor Rock'; cohesion = '100 - 200 kPa'; friction = '15° - 25°';
+            rec = 'Buruk. Potensi keruntuhan tinggi. Perlu penyangga berat: rock bolt rapat, shotcrete tebal, dan steel ribs.';
+        } else {
+            rmrClass = 'V'; desc = 'Very Poor Rock'; cohesion = '< 100 kPa'; friction = '< 15°';
+            rec = 'Sangat buruk. Tidak stabil. Memerlukan penanganan khusus, forepoling, dan penyangga sangat berat segera setelah penggalian.';
+        }
+
+        // 2. GSI Calculation
+        const surface = document.getElementById('gsi_surface').value;
+        const struct = document.getElementById('gsi_struct').value;
+        const gsi = getGSI(surface, struct);
+
+        // 3. Update UI
+        document.getElementById('res_rmr_val').textContent = rmr;
+        document.getElementById('res_rmr_class').textContent = `Kelas ${rmrClass}`;
+        document.getElementById('res_rmr_desc').textContent = desc;
+        document.getElementById('res_cohesion').textContent = cohesion;
+        document.getElementById('res_friction').textContent = friction;
+        document.getElementById('res_recommendation').textContent = rec;
+        
+        document.getElementById('res_gsi_val').textContent = gsi;
+    }
+
+    // Initial run
+    calculateAll();
+</script>
+</body>
+</html>

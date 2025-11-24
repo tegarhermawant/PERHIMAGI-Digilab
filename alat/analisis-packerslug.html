@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Packer Test & Slug Test - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-packerslug.html">
+    <meta property="og:title" content="Analisis Packer Test & Slug Test - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool analisis permeabilitas batuan menggunakan Packer Test dan Slug Test (Metode Hvorslev).">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-field { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; }
+        .input-field:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .section-title { font-size: 0.875rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem; }
+        .result-card { background: white; border-radius: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .result-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+        .result-value { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .result-unit { font-size: 0.75rem; color: #94a3b8; font-weight: 500; }
+        .tab-button { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.2s; }
+        .tab-button.active { background-color: #dc2626; color: white; }
+        .tab-button:not(.active) { background-color: #f1f5f9; color: #64748b; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="home" class="w-5 h-5"></i> Home</a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="book" class="w-5 h-5"></i> Library</a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium"><i data-lucide="wrench" class="w-5 h-5"></i> Alat</a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="info" class="w-5 h-5"></i> Tentang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Hidrogeologi & Lingkungan</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Packer Test & Slug Test</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Analisis permeabilitas batuan/akuifer menggunakan Packer Test (Nilai Lugeon) dan Slug Test (Metode Hvorslev).
+            </p>
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Panduan Modul
+            </button>
+        </div>
+
+        <!-- TAB SELECTOR -->
+        <div class="flex gap-4 justify-center mb-8">
+            <button onclick="switchTab('packer')" id="tab-packer" class="tab-button active">
+                <i data-lucide="gauge" class="w-4 h-4 inline mr-2"></i>Packer Test
+            </button>
+            <button onclick="switchTab('slug')" id="tab-slug" class="tab-button">
+                <i data-lucide="droplet" class="w-4 h-4 inline mr-2"></i>Slug Test
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="flask-conical" class="w-5 h-5"></i></div>
+                        Panduan Packer & Slug Test
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg"><i data-lucide="x" class="w-6 h-6 text-slate-500"></i></button>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">Packer Test</h4>
+                        <p class="text-sm text-slate-600 mb-2">Konduktivitas Hidrolik:</p>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ k = \frac{Q}{2 \pi L h} \ln\left(\frac{L}{r}\right) \]</p>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-2 mt-3">Nilai Lugeon:</p>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ Lu = \frac{10 \times Q}{P \times L} \]</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">Slug Test (Hvorslev)</h4>
+                        <p class="text-sm text-slate-600 mb-2">Konduktivitas Hidrolik:</p>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ k = \frac{r^2 \ln(L_e / R)}{2 L_e t_{37}} \]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PACKER TEST CONTENT -->
+        <div id="content-packer" class="grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">A. Dimensi Sumur</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Diameter Lubang ($d$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="p_d" class="input-field" placeholder="Contoh: 82" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mm</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Panjang Zona Uji ($L$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="p_L" class="input-field" placeholder="Contoh: 15" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">B. Tekanan & Debit</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Tinggi Muka Air Tanah ($h_m$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="p_hm" class="input-field" placeholder="Contoh: 15" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Tinggi Pressure Gauge ($h_p$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="p_hp" class="input-field" placeholder="Contoh: 1.4" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Tekanan Manometer ($P_m$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="p_Pm" class="input-field" placeholder="Contoh: 3.5" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">kg/cm²</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Debit Injeksi ($Q$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="p_Q" class="input-field" placeholder="Contoh: 50" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">L/menit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil Packer Test</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Konduktivitas ($k$)</p>
+                            <div class="text-4xl font-black text-red-600 mb-1" id="res_p_k">-</div>
+                            <p class="text-xs font-bold text-slate-400">cm/detik</p>
+                        </div>
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Nilai Lugeon</p>
+                            <div class="text-4xl font-black text-red-600 mb-1" id="res_p_lu">-</div>
+                            <p class="text-xs font-bold text-slate-400">Lu</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-slate-700 border-slate-200">Interpretasi</h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p class="text-xs font-bold text-blue-700 uppercase mb-2">Klasifikasi Permeabilitas</p>
+                            <p class="text-lg font-bold text-blue-900" id="res_p_class">-</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-2">Klasifikasi Lugeon</p>
+                            <p class="text-sm text-slate-800" id="res_p_lu_class">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLUG TEST CONTENT -->
+        <div id="content-slug" class="hidden grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">A. Geometri Sumur</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Jari-jari Casing ($r$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="s_r" class="input-field" placeholder="Contoh: 0.041" step="0.001">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Jari-jari Screen ($R$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="s_R" class="input-field" placeholder="Contoh: 0.275" step="0.001">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Panjang Screen ($L_e$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="s_Le" class="input-field" placeholder="Contoh: 5" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Basic Time Lag ($t_{37}$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="s_t37" class="input-field" placeholder="Contoh: 20" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">detik</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Waktu saat rasio pemulihan = 0.37</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil Slug Test</h3>
+                    
+                    <div class="text-center py-6 bg-slate-50 rounded-xl border border-slate-100 relative z-10">
+                        <p class="text-sm text-slate-500 mb-1">Konduktivitas Hidrolik ($k$)</p>
+                        <div class="text-5xl font-black text-red-600 mb-1" id="res_s_k">-</div>
+                        <p class="text-xs font-bold text-slate-400">m/detik</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-slate-700 border-slate-200">Interpretasi</h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p class="text-xs font-bold text-blue-700 uppercase mb-2">Klasifikasi Permeabilitas</p>
+                            <p class="text-lg font-bold text-blue-900" id="res_s_class">-</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-2">Kesesuaian untuk Waste Dump</p>
+                            <p class="text-sm text-slate-800" id="res_s_waste">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-slate-400"></i>
+                        <div>
+                            <p class="font-bold text-slate-700 mb-2">Disclaimer</p>
+                            <p class="text-slate-600">
+                                Tool ini disusun untuk keperluan praktikum. Hasil perhitungan bergantung pada akurasi data lapangan dan asumsi kondisi hidrogeologis.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Hvorslev, M.J. (1951)</strong> – <em>Time Lag and Soil Permeability in Ground-Water Observations</em>.</li>
+                    <li><strong>Lugeon, M. (1933)</strong> – <em>Barrages et Géologie</em>.</li>
+                    <li><strong>Tegar Hermawan T.</strong> – <em>Laporan Praktikum Hidrogeologi Acara 5: Packer Test dan Slug Test</em>.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+
+    lucide.createIcons();
+    const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+    const mobileNavDropdown=document.getElementById('mobileNavDropdown');
+    mobileMenuBtn.addEventListener('click',e=>{e.stopPropagation();mobileNavDropdown.classList.toggle('hidden');lucide.createIcons();});
+    document.addEventListener('click',e=>{if(!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)){mobileNavDropdown.classList.add('hidden');}});
+    function toggleGuideModal(){const m=document.getElementById('guideModal');m.classList.toggle('hidden');setTimeout(()=>lucide.createIcons(),100);}
+
+    // Tab switching
+    function switchTab(tab) {
+        if (tab === 'packer') {
+            document.getElementById('tab-packer').classList.add('active');
+            document.getElementById('tab-slug').classList.remove('active');
+            document.getElementById('content-packer').classList.remove('hidden');
+            document.getElementById('content-slug').classList.add('hidden');
+        } else {
+            document.getElementById('tab-slug').classList.add('active');
+            document.getElementById('tab-packer').classList.remove('active');
+            document.getElementById('content-slug').classList.remove('hidden');
+            document.getElementById('content-packer').classList.add('hidden');
+        }
+        lucide.createIcons();
+    }
+
+    // Helper function to format scientific notation
+    function formatScientific(value, decimals = 2) {
+        if (value === 0) return '0';
+        const exp = Math.floor(Math.log10(Math.abs(value)));
+        const mantissa = value / Math.pow(10, exp);
+        
+        // Superscript digits
+        const superscripts = {
+            '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+            '5': '⁵', '6': '⁶', '⁷': '⁷', '8': '⁸', '9': '⁹',
+            '-': '⁻', '+': '⁺'
+        };
+        
+        const expStr = exp.toString().split('').map(c => superscripts[c] || c).join('');
+        return `${mantissa.toFixed(decimals)} × 10${expStr}`;
+    }
+
+    // Live updates for Packer Test
+    const packerInputs = document.querySelectorAll('#content-packer input');
+    packerInputs.forEach(input => input.addEventListener('input', calculatePacker));
+
+    function calculatePacker() {
+        const d_mm = parseFloat(document.getElementById('p_d').value) || 0;
+        const L_m = parseFloat(document.getElementById('p_L').value) || 0;
+        const hm = parseFloat(document.getElementById('p_hm').value) || 0;
+        const hp = parseFloat(document.getElementById('p_hp').value) || 0;
+        const Pm = parseFloat(document.getElementById('p_Pm').value) || 0;
+        const Q_lpm = parseFloat(document.getElementById('p_Q').value) || 0;
+
+        if (d_mm > 0 && L_m > 0 && hm > 0 && Pm > 0 && Q_lpm > 0) {
+            // Convert units
+            const r_cm = (d_mm / 2) / 10; // mm to cm
+            const L_cm = L_m * 100; // m to cm
+            const Q_cm3s = (Q_lpm * 1000) / 60; // L/min to cm³/s
+            const h_cm = (hm + hp) * 100; // m to cm
+
+            // Calculate pressure
+            const Ps = (hm + hp) / 10; // kg/cm²
+            const P_total = Pm + Ps; // kg/cm²
+
+            // Calculate k (Hydraulic Conductivity)
+            const k = (Q_cm3s / (2 * Math.PI * L_cm * h_cm)) * Math.log(L_cm / r_cm);
+
+            // Calculate Lugeon
+            const Lu = (10 * Q_lpm) / (P_total * L_m);
+
+            // Display results
+            document.getElementById('res_p_k').innerHTML = formatScientific(k, 2);
+            document.getElementById('res_p_lu').textContent = Lu.toFixed(2);
+
+            // Classify permeability
+            let k_class = '';
+            if (k > 1e-2) k_class = 'Very High Permeability';
+            else if (k > 1e-3) k_class = 'High Permeability';
+            else if (k > 1e-4) k_class = 'Medium Permeability';
+            else if (k > 1e-5) k_class = 'Low Permeability';
+            else k_class = 'Very Low Permeability';
+            document.getElementById('res_p_class').textContent = k_class;
+
+            // Classify Lugeon
+            let lu_class = '';
+            if (Lu < 1) lu_class = 'Very Tight (Sangat Rapat) - Grouting tidak diperlukan';
+            else if (Lu < 3) lu_class = 'Tight (Rapat) - Grouting ringan';
+            else if (Lu < 5) lu_class = 'Moderately Tight (Agak Rapat) - Grouting sedang';
+            else if (Lu < 10) lu_class = 'Some Open (Agak Terbuka) - Grouting standar';
+            else if (Lu < 25) lu_class = 'Open (Terbuka) - Grouting intensif';
+            else lu_class = 'Very Open (Sangat Terbuka) - Grouting sangat intensif';
+            document.getElementById('res_p_lu_class').textContent = lu_class;
+        } else {
+            document.getElementById('res_p_k').textContent = '-';
+            document.getElementById('res_p_lu').textContent = '-';
+            document.getElementById('res_p_class').textContent = '-';
+            document.getElementById('res_p_lu_class').textContent = '-';
+        }
+    }
+
+    // Live updates for Slug Test
+    const slugInputs = document.querySelectorAll('#content-slug input');
+    slugInputs.forEach(input => input.addEventListener('input', calculateSlug));
+
+    function calculateSlug() {
+        const r = parseFloat(document.getElementById('s_r').value) || 0;
+        const R = parseFloat(document.getElementById('s_R').value) || 0;
+        const Le = parseFloat(document.getElementById('s_Le').value) || 0;
+        const t37 = parseFloat(document.getElementById('s_t37').value) || 0;
+
+        if (r > 0 && R > 0 && Le > 0 && t37 > 0) {
+            // Hvorslev formula: k = (r² * ln(Le/R)) / (2 * Le * t37)
+            const k = (r * r * Math.log(Le / R)) / (2 * Le * t37);
+
+            // Display result
+            document.getElementById('res_s_k').innerHTML = formatScientific(k, 2);
+
+            // Classify permeability
+            const k_cm_s = k * 100; // m/s to cm/s
+            let s_class = '';
+            if (k_cm_s > 1e-2) s_class = 'Very High Permeability';
+            else if (k_cm_s > 1e-3) s_class = 'High Permeability';
+            else if (k_cm_s > 1e-4) s_class = 'Medium Permeability';
+            else if (k_cm_s > 1e-5) s_class = 'Low Permeability';
+            else s_class = 'Very Low Permeability';
+            document.getElementById('res_s_class').textContent = s_class;
+
+            // Waste dump suitability
+            let waste = '';
+            if (k_cm_s < 1e-7) {
+                waste = '✓ Cocok untuk waste dump. Permeabilitas sangat rendah, memenuhi kriteria impermeabel.';
+            } else if (k_cm_s < 1e-6) {
+                waste = '⚠ Marginal untuk waste dump. Permeabilitas rendah, mungkin memerlukan liner tambahan.';
+            } else {
+                waste = '✗ Tidak cocok untuk waste dump tanpa pelapis tambahan (liner). Permeabilitas terlalu tinggi (> 10⁻⁷ cm/s).';
+            }
+            document.getElementById('res_s_waste').textContent = waste;
+        } else {
+            document.getElementById('res_s_k').textContent = '-';
+            document.getElementById('res_s_class').textContent = '-';
+            document.getElementById('res_s_waste').textContent = '-';
+        }
+    }
+</script>
+</body>
+</html>

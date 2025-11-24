@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Data Kimia Air Tanah - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-kimiaairtanah.html">
+    <meta property="og:title" content="Analisis Data Kimia Air Tanah - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool analisis hidrokimia untuk penentuan fasies air tanah dan evolusi kimia air tanah.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-field { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; }
+        .input-field:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .section-title { font-size: 0.875rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem; }
+        .result-card { background: white; border-radius: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .result-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+        .result-value { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .result-unit { font-size: 0.75rem; color: #94a3b8; font-weight: 500; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="home" class="w-5 h-5"></i> Home</a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="book" class="w-5 h-5"></i> Library</a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium"><i data-lucide="wrench" class="w-5 h-5"></i> Alat</a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="info" class="w-5 h-5"></i> Tentang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Hidrogeologi & Lingkungan</span>
+            <h2 class="text-3xl font-bold text-slate-900">Analisis Data Kimia Air Tanah</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Analisis hidrokimia untuk penentuan fasies air tanah, konversi satuan ion, dan interpretasi evolusi kimia air tanah.
+            </p>
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Panduan Modul
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="droplets" class="w-5 h-5"></i></div>
+                        Panduan Analisis Hidrokimia
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg"><i data-lucide="x" class="w-6 h-6 text-slate-500"></i></button>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">1. Konversi Satuan</h4>
+                        <p class="text-sm text-slate-600 mb-2">Konversi dari mg/L ke meq/L:</p>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center mb-2">\[ \text{meq/L} = \frac{\text{mg/L}}{\text{BM}/\text{Valensi}} \]</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">2. Penentuan Fasies (Metode Kurlov)</h4>
+                        <p class="text-sm text-slate-600 mb-2">Hitung persentase ion dominan:</p>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ \% = \frac{\text{meq Ion}}{\text{Total meq}} \times 100\% \]</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">3. Ion Balance Error</h4>
+                        <p class="text-sm text-slate-600 mb-2">Validasi data:</p>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ E = \frac{\sum \text{Kation} - \sum \text{Anion}}{\sum \text{Kation} + \sum \text{Anion}} \times 100\% \]</p>
+                            <p class="text-xs text-slate-400 mt-2 text-center">Toleransi: &lt; 5% (baik) atau &lt; 10% (dapat diterima)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN: INPUTS (5 cols) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Cation Inputs -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">A. Konsentrasi Kation (mg/L)</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Natrium ($Na^+$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="na" class="input-field" placeholder="Contoh: 11" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Kalium ($K^+$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="k" class="input-field" placeholder="Contoh: 2" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Kalsium ($Ca^{2+}$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="ca" class="input-field" placeholder="Contoh: 28.5" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Magnesium ($Mg^{2+}$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="mg" class="input-field" placeholder="Contoh: 4.5" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anion Inputs -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">B. Konsentrasi Anion (mg/L)</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Klorida ($Cl^-$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="cl" class="input-field" placeholder="Contoh: 3.2" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Sulfat ($SO_4^{2-}$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="so4" class="input-field" placeholder="Contoh: 10" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Bikarbonat ($HCO_3^-$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="hco3" class="input-field" placeholder="Contoh: 124.35" step="0.01">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Nitrat ($NO_3^-$) - Opsional</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="no3" class="input-field" placeholder="Contoh: 0" step="0.01" value="0">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mg/L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: RESULTS (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- 1. Conversion Results -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil Konversi (meq/L)</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 relative z-10">
+                        <div class="space-y-2">
+                            <p class="text-xs font-bold text-slate-500 uppercase">Kation</p>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$Na^+$</p>
+                                <p id="res_na_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$K^+$</p>
+                                <p id="res_k_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$Ca^{2+}$</p>
+                                <p id="res_ca_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$Mg^{2+}$</p>
+                                <p id="res_mg_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xs font-bold text-slate-500 uppercase">Anion</p>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$Cl^-$</p>
+                                <p id="res_cl_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$SO_4^{2-}$</p>
+                                <p id="res_so4_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$HCO_3^-$</p>
+                                <p id="res_hco3_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">$NO_3^-$</p>
+                                <p id="res_no3_meq" class="result-value text-base">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Facies & Balance -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-slate-700 border-slate-200">Fasies Air Tanah & Validasi</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                            <p class="text-xs font-bold text-red-700 uppercase mb-2">Nama Fasies</p>
+                            <p class="text-lg font-bold text-red-900" id="res_facies">-</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="result-card">
+                                <p class="result-label">Total Kation</p>
+                                <p id="res_total_cation" class="result-value text-lg">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                            <div class="result-card">
+                                <p class="result-label">Total Anion</p>
+                                <p id="res_total_anion" class="result-value text-lg">-</p>
+                                <p class="result-unit">meq/L</p>
+                            </div>
+                        </div>
+
+                        <div class="result-card bg-slate-50">
+                            <p class="result-label">Ion Balance Error</p>
+                            <p id="res_error" class="result-value text-lg">-</p>
+                            <p class="result-unit">%</p>
+                            <p id="res_error_status" class="text-xs mt-2 font-bold">-</p>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-1">Interpretasi</p>
+                            <p class="text-sm text-slate-800" id="res_interpretation">Masukkan data untuk melihat interpretasi...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.5 Piper Classification -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-slate-700 border-slate-200">Klasifikasi Diagram Piper</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p class="text-xs font-bold text-blue-700 uppercase mb-2">Tipe Air (Piper)</p>
+                            <p class="text-lg font-bold text-blue-900" id="res_piper_type">-</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">Zona Kation</p>
+                                <p id="res_cation_zone" class="result-value text-base">-</p>
+                            </div>
+                            <div class="result-card bg-slate-50">
+                                <p class="result-label">Zona Anion</p>
+                                <p id="res_anion_zone" class="result-value text-base">-</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-1">Karakteristik Piper</p>
+                            <p class="text-sm text-slate-800" id="res_piper_char">Masukkan data untuk melihat karakteristik...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Calculation Process -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="section-title text-slate-700 border-slate-200 mb-0">Proses Perhitungan</h3>
+                        <button onclick="toggleCalcProcess()" class="text-xs font-bold text-slate-500 hover:text-red-600 transition flex items-center gap-1">
+                            <span id="calcToggleText">Tampilkan</span>
+                            <i data-lucide="chevron-down" id="calcToggleIcon" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="calcProcess" class="hidden space-y-4 text-sm">
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                            <p class="font-bold text-red-700 mb-2">1. Konversi ke meq/L</p>
+                            <div id="calc_conversion" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <p class="font-bold text-slate-700 mb-2">2. Persentase Ion</p>
+                            <div id="calc_percentage" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-slate-400"></i>
+                        <div>
+                            <p class="font-bold text-slate-700 mb-2">Disclaimer</p>
+                            <p class="text-slate-600">
+                                Tool ini disusun untuk keperluan praktikum. Interpretasi fasies bersifat umum dan mungkin memerlukan analisis tambahan untuk kondisi geologis spesifik.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Hem, J.D. (1985)</strong> – <em>Study and Interpretation of the Chemical Characteristics of Natural Water</em>.</li>
+                    <li><strong>Freeze, R.A. & Cherry, J.A. (1979)</strong> – <em>Groundwater</em>.</li>
+                    <li><strong>Tegar Hermawan T.</strong> – <em>Laporan Praktikum Hidrogeologi Acara 2: Analisis Data Kimia Air Tanah</em>.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+<script>
+    // MathJax Config
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+
+    lucide.createIcons();
+    const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+    const mobileNavDropdown=document.getElementById('mobileNavDropdown');
+    mobileMenuBtn.addEventListener('click',e=>{e.stopPropagation();mobileNavDropdown.classList.toggle('hidden');lucide.createIcons();});
+    document.addEventListener('click',e=>{if(!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)){mobileNavDropdown.classList.add('hidden');}});
+    function toggleGuideModal(){const m=document.getElementById('guideModal');m.classList.toggle('hidden');setTimeout(()=>lucide.createIcons(),100);}
+
+    function toggleCalcProcess() {
+        const calcProcess = document.getElementById('calcProcess');
+        const toggleText = document.getElementById('calcToggleText');
+        calcProcess.classList.toggle('hidden');
+        toggleText.textContent = calcProcess.classList.contains('hidden') ? 'Tampilkan' : 'Sembunyikan';
+        setTimeout(() => {
+            lucide.createIcons();
+            if (window.MathJax) MathJax.typesetPromise();
+        }, 100);
+    }
+
+    // Conversion factors (BM/Valence)
+    const factors = {
+        na: 23, k: 39.1, ca: 20.04, mg: 12.155,
+        cl: 35.5, so4: 48, hco3: 61, no3: 62
+    };
+
+    // Live updates
+    const allInputs = document.querySelectorAll('input');
+    allInputs.forEach(input => input.addEventListener('input', calculateAll));
+
+    function calculateAll() {
+        // Get inputs
+        const na_mg = parseFloat(document.getElementById('na').value) || 0;
+        const k_mg = parseFloat(document.getElementById('k').value) || 0;
+        const ca_mg = parseFloat(document.getElementById('ca').value) || 0;
+        const mg_mg = parseFloat(document.getElementById('mg').value) || 0;
+        const cl_mg = parseFloat(document.getElementById('cl').value) || 0;
+        const so4_mg = parseFloat(document.getElementById('so4').value) || 0;
+        const hco3_mg = parseFloat(document.getElementById('hco3').value) || 0;
+        const no3_mg = parseFloat(document.getElementById('no3').value) || 0;
+
+        // Convert to meq/L
+        const na_meq = na_mg / factors.na;
+        const k_meq = k_mg / factors.k;
+        const ca_meq = ca_mg / factors.ca;
+        const mg_meq = mg_mg / factors.mg;
+        const cl_meq = cl_mg / factors.cl;
+        const so4_meq = so4_mg / factors.so4;
+        const hco3_meq = hco3_mg / factors.hco3;
+        const no3_meq = no3_mg / factors.no3;
+
+        // Display meq/L
+        document.getElementById('res_na_meq').textContent = na_meq.toFixed(3);
+        document.getElementById('res_k_meq').textContent = k_meq.toFixed(3);
+        document.getElementById('res_ca_meq').textContent = ca_meq.toFixed(3);
+        document.getElementById('res_mg_meq').textContent = mg_meq.toFixed(3);
+        document.getElementById('res_cl_meq').textContent = cl_meq.toFixed(3);
+        document.getElementById('res_so4_meq').textContent = so4_meq.toFixed(3);
+        document.getElementById('res_hco3_meq').textContent = hco3_meq.toFixed(3);
+        document.getElementById('res_no3_meq').textContent = no3_meq.toFixed(3);
+
+        // Totals
+        const total_cation = na_meq + k_meq + ca_meq + mg_meq;
+        const total_anion = cl_meq + so4_meq + hco3_meq + no3_meq;
+
+        document.getElementById('res_total_cation').textContent = total_cation.toFixed(3);
+        document.getElementById('res_total_anion').textContent = total_anion.toFixed(3);
+
+        // Ion Balance Error
+        let error = 0;
+        let errorStatus = '-';
+        if (total_cation > 0 && total_anion > 0) {
+            error = ((total_cation - total_anion) / (total_cation + total_anion)) * 100;
+            document.getElementById('res_error').textContent = Math.abs(error).toFixed(2);
+            
+            if (Math.abs(error) < 5) {
+                errorStatus = '✓ Baik (< 5%)';
+                document.getElementById('res_error_status').className = 'text-xs mt-2 font-bold text-green-600';
+            } else if (Math.abs(error) < 10) {
+                errorStatus = '⚠ Dapat Diterima (< 10%)';
+                document.getElementById('res_error_status').className = 'text-xs mt-2 font-bold text-amber-600';
+            } else {
+                errorStatus = '✗ Perlu Dicek Ulang (> 10%)';
+                document.getElementById('res_error_status').className = 'text-xs mt-2 font-bold text-red-600';
+            }
+            document.getElementById('res_error_status').textContent = errorStatus;
+        } else {
+            document.getElementById('res_error').textContent = '-';
+            document.getElementById('res_error_status').textContent = '-';
+        }
+
+        // Determine facies
+        let facies = '-';
+        let interpretation = 'Masukkan data untuk melihat interpretasi...';
+
+        if (total_cation > 0 && total_anion > 0) {
+            // Calculate percentages
+            const na_pct = (na_meq / total_cation) * 100;
+            const k_pct = (k_meq / total_cation) * 100;
+            const ca_pct = (ca_meq / total_cation) * 100;
+            const mg_pct = (mg_meq / total_cation) * 100;
+            const cl_pct = (cl_meq / total_anion) * 100;
+            const so4_pct = (so4_meq / total_anion) * 100;
+            const hco3_pct = (hco3_meq / total_anion) * 100;
+
+            // Find dominant cation
+            let dom_cation = '';
+            let max_cat = Math.max(na_pct, k_pct, ca_pct, mg_pct);
+            if (ca_pct === max_cat && ca_pct > 50) dom_cation = 'Ca';
+            else if (mg_pct === max_cat && mg_pct > 50) dom_cation = 'Mg';
+            else if (na_pct === max_cat && na_pct > 50) dom_cation = 'Na';
+            else if (ca_pct > 30 && mg_pct > 30) dom_cation = 'Ca-Mg';
+            else if (na_pct > 30 && mg_pct > 30) dom_cation = 'Na-Mg';
+            else if (ca_pct > 30 && na_pct > 30) dom_cation = 'Ca-Na';
+            else dom_cation = 'Mixed';
+
+            // Find dominant anion
+            let dom_anion = '';
+            let max_an = Math.max(cl_pct, so4_pct, hco3_pct);
+            if (hco3_pct === max_an && hco3_pct > 50) dom_anion = 'HCO₃';
+            else if (cl_pct === max_an && cl_pct > 50) dom_anion = 'Cl';
+            else if (so4_pct === max_an && so4_pct > 50) dom_anion = 'SO₄';
+            else if (hco3_pct > 30 && cl_pct > 30) dom_anion = 'HCO₃-Cl';
+            else if (hco3_pct > 30 && so4_pct > 30) dom_anion = 'HCO₃-SO₄';
+            else dom_anion = 'Mixed';
+
+            facies = `${dom_cation}-${dom_anion}`;
+
+            // Interpretation
+            if (facies.includes('Ca') && facies.includes('HCO₃')) {
+                interpretation = 'Air tanah dangkal atau daerah resapan (recharge area). Air hujan melarutkan mineral karbonat atau silikat di zona dekat permukaan. Air segar, umumnya berkualitas baik.';
+            } else if (facies.includes('Na') && facies.includes('Mg') && facies.includes('HCO₃')) {
+                interpretation = 'Air tanah tahap menengah (transit). Terjadi proses pertukaran ion (cation exchange) di mana Ca digantikan oleh Na seiring perjalanan air melalui batuan vulkanik atau lempung.';
+            } else if (facies.includes('Na') && facies.includes('Cl')) {
+                interpretation = 'Air tanah tahap lanjut (discharge) atau pencampuran. Kandungan Cl yang meningkat menunjukkan pengaruh air formasi tua, intrusi air asin, atau pembubaran mineral evaporit. Air cenderung lebih asin.';
+            } else if (facies.includes('Ca') && facies.includes('SO₄')) {
+                interpretation = 'Air tanah dengan pengaruh pelapukan mineral sulfat atau oksidasi sulfida. Dapat mengindikasikan zona oksidasi atau pengaruh aktivitas antropogenik.';
+            } else {
+                interpretation = 'Fasies campuran. Kemungkinan terjadi mixing dari berbagai sumber air atau berada di zona transisi.';
+            }
+
+            // Piper Diagram Classification
+            let piperType = '-';
+            let cationZone = '-';
+            let anionZone = '-';
+            let piperChar = 'Masukkan data untuk melihat karakteristik...';
+
+            // Determine cation zone
+            if (ca_pct > 50) {
+                cationZone = 'Ca Dominan';
+            } else if (mg_pct > 50) {
+                cationZone = 'Mg Dominan';
+            } else if ((na_pct + k_pct) > 50) {
+                cationZone = 'Na+K Dominan';
+            } else if (ca_pct > 33 && mg_pct < 33 && (na_pct + k_pct) < 33) {
+                cationZone = 'Ca > Mg > Na+K';
+            } else if (mg_pct > 33 && ca_pct < 33 && (na_pct + k_pct) < 33) {
+                cationZone = 'Mg > Ca > Na+K';
+            } else {
+                cationZone = 'Mixed Cation';
+            }
+
+            // Determine anion zone
+            if (hco3_pct > 50) {
+                anionZone = 'HCO₃ Dominan';
+            } else if (cl_pct > 50) {
+                anionZone = 'Cl Dominan';
+            } else if (so4_pct > 50) {
+                anionZone = 'SO₄ Dominan';
+            } else if (hco3_pct > 33 && cl_pct < 33 && so4_pct < 33) {
+                anionZone = 'HCO₃ > SO₄ > Cl';
+            } else if (cl_pct > 33 && hco3_pct < 33 && so4_pct < 33) {
+                anionZone = 'Cl > HCO₃ > SO₄';
+            } else {
+                anionZone = 'Mixed Anion';
+            }
+
+            // Determine Piper water type based on diamond plot zones
+            // Simplified classification based on dominant ions
+            if (ca_pct > 50 && hco3_pct > 50) {
+                piperType = 'Calcium Bicarbonate (Ca-HCO₃)';
+                piperChar = 'Air tanah segar, tipikal zona recharge. Umum di akuifer karbonat atau vulkanik muda. TDS rendah-sedang.';
+            } else if ((na_pct + k_pct) > 50 && cl_pct > 50) {
+                piperType = 'Sodium Chloride (Na-Cl)';
+                piperChar = 'Air tanah asin atau terpengaruh intrusi air laut. Zona discharge atau air formasi dalam. TDS tinggi.';
+            } else if ((na_pct + k_pct) > 50 && hco3_pct > 50) {
+                piperType = 'Sodium Bicarbonate (Na-HCO₃)';
+                piperChar = 'Air tanah dengan cation exchange. Transisi dari Ca-HCO₃ ke Na-Cl. Umum di akuifer dengan mineral lempung.';
+            } else if (ca_pct > 50 && so4_pct > 50) {
+                piperType = 'Calcium Sulfate (Ca-SO₄)';
+                piperChar = 'Air tanah terpengaruh pelapukan gypsum/anhydrite atau oksidasi sulfida. Dapat mengindikasikan pengaruh antropogenik.';
+            } else if (mg_pct > 50 && hco3_pct > 50) {
+                piperType = 'Magnesium Bicarbonate (Mg-HCO₃)';
+                piperChar = 'Air tanah dari pelapukan batuan ultramafik atau dolomit. Umum di akuifer karbonat atau batuan basa.';
+            } else if ((na_pct + k_pct) > 50 && so4_pct > 50) {
+                piperType = 'Sodium Sulfate (Na-SO₄)';
+                piperChar = 'Air tanah terpengaruh evaporit atau aktivitas geothermal. Dapat terkait dengan zona oksidasi atau pencemaran.';
+            } else if (ca_pct > 40 && cl_pct > 40) {
+                piperType = 'Calcium Chloride (Ca-Cl)';
+                piperChar = 'Air formasi dalam atau mixing dengan air asin. Reverse cation exchange. TDS sangat tinggi.';
+            } else if (mg_pct > 40 && cl_pct > 40) {
+                piperType = 'Magnesium Chloride (Mg-Cl)';
+                piperChar = 'Air laut atau air formasi dengan pengaruh evaporasi kuat. Salinitas sangat tinggi.';
+            } else {
+                // Mixed type - determine based on dominant characteristics
+                if (hco3_pct > cl_pct && hco3_pct > so4_pct) {
+                    piperType = 'Mixed Cation-Bicarbonate';
+                    piperChar = 'Air tanah campuran dengan dominasi bikarbonat. Zona transisi atau mixing dari berbagai sumber.';
+                } else if (cl_pct > hco3_pct && cl_pct > so4_pct) {
+                    piperType = 'Mixed Cation-Chloride';
+                    piperChar = 'Air tanah campuran dengan dominasi klorida. Pengaruh salinisasi atau mixing dengan air asin.';
+                } else if (so4_pct > hco3_pct && so4_pct > cl_pct) {
+                    piperType = 'Mixed Cation-Sulfate';
+                    piperChar = 'Air tanah campuran dengan dominasi sulfat. Pengaruh oksidasi atau pelapukan mineral sulfat.';
+                } else {
+                    piperType = 'Mixed Water Type';
+                    piperChar = 'Air tanah dengan komposisi campuran. Kemungkinan mixing dari berbagai sumber atau zona transisi kompleks.';
+                }
+            }
+
+            document.getElementById('res_piper_type').textContent = piperType;
+            document.getElementById('res_cation_zone').textContent = cationZone;
+            document.getElementById('res_anion_zone').textContent = anionZone;
+            document.getElementById('res_piper_char').textContent = piperChar;
+        } else {
+            document.getElementById('res_piper_type').textContent = '-';
+            document.getElementById('res_cation_zone').textContent = '-';
+            document.getElementById('res_anion_zone').textContent = '-';
+            document.getElementById('res_piper_char').textContent = 'Masukkan data untuk melihat karakteristik...';
+        }
+
+        document.getElementById('res_facies').textContent = facies;
+        document.getElementById('res_interpretation').textContent = interpretation;
+
+        // Update calculation process
+        if (total_cation > 0) {
+            const ca_pct = (ca_meq / total_cation) * 100;
+            const mg_pct = (mg_meq / total_cation) * 100;
+            const na_pct = (na_meq / total_cation) * 100;
+            const hco3_pct = (hco3_meq / total_anion) * 100;
+
+            document.getElementById('calc_conversion').innerHTML = `
+                <p class="font-semibold mb-1">Contoh: $Ca^{2+}$</p>
+                <p>$\\text{meq/L} = ${ca_mg} / ${factors.ca} = ${ca_meq.toFixed(3)}$ meq/L</p>
+            `;
+
+            document.getElementById('calc_percentage').innerHTML = `
+                <p class="font-semibold mb-1">Kation:</p>
+                <p>$\\%Ca = (${ca_meq.toFixed(3)} / ${total_cation.toFixed(3)}) \\times 100 = ${ca_pct.toFixed(2)}\\%$</p>
+                <p>$\\%Mg = ${mg_pct.toFixed(2)}\\%$, $\\%Na = ${na_pct.toFixed(2)}\\%$</p>
+                <p class="font-semibold mt-2 mb-1">Anion:</p>
+                <p>$\\%HCO_3 = (${hco3_meq.toFixed(3)} / ${total_anion.toFixed(3)}) \\times 100 = ${hco3_pct.toFixed(2)}\\%$</p>
+            `;
+        }
+
+        // Re-render MathJax
+        if (!document.getElementById('calcProcess').classList.contains('hidden')) {
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+    }
+</script>
+</body>
+</html>

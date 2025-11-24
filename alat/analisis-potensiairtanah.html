@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Potensi Air Tanah - PERHIMAGI Digilab</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://perhimagi.org/alat/analisis-potensiairtanah.html">
+    <meta property="og:title" content="Evaluasi Potensi Air Tanah - PERHIMAGI Digilab">
+    <meta property="og:description" content="Tool evaluasi cadangan air tanah, debit eksploitasi aman, dan kecepatan aliran air tanah.">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-field { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; }
+        .input-field:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .section-title { font-size: 0.875rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem; }
+        .result-card { background: white; border-radius: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .result-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+        .result-value { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+        .result-unit { font-size: 0.75rem; color: #94a3b8; font-weight: 500; }
+        .tab-button { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.2s; }
+        .tab-button.active { background-color: #dc2626; color: white; }
+        .tab-button:not(.active) { background-color: #f1f5f9; color: #64748b; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="home" class="w-5 h-5"></i> Home</a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="book" class="w-5 h-5"></i> Library</a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg bg-red-50 text-red-600 font-medium"><i data-lucide="wrench" class="w-5 h-5"></i> Alat</a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium"><i data-lucide="info" class="w-5 h-5"></i> Tentang</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-1">
+        <div class="text-center mb-10">
+            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2 inline-block">Hidrogeologi & Lingkungan</span>
+            <h2 class="text-3xl font-bold text-slate-900">Evaluasi Potensi Air Tanah</h2>
+            <p class="text-slate-600 mt-2 text-sm max-w-3xl mx-auto">
+                Evaluasi cadangan air tanah, debit eksploitasi aman (safe yield), dan analisis kecepatan aliran air tanah.
+            </p>
+            <button onclick="toggleGuideModal()" class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium border border-slate-300">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Panduan Modul
+            </button>
+        </div>
+
+        <!-- TAB SELECTOR -->
+        <div class="flex gap-4 justify-center mb-8">
+            <button onclick="switchTab('reserve')" id="tab-reserve" class="tab-button active">
+                <i data-lucide="database" class="w-4 h-4 inline mr-2"></i>Cadangan & Eksploitasi
+            </button>
+            <button onclick="switchTab('flow')" id="tab-flow" class="tab-button">
+                <i data-lucide="move" class="w-4 h-4 inline mr-2"></i>Kecepatan Aliran
+            </button>
+        </div>
+
+        <!-- METHODOLOGY MODAL -->
+        <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) toggleGuideModal()">
+            <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="sticky top-0 bg-white border-b border-slate-200 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-3">
+                        <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="droplets" class="w-5 h-5"></i></div>
+                        Panduan Evaluasi Potensi Air Tanah
+                    </h3>
+                    <button onclick="toggleGuideModal()" class="p-2 hover:bg-slate-100 rounded-lg"><i data-lucide="x" class="w-6 h-6 text-slate-500"></i></button>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">Volume Cadangan</h4>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ V_s = S \times A \times H \]</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">Debit Eksploitasi Maksimal</h4>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ Q_{max} = Sc \times \frac{H}{2} \]</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-2">Kecepatan Aliran</h4>
+                        <div class="bg-white p-3 rounded border text-sm">
+                            <p class="font-semibold text-center">\[ v_a = \frac{K \times i}{n} \]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESERVE & EXPLOITATION CONTENT -->
+        <div id="content-reserve" class="grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">A. Dimensi Akuifer</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Panjang Akuifer ($L_{aq}$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="r_Laq" class="input-field" placeholder="Contoh: 5940" step="1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Lebar Akuifer ($W_{aq}$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="r_Waq" class="input-field" placeholder="Contoh: 4320" step="1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">B. Data Sumur</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Head Sumur Y ($h_y$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="r_hy" class="input-field" placeholder="Contoh: 215" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Head Sumur Z ($h_z$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="r_hz" class="input-field" placeholder="Contoh: 250" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">C. Parameter Hidrolik</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Storativitas ($S$)</label>
+                            <input type="number" id="r_S" class="input-field" placeholder="Contoh: 0.23" step="0.01">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Kapasitas Jenis ($Sc$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="r_Sc" class="input-field" placeholder="Contoh: 8.9" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m²/hari</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil Evaluasi</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Luas Akuifer ($A$)</p>
+                            <div class="text-3xl font-black text-red-600 mb-1" id="res_r_A">-</div>
+                            <p class="text-xs font-bold text-slate-400">m²</p>
+                        </div>
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Tebal Jenuh ($H$)</p>
+                            <div class="text-3xl font-black text-red-600 mb-1" id="res_r_H">-</div>
+                            <p class="text-xs font-bold text-slate-400">m</p>
+                        </div>
+                        <div class="text-center py-4 bg-blue-50 rounded-xl border border-blue-100 md:col-span-2">
+                            <p class="text-sm text-blue-700 mb-1 font-bold">Volume Cadangan ($V_s$)</p>
+                            <div class="text-4xl font-black text-blue-600 mb-1" id="res_r_Vs">-</div>
+                            <p class="text-xs font-bold text-blue-400">m³</p>
+                        </div>
+                        <div class="text-center py-4 bg-green-50 rounded-xl border border-green-100 md:col-span-2">
+                            <p class="text-sm text-green-700 mb-1 font-bold">Debit Eksploitasi Maksimal ($Q_{max}$)</p>
+                            <div class="text-4xl font-black text-green-600 mb-1" id="res_r_Qmax">-</div>
+                            <p class="text-xs font-bold text-green-400">m³/hari</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-slate-700 border-slate-200">Interpretasi</h3>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-sm text-slate-800" id="res_r_interp">Masukkan data untuk melihat interpretasi...</p>
+                    </div>
+                </div>
+
+                <!-- Calculation Process -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="section-title text-slate-700 border-slate-200 mb-0">Proses Perhitungan</h3>
+                        <button onclick="toggleCalcReserve()" class="text-xs font-bold text-slate-500 hover:text-red-600 transition flex items-center gap-1">
+                            <span id="calcReserveToggleText">Tampilkan</span>
+                            <i data-lucide="chevron-down" id="calcReserveToggleIcon" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="calcReserveProcess" class="hidden space-y-4 text-sm">
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                            <p class="font-bold text-red-700 mb-2">1. Luas Akuifer</p>
+                            <div id="calc_r_area" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <p class="font-bold text-slate-700 mb-2">2. Tebal Jenuh Rata-rata</p>
+                            <div id="calc_r_thickness" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <p class="font-bold text-blue-700 mb-2">3. Volume Cadangan</p>
+                            <div id="calc_r_volume" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                            <p class="font-bold text-green-700 mb-2">4. Debit Eksploitasi Maksimal</p>
+                            <div id="calc_r_qmax" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLOW VELOCITY CONTENT -->
+        <div id="content-flow" class="hidden grid lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">A. Data Peta</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Skala Peta</label>
+                            <div class="flex gap-2 items-center">
+                                <span class="text-sm text-slate-500 font-bold">1 :</span>
+                                <input type="number" id="f_scale" class="input-field" placeholder="Contoh: 45000" step="1">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Jarak di Peta</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="f_Lpeta" class="input-field" placeholder="Contoh: 5.3" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">cm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <h3 class="section-title text-red-600 border-red-100">B. Data Hidrolik</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Head Titik A ($h_A$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="f_hA" class="input-field" placeholder="Contoh: 128" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mdpl</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Head Titik B ($h_B$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="f_hB" class="input-field" placeholder="Contoh: 64" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">mdpl</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Konduktivitas Hidrolik ($K$)</label>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="f_K" class="input-field" placeholder="Contoh: 39" step="0.1">
+                                <span class="text-sm text-slate-500 font-bold whitespace-nowrap">m/hari</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 block mb-1">Porositas ($n$)</label>
+                            <input type="number" id="f_n" class="input-field" placeholder="Contoh: 0.25" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <h3 class="section-title text-red-600 border-red-100 relative z-10">Hasil Analisis Aliran</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Jarak Sebenarnya ($L$)</p>
+                            <div class="text-3xl font-black text-red-600 mb-1" id="res_f_L">-</div>
+                            <p class="text-xs font-bold text-slate-400">m</p>
+                        </div>
+                        <div class="text-center py-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-sm text-slate-500 mb-1">Gradien Hidrolik ($i$)</p>
+                            <div class="text-3xl font-black text-red-600 mb-1" id="res_f_i">-</div>
+                            <p class="text-xs font-bold text-slate-400">(tanpa dimensi)</p>
+                        </div>
+                        <div class="text-center py-6 bg-blue-50 rounded-xl border border-blue-100 md:col-span-2">
+                            <p class="text-sm text-blue-700 mb-1 font-bold">Kecepatan Aliran ($v_a$)</p>
+                            <div class="text-5xl font-black text-blue-600 mb-1" id="res_f_va">-</div>
+                            <p class="text-xs font-bold text-blue-400">m/hari</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="section-title text-slate-700 border-slate-200">Interpretasi</h3>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <p class="text-sm text-slate-800" id="res_f_interp">Masukkan data untuk melihat interpretasi...</p>
+                    </div>
+                </div>
+
+                <!-- Calculation Process -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="section-title text-slate-700 border-slate-200 mb-0">Proses Perhitungan</h3>
+                        <button onclick="toggleCalcFlow()" class="text-xs font-bold text-slate-500 hover:text-red-600 transition flex items-center gap-1">
+                            <span id="calcFlowToggleText">Tampilkan</span>
+                            <i data-lucide="chevron-down" id="calcFlowToggleIcon" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="calcFlowProcess" class="hidden space-y-4 text-sm">
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                            <p class="font-bold text-red-700 mb-2">1. Jarak Sebenarnya</p>
+                            <div id="calc_f_distance" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <p class="font-bold text-slate-700 mb-2">2. Gradien Hidrolik</p>
+                            <div id="calc_f_gradient" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <p class="font-bold text-blue-700 mb-2">3. Kecepatan Aliran</p>
+                            <div id="calc_f_velocity" class="text-xs space-y-1 pl-3 text-slate-700">
+                                <p>Masukkan nilai untuk melihat perhitungan...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pb-8">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-xs">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-slate-400"></i>
+                        <div>
+                            <p class="font-bold text-slate-700 mb-2">Disclaimer</p>
+                            <p class="text-slate-600">
+                                Tool ini disusun untuk keperluan praktikum. Hasil perhitungan bergantung pada akurasi data lapangan dan asumsi kondisi hidrogeologis.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide border-b pb-2">Referensi</h4>
+                <ul class="text-xs text-slate-500 space-y-2 list-disc pl-4">
+                    <li><strong>Todd, D.K. & Mays, L.W. (2005)</strong> – <em>Groundwater Hydrology</em>.</li>
+                    <li><strong>Freeze, R.A. & Cherry, J.A. (1979)</strong> – <em>Groundwater</em>.</li>
+                    <li><strong>Tegar Hermawan T.</strong> – <em>Laporan Praktikum Hidrogeologi Acara 6: Evaluasi Potensi Air Tanah</em>.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+        <p class="mt-2">Dikelola oleh Divisi Akademik.</p>
+    </footer>
+
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+
+    lucide.createIcons();
+    const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+    const mobileNavDropdown=document.getElementById('mobileNavDropdown');
+    mobileMenuBtn.addEventListener('click',e=>{e.stopPropagation();mobileNavDropdown.classList.toggle('hidden');lucide.createIcons();});
+    document.addEventListener('click',e=>{if(!mobileMenuBtn.contains(e.target) && !mobileNavDropdown.contains(e.target)){mobileNavDropdown.classList.add('hidden');}});
+    function toggleGuideModal(){const m=document.getElementById('guideModal');m.classList.toggle('hidden');setTimeout(()=>lucide.createIcons(),100);}
+
+    // Tab switching
+    function switchTab(tab) {
+        if (tab === 'reserve') {
+            document.getElementById('tab-reserve').classList.add('active');
+            document.getElementById('tab-flow').classList.remove('active');
+            document.getElementById('content-reserve').classList.remove('hidden');
+            document.getElementById('content-flow').classList.add('hidden');
+        } else {
+            document.getElementById('tab-flow').classList.add('active');
+            document.getElementById('tab-reserve').classList.remove('active');
+            document.getElementById('content-flow').classList.remove('hidden');
+            document.getElementById('content-reserve').classList.add('hidden');
+        }
+        lucide.createIcons();
+    }
+
+    // Helper function to format large numbers
+    function formatNumber(value) {
+        if (value >= 1e9) return (value / 1e9).toFixed(2) + ' miliar';
+        if (value >= 1e6) return (value / 1e6).toFixed(2) + ' juta';
+        if (value >= 1e3) return (value / 1e3).toFixed(2) + ' ribu';
+        return value.toFixed(2);
+    }
+
+    // Toggle functions
+    function toggleCalcReserve() {
+        const calcProcess = document.getElementById('calcReserveProcess');
+        const toggleText = document.getElementById('calcReserveToggleText');
+        calcProcess.classList.toggle('hidden');
+        toggleText.textContent = calcProcess.classList.contains('hidden') ? 'Tampilkan' : 'Sembunyikan';
+        setTimeout(() => {
+            lucide.createIcons();
+            if (window.MathJax) MathJax.typesetPromise();
+        }, 100);
+    }
+
+    function toggleCalcFlow() {
+        const calcProcess = document.getElementById('calcFlowProcess');
+        const toggleText = document.getElementById('calcFlowToggleText');
+        calcProcess.classList.toggle('hidden');
+        toggleText.textContent = calcProcess.classList.contains('hidden') ? 'Tampilkan' : 'Sembunyikan';
+        setTimeout(() => {
+            lucide.createIcons();
+            if (window.MathJax) MathJax.typesetPromise();
+        }, 100);
+    }
+
+    // Live updates for Reserve & Exploitation
+    const reserveInputs = document.querySelectorAll('#content-reserve input');
+    reserveInputs.forEach(input => input.addEventListener('input', calculateReserve));
+
+    function calculateReserve() {
+        const Laq = parseFloat(document.getElementById('r_Laq').value) || 0;
+        const Waq = parseFloat(document.getElementById('r_Waq').value) || 0;
+        const hy = parseFloat(document.getElementById('r_hy').value) || 0;
+        const hz = parseFloat(document.getElementById('r_hz').value) || 0;
+        const S = parseFloat(document.getElementById('r_S').value) || 0;
+        const Sc = parseFloat(document.getElementById('r_Sc').value) || 0;
+
+        if (Laq > 0 && Waq > 0 && hy > 0 && hz > 0 && S > 0 && Sc > 0) {
+            // Calculate area
+            const A = Laq * Waq;
+            
+            // Calculate average saturated thickness
+            const H = (hy + hz) / 2;
+            
+            // Calculate storage volume
+            const Vs = S * A * H;
+            
+            // Calculate maximum exploitation discharge
+            const Qmax = Sc * (H / 2);
+
+            // Display results
+            document.getElementById('res_r_A').textContent = formatNumber(A);
+            document.getElementById('res_r_H').textContent = H.toFixed(2);
+            document.getElementById('res_r_Vs').textContent = formatNumber(Vs);
+            document.getElementById('res_r_Qmax').textContent = Qmax.toFixed(2);
+
+            // Interpretation
+            let interp = `Akuifer memiliki luas ${formatNumber(A)} m² dengan tebal jenuh rata-rata ${H.toFixed(2)} m. `;
+            interp += `Total cadangan air yang dapat dieksploitasi adalah ${formatNumber(Vs)} m³. `;
+            interp += `Debit eksploitasi aman per sumur adalah ${Qmax.toFixed(2)} m³/hari. `;
+            
+            if (Vs > 1e9) {
+                interp += 'Potensi cadangan sangat besar, cocok untuk eksploitasi skala besar.';
+            } else if (Vs > 1e6) {
+                interp += 'Potensi cadangan cukup besar, cocok untuk eksploitasi skala menengah.';
+            } else {
+                interp += 'Potensi cadangan terbatas, cocok untuk eksploitasi skala kecil.';
+            }
+
+            document.getElementById('res_r_interp').textContent = interp;
+
+            // Update calculation steps
+            document.getElementById('calc_r_area').innerHTML = `
+                <p class="font-semibold mb-1">Rumus:</p>
+                <p>$A = L_{aq} \\times W_{aq}$</p>
+                <p class="font-semibold mt-2 mb-1">Perhitungan:</p>
+                <p>$A = ${Laq.toLocaleString()} \\times ${Waq.toLocaleString()}$</p>
+                <p>$A = ${A.toLocaleString()}$ m²</p>
+            `;
+
+            document.getElementById('calc_r_thickness').innerHTML = `
+                <p class="font-semibold mb-1">Rumus:</p>
+                <p>$H = \\frac{h_y + h_z}{2}$</p>
+                <p class="font-semibold mt-2 mb-1">Perhitungan:</p>
+                <p>$H = \\frac{${hy} + ${hz}}{2}$</p>
+                <p>$H = \\frac{${(hy + hz).toFixed(2)}}{2} = ${H.toFixed(2)}$ m</p>
+            `;
+
+            document.getElementById('calc_r_volume').innerHTML = `
+                <p class="font-semibold mb-1">Rumus:</p>
+                <p>$V_s = S \\times A \\times H$</p>
+                <p class="font-semibold mt-2 mb-1">Perhitungan:</p>
+                <p>$V_s = ${S} \\times ${A.toLocaleString()} \\times ${H.toFixed(2)}$</p>
+                <p>$V_s = ${Vs.toLocaleString()}$ m³</p>
+                <p class="mt-1 text-blue-600 font-semibold">≈ ${formatNumber(Vs)} m³</p>
+            `;
+
+            document.getElementById('calc_r_qmax').innerHTML = `
+                <p class="font-semibold mb-1">Rumus:</p>
+                <p>$Q_{max} = Sc \\times \\frac{H}{2}$</p>
+                <p class="font-semibold mt-2 mb-1">Perhitungan:</p>
+                <p>$Q_{max} = ${Sc} \\times \\frac{${H.toFixed(2)}}{2}$</p>
+                <p>$Q_{max} = ${Sc} \\times ${(H/2).toFixed(2)}$</p>
+                <p>$Q_{max} = ${Qmax.toFixed(2)}$ m³/hari</p>
+            `;
+        } else {
+            document.getElementById('res_r_A').textContent = '-';
+            document.getElementById('res_r_H').textContent = '-';
+            document.getElementById('res_r_Vs').textContent = '-';
+            document.getElementById('res_r_Qmax').textContent = '-';
+            document.getElementById('res_r_interp').textContent = 'Masukkan data untuk melihat interpretasi...';
+            
+            document.getElementById('calc_r_area').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_r_thickness').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_r_volume').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_r_qmax').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+        }
+
+        // Re-render MathJax if calculation process is visible
+        if (!document.getElementById('calcReserveProcess').classList.contains('hidden')) {
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+    }
+
+    // Live updates for Flow Velocity
+    const flowInputs = document.querySelectorAll('#content-flow input');
+    flowInputs.forEach(input => input.addEventListener('input', calculateFlow));
+
+    function calculateFlow() {
+        const scale = parseFloat(document.getElementById('f_scale').value) || 0;
+        const Lpeta = parseFloat(document.getElementById('f_Lpeta').value) || 0;
+        const hA = parseFloat(document.getElementById('f_hA').value) || 0;
+        const hB = parseFloat(document.getElementById('f_hB').value) || 0;
+        const K = parseFloat(document.getElementById('f_K').value) || 0;
+        const n = parseFloat(document.getElementById('f_n').value) || 0;
+
+        if (scale > 0 && Lpeta > 0 && hA > 0 && hB > 0 && K > 0 && n > 0) {
+            // Calculate actual distance
+            const L = (Lpeta * scale) / 100; // cm to m
+            
+            // Calculate hydraulic gradient
+            const i = Math.abs(hA - hB) / L;
+            
+            // Calculate average linear velocity
+            const va = (K * i) / n;
+
+            // Display results
+            document.getElementById('res_f_L').textContent = L.toFixed(2);
+            document.getElementById('res_f_i').textContent = i.toFixed(4);
+            document.getElementById('res_f_va').textContent = va.toFixed(2);
+
+            // Interpretation
+            const direction = hA > hB ? 'A ke B' : 'B ke A';
+            let interp = `Air tanah mengalir dari titik ${direction} dengan kecepatan ${va.toFixed(2)} m/hari. `;
+            interp += `Gradien hidrolik sebesar ${i.toFixed(4)} menunjukkan `;
+            
+            if (i > 0.05) {
+                interp += 'kemiringan muka air tanah yang curam. ';
+            } else if (i > 0.01) {
+                interp += 'kemiringan muka air tanah yang sedang. ';
+            } else {
+                interp += 'kemiringan muka air tanah yang landai. ';
+            }
+
+            if (va > 10) {
+                interp += 'Kecepatan aliran sangat cepat, tipikal untuk akuifer dengan permeabilitas tinggi (pasir kasar/kerikil).';
+            } else if (va > 1) {
+                interp += 'Kecepatan aliran cukup cepat, tipikal untuk akuifer pasir bersih.';
+            } else if (va > 0.1) {
+                interp += 'Kecepatan aliran sedang, tipikal untuk akuifer pasir halus.';
+            } else {
+                interp += 'Kecepatan aliran lambat, tipikal untuk akuifer dengan permeabilitas rendah.';
+            }
+
+            document.getElementById('res_f_interp').textContent = interp;
+
+            // Update calculation steps
+            document.getElementById('calc_f_distance').innerHTML = `
+                <p class="font-semibold mb-1">Rumus:</p>
+                <p>$L = L_{peta} \\times \\text{Skala} / 100$</p>
+                <p class="font-semibold mt-2 mb-1">Perhitungan:</p>
+                <p>$L = ${Lpeta} \\text{ cm} \\times ${scale.toLocaleString()} / 100$</p>
+                <p>$L = ${(Lpeta * scale).toLocaleString()} \\text{ cm} / 100$</p>
+                <p>$L = ${L.toFixed(2)}$ m</p>
+            `;
+
+            document.getElementById('calc_f_gradient').innerHTML = `
+                <p class="font-semibold mb-1">Rumus:</p>
+                <p>$i = \\frac{|h_A - h_B|}{L}$</p>
+                <p class="font-semibold mt-2 mb-1">Perhitungan:</p>
+                <p>$i = \\frac{|${hA} - ${hB}|}{${L.toFixed(2)}}$</p>
+                <p>$i = \\frac{${Math.abs(hA - hB).toFixed(2)}}{${L.toFixed(2)}}$</p>
+                <p>$i = ${i.toFixed(4)}$ (tanpa dimensi)</p>
+            `;
+
+            document.getElementById('calc_f_velocity').innerHTML = `
+                <p class="font-semibold mb-1">Rumus:</p>
+                <p>$v_a = \\frac{K \\times i}{n}$</p>
+                <p class="font-semibold mt-2 mb-1">Perhitungan:</p>
+                <p>$v_a = \\frac{${K} \\times ${i.toFixed(4)}}{${n}}$</p>
+                <p>$v_a = \\frac{${(K * i).toFixed(4)}}{${n}}$</p>
+                <p>$v_a = ${va.toFixed(2)}$ m/hari</p>
+            `;
+        } else {
+            document.getElementById('res_f_L').textContent = '-';
+            document.getElementById('res_f_i').textContent = '-';
+            document.getElementById('res_f_va').textContent = '-';
+            document.getElementById('res_f_interp').textContent = 'Masukkan data untuk melihat interpretasi...';
+            
+            document.getElementById('calc_f_distance').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_f_gradient').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+            document.getElementById('calc_f_velocity').innerHTML = '<p>Masukkan nilai untuk melihat perhitungan...</p>';
+        }
+
+        // Re-render MathJax if calculation process is visible
+        if (!document.getElementById('calcFlowProcess').classList.contains('hidden')) {
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+    }
+</script>
+</body>
+</html>
