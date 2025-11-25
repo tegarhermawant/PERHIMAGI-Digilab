@@ -456,7 +456,7 @@
         }
 
         // --- NAVIGATION SYSTEM ---
-        function navigateTo(pageId) {
+        window.navigateTo = function(pageId) {
             const home = document.getElementById('page-home');
             const about = document.getElementById('page-about');
             const navLib = document.getElementById('nav-library');
@@ -485,14 +485,14 @@
                 navAbout.classList.remove('text-slate-600');
             }
             window.scrollTo(0, 0);
-        }
+        };
 
         // --- VIEW SWITCHER ---
-        function setView(view) {
+        window.setView = function(view) {
             currentView = view;
             updateViewButtons();
             renderGrid();
-        }
+        };
 
         function updateViewButtons() {
             ['gallery', 'list', 'column'].forEach(view => {
@@ -532,7 +532,7 @@
             }
         }
 
-        function incrementDownload(id) {
+        window.incrementDownload = function(id) {
             console.log("Mengirim request increment download untuk ID:", id);
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -545,7 +545,7 @@
             })
             .then(() => console.log("Request terkirim (no-cors)"))
             .catch(e => console.error("Gagal update download:", e));
-        }
+        };
 
         async function fetchData() {
             try {
@@ -909,7 +909,7 @@
             });
         }
 
-        function toggleTopic(topic) {
+        window.toggleTopic = function(topic) {
             const index = activeFilters.topics.indexOf(topic);
             if (index > -1) activeFilters.topics.splice(index, 1);
             else activeFilters.topics.push(topic);
@@ -934,9 +934,9 @@
                 resetBtn.classList.add('hidden');
             }
             applyFilters();
-        }
+        };
 
-        function resetAllFilters() {
+        window.resetAllFilters = function() {
             document.getElementById('searchInput').value = "";
             activeFilters.search = "";
             activeFilters.type = "Semua";
@@ -948,9 +948,9 @@
             document.querySelectorAll('.topic-btn').forEach(b => b.className = "topic-btn px-3 py-1 rounded-full text-xs border transition-all duration-200 bg-white text-slate-600 border-slate-200 hover:border-red-300 hover:text-red-600");
             document.getElementById('resetTopicsBtn').classList.add('hidden');
             applyFilters();
-        }
+        };
 
-        function openDetail(id) {
+        window.openDetail = function(id) {
             const item = allData.find(i => i.id === id);
             if (!item) return;
             currentModalItem = item;
@@ -995,12 +995,12 @@
             document.getElementById('detailModal').classList.remove('hidden');
             document.getElementById('detailModal').classList.add('flex');
             lucide.createIcons();
-        }
+        };
 
-        function closeModal() {
+        window.closeModal = function() {
             document.getElementById('detailModal').classList.add('hidden');
             document.getElementById('detailModal').classList.remove('flex');
-        }
+        };
     </script>
 
     <!-- MOBILE MENU SCRIPT & ICON INIT -->
