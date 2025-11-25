@@ -544,20 +544,43 @@
         window.incrementDownload = function(id) {
             console.log("Processing download for ID:", id);
             
-            // 1. Call Download Count Script (Old Script)
-            fetch(COUNT_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
-                credentials: 'omit',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `id=${id}`,
-                keepalive: true
-            })
-            .then(() => console.log("Count incremented"))
-            .catch(e => console.error("Count failed:", e));
+            // --- COOLDOWN LOGIC (3 HOURS) ---
+            const COOLDOWN_DURATION = 3 * 60 * 60 * 1000; // 3 Jam dalam milidetik
+            const storageKey = `last_download_${id}`;
+            const lastDownloadTime = localStorage.getItem(storageKey);
+            const now = Date.now();
 
-            // 2. Call Logging Script (New Script)
+            let shouldIncrement = true;
+
+            if (lastDownloadTime) {
+                const timeDiff = now - parseInt(lastDownloadTime);
+                if (timeDiff < COOLDOWN_DURATION) {
+                    shouldIncrement = false;
+                    console.log(`Download count skipped. Cooldown active for ID ${id}. Time left: ${Math.ceil((COOLDOWN_DURATION - timeDiff) / 60000)} mins`);
+                }
+            }
+
+            if (shouldIncrement) {
+                // 1. Call Download Count Script (Old Script)
+                const countUrl = new URL(COUNT_SCRIPT_URL);
+                countUrl.searchParams.append('id', id);
+
+                fetch(countUrl.toString(), {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    credentials: 'omit',
+                    keepalive: true
+                })
+                .then(() => {
+                    console.log("Count incremented");
+                    // Save timestamp only on success attempt (or fire-and-forget)
+                    localStorage.setItem(storageKey, now.toString());
+                })
+                .catch(e => console.error("Count failed:", e));
+            }
+
+            // 2. Call Logging Script (New Script) - Always log activity regardless of count cooldown
             const title = currentModalItem ? currentModalItem.judul : "Unknown";
             const name = currentUser ? currentUser.displayName : "Anonymous";
             const email = currentUser ? currentUser.email : "-";
