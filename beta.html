@@ -57,7 +57,7 @@
                         <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
                     </div>
                 </div>
-                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
                     <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
                     <a href="/index.html" class="text-red-600 font-bold border-b-2 border-red-600 pb-1">Library</a>
                     <a href="/alat/" class="hover:text-red-600 transition">Alat</a>
@@ -96,7 +96,6 @@
                 <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
                     <i data-lucide="wrench" class="w-5 h-5"></i> Alat
                 </a>
-                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
                 <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
                     <i data-lucide="info" class="w-5 h-5"></i> Tentang
                 </a>
@@ -416,6 +415,11 @@
             onAuthStateChanged(auth, (user) => {
                 currentUser = user;
                 updateAuthUI(user);
+                
+                // Refresh modal if open to update button state
+                if (currentModalItem && !document.getElementById('detailModal').classList.contains('hidden')) {
+                    openDetail(currentModalItem.id);
+                }
             });
 
             fetchContactNumber();
