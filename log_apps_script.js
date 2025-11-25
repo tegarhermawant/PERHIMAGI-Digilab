@@ -1,20 +1,11 @@
-// SCRIPT INI UNTUK DI-COPY KE SPREADSHEET BARU (LOGS)
-// Nama File: log_apps_script.js
-// Cara pasang:
-// 1. Buka Spreadsheet BARU yang kosong (untuk Logs)
-// 2. Klik menu "Ekstensi" > "Apps Script"
-// 3. Paste kode ini
-// 4. Deploy sebagai "New Web App" -> "Anyone" has access
-// 5. Copy URL Web App baru dan update di beta.html
-
 function doPost(e) {
     const lock = LockService.getScriptLock();
     lock.tryLock(10000);
 
     try {
-        // LOG KE SPREADSHEET INI (LOGS)
-        const logDoc = SpreadsheetApp.getActiveSpreadsheet();
-        const logSheet = logDoc.getSheets()[0]; // Pakai sheet pertama
+        // Gunakan Spreadsheet LOGS (bukan active spreadsheet)
+        const logDoc = SpreadsheetApp.openById("1pqeAzhIcCu_hEhbBXmGHluSNQjyJjxhkBEyjAiOUEWs");
+        const logSheet = logDoc.getSheets()[0]; // Sheet pertama
 
         // Buat Header jika masih kosong
         if (logSheet.getLastRow() === 0) {
@@ -34,12 +25,11 @@ function doPost(e) {
             "message": "Log recorded"
         })).setMimeType(ContentService.MimeType.JSON);
 
-    } catch (e) {
+    } catch (err) {
         return ContentService.createTextOutput(JSON.stringify({
             "result": "error",
-            "error": e.toString()
+            "error": err.toString()
         })).setMimeType(ContentService.MimeType.JSON);
-
     } finally {
         lock.releaseLock();
     }

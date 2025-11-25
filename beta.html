@@ -388,7 +388,12 @@
         // --- CONFIGURATION ---
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJcbZob_yUkPgcvInwVp2-Wgnj2UkQLKrUlmjys4Tgd5Ke1kiOxqbqADlbqku-0s3SHTUQBpkZmKz7/pub?output=csv";
         const CONTACT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXQcZbV3OpKfMLSQtS-7EC7mUvwBexG4qDImEKL9yVrUemFM8kUGbgX_oex27Lox_Yv-jhDzrOyH3m/pub?output=csv";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSIQxENaGS4JdeeFsYr6ZIwxOwozNu2Pd7HILz4tVkA_yXNg1YZP8_NgTSxkyOTIEp/exec";
+        
+        // Script 1: Download Count (Database Utama)
+        const COUNT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ7E1Y4HaoemUnSv1PAjCs8LVqQt0d_4plG7SWhqfILH56GaA81vU_hF4oQN0elIYy/exec";
+        
+        // Script 2: Logging (Spreadsheet Log Baru)
+        const LOG_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSIQxENaGS4JdeeFsYr6ZIwxOwozNu2Pd7HILz4tVkA_yXNg1YZP8_NgTSxkyOTIEp/exec";
 
         // --- STATE ---
         let allData = [];
@@ -533,30 +538,41 @@
         }
 
         window.incrementDownload = function(id) {
-            console.log("Mengirim request increment download untuk ID:", id);
+            console.log("Processing download for ID:", id);
             
-            // Prepare data for logging
-            const title = currentModalItem ? currentModalItem.judul : "Unknown";
-            const name = currentUser ? currentUser.displayName : "Anonymous";
-            const email = currentUser ? currentUser.email : "-";
-
-            const params = new URLSearchParams();
-            params.append('id', id);
-            params.append('title', title);
-            params.append('name', name);
-            params.append('email', email);
-
-            fetch(SCRIPT_URL, {
+            // 1. Call Download Count Script (Old Script)
+            fetch(COUNT_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 cache: 'no-cache',
                 credentials: 'omit',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString(),
+                body: `id=${id}`,
                 keepalive: true
             })
-            .then(() => console.log("Request terkirim (no-cors) dengan data log"))
-            .catch(e => console.error("Gagal update download:", e));
+            .then(() => console.log("Count incremented"))
+            .catch(e => console.error("Count failed:", e));
+
+            // 2. Call Logging Script (New Script)
+            const title = currentModalItem ? currentModalItem.judul : "Unknown";
+            const name = currentUser ? currentUser.displayName : "Anonymous";
+            const email = currentUser ? currentUser.email : "-";
+
+            const logUrl = new URL(LOG_SCRIPT_URL);
+            logUrl.searchParams.append('id', id);
+            logUrl.searchParams.append('title', title);
+            logUrl.searchParams.append('name', name);
+            logUrl.searchParams.append('email', email);
+
+            fetch(logUrl.toString(), {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                credentials: 'omit',
+                keepalive: true
+            })
+            .then(() => console.log("Log sent"))
+            .catch(e => console.error("Log failed:", e));
         };
 
         async function fetchData() {
