@@ -388,7 +388,7 @@
         // --- CONFIGURATION ---
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJcbZob_yUkPgcvInwVp2-Wgnj2UkQLKrUlmjys4Tgd5Ke1kiOxqbqADlbqku-0s3SHTUQBpkZmKz7/pub?output=csv";
         const CONTACT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXQcZbV3OpKfMLSQtS-7EC7mUvwBexG4qDImEKL9yVrUemFM8kUGbgX_oex27Lox_Yv-jhDzrOyH3m/pub?output=csv";
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ7E1Y4HaoemUnSv1PAjCs8LVqQt0d_4plG7SWhqfILH56GaA81vU_hF4oQN0elIYy/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSIQxENaGS4JdeeFsYr6ZIwxOwozNu2Pd7HILz4tVkA_yXNg1YZP8_NgTSxkyOTIEp/exec";
 
         // --- STATE ---
         let allData = [];
@@ -534,16 +534,28 @@
 
         window.incrementDownload = function(id) {
             console.log("Mengirim request increment download untuk ID:", id);
+            
+            // Prepare data for logging
+            const title = currentModalItem ? currentModalItem.judul : "Unknown";
+            const name = currentUser ? currentUser.displayName : "Anonymous";
+            const email = currentUser ? currentUser.email : "-";
+
+            const params = new URLSearchParams();
+            params.append('id', id);
+            params.append('title', title);
+            params.append('name', name);
+            params.append('email', email);
+
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 cache: 'no-cache',
                 credentials: 'omit',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `id=${id}`,
+                body: params.toString(),
                 keepalive: true
             })
-            .then(() => console.log("Request terkirim (no-cors)"))
+            .then(() => console.log("Request terkirim (no-cors) dengan data log"))
             .catch(e => console.error("Gagal update download:", e));
         };
 
