@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Digital Library PERHIMAGI</title>
+    
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" sizes="192x192">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col relative overflow-hidden">
+
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 z-0 opacity-40">
+        <div class="absolute inset-0 bg-[url('https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png')] bg-no-repeat bg-center bg-contain opacity-5 blur-3xl transform scale-150"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100"></div>
+    </div>
+
+    <!-- LOADING STATE (Full Screen) -->
+    <div id="loadingState" class="fixed inset-0 z-[60] bg-white flex flex-col items-center justify-center">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-red-600 mb-6"></div>
+        <p class="text-slate-500 font-medium text-lg animate-pulse">Memeriksa status akses...</p>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div id="mainContainer" class="relative z-10 flex-1 flex flex-col items-center justify-center p-6 w-full max-w-7xl mx-auto">
+        
+        <!-- 1. LOGIN SECTION (Full Screen Centered) -->
+        <div id="loginSection" class="hidden w-full max-w-4xl flex flex-col items-center text-center">
+            <div class="mb-8 transform hover:scale-105 transition duration-500">
+                <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" alt="Logo" class="h-28 md:h-36 w-auto object-contain drop-shadow-2xl">
+            </div>
+            
+            <h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">
+                AKSES <span class="text-red-600">TERBATAS</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-xl font-light leading-relaxed">
+                Silakan login menggunakan akun Google Anda untuk mengakses <strong>Digital Library PERHIMAGI</strong>.
+            </p>
+
+            <div class="w-full max-w-md space-y-6">
+                <button onclick="loginWithGoogle()" class="group w-full bg-white border-2 border-slate-200 hover:border-red-600 text-slate-700 hover:text-red-600 font-bold py-4 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-red-100 flex items-center justify-center gap-4 text-lg">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-8 h-8 group-hover:scale-110 transition-transform" alt="Google">
+                    <span>Masuk dengan Google</span>
+                </button>
+                
+                <p class="text-sm text-slate-400">
+                    Pastikan menggunakan email yang aktif.
+                </p>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="mt-16 border-t border-slate-200 pt-6 w-full max-w-sm">
+                <p class="text-slate-400 text-sm font-medium mb-4">Butuh Bantuan?</p>
+                <div class="flex justify-center gap-6 text-slate-500 font-medium text-sm">
+                    <a href="mailto:perhimagi.indonesia@gmail.com" class="hover:text-red-600 transition flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100 hover:border-red-200">
+                        <i data-lucide="mail" class="w-4 h-4"></i> Email
+                    </a>
+                    <a href="https://wa.me/6282290193887" target="_blank" class="hover:text-green-600 transition flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100 hover:border-green-200">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. NO ACCESS SECTION (Full Screen) -->
+        <div id="noAccessSection" class="hidden w-full max-w-3xl flex flex-col items-center text-center">
+            <div class="bg-red-50 w-32 h-32 rounded-full flex items-center justify-center mb-8 animate-bounce-slow">
+                <i data-lucide="lock" class="text-red-600 w-16 h-16"></i>
+            </div>
+            <h2 class="text-3xl md:text-5xl font-bold text-slate-900 mb-4">Tidak ada akses</h2>
+            <p class="text-slate-600 mb-10 text-lg md:text-xl max-w-xl">
+                Email <span id="userEmailDisplay" class="font-bold text-slate-900 bg-slate-100 px-2 py-1 rounded"></span> belum memiliki akses ke perpustakaan ini.
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-4 w-full max-w-lg">
+                <button onclick="showRegistration()" class="flex-1 bg-red-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-red-700 transition shadow-xl hover:shadow-red-200 text-lg">
+                    Daftar Sekarang
+                </button>
+                <button onclick="logoutUser()" class="flex-1 bg-white border-2 border-slate-200 text-slate-600 font-bold py-4 px-6 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition text-lg">
+                    Ganti Akun
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. REGISTRATION FORM (Full Screen) -->
+        <div id="registrationSection" class="hidden w-full max-w-2xl bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 md:p-12 relative flex flex-col">
+            <button onclick="showNoAccess()" class="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <div class="text-center mb-10">
+                <h3 class="text-3xl font-bold text-slate-900 mb-2">Formulir Pendaftaran</h3>
+                <p class="text-slate-500">Isi data diri Anda untuk mengajukan akses.</p>
+            </div>
+            
+            <form id="regForm" onsubmit="handleRegistration(event)" class="space-y-6">
+                <div class="space-y-2 text-left">
+                    <label class="text-sm font-bold text-slate-700 uppercase tracking-wider ml-1">Nama Lengkap</label>
+                    <input type="text" id="regName" readonly 
+                        class="w-full p-5 border-2 border-slate-100 rounded-2xl bg-slate-50 text-slate-500 font-medium cursor-not-allowed text-lg">
+                </div>
+                <div class="space-y-2 text-left">
+                    <label class="block text-sm font-bold text-slate-700 uppercase mb-2">Email Google</label>
+                    <input type="email" id="regEmail" readonly 
+                        class="w-full p-5 border-2 border-slate-100 rounded-2xl bg-slate-50 text-slate-500 font-medium cursor-not-allowed text-lg">
+                </div>
+
+            <!-- Institution Field -->
+            <div class="space-y-3 text-left pt-2">
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative flex items-center">
+                        <input type="checkbox" id="isPerhimagiMember" onchange="toggleInstitutionInput()" class="peer h-6 w-6 cursor-pointer appearance-none rounded-lg border-2 border-slate-300 transition-all checked:border-red-600 checked:bg-red-600 hover:border-red-400">
+                        <i data-lucide="check" class="pointer-events-none absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100"></i>
+                    </div>
+                    <span class="text-slate-700 font-medium group-hover:text-red-700 transition">Institusi Anggota PERHIMAGI?</span>
+                </label>
+
+                <!-- Select Input (Hidden by default) -->
+                <div id="institutionSelectContainer" class="hidden">
+                    <label class="block text-sm font-bold text-slate-700 uppercase mb-2 ml-1">Pilih Institusi</label>
+                    <div class="relative">
+                        <select id="regInstitutionSelect" class="w-full p-5 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 outline-none transition bg-white text-lg appearance-none cursor-pointer">
+                            <option value="" disabled selected>-- Pilih Institusi --</option>
+                            <!-- Options injected by JS -->
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-slate-500">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Input (Default) -->
+                <div id="institutionTextContainer">
+                    <label class="block text-sm font-bold text-slate-700 uppercase mb-2 ml-1">Asal Instansi / Sekolah</label>
+                    <input type="text" id="regInstitutionText" 
+                        class="w-full p-5 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 outline-none transition bg-white text-lg font-medium placeholder:font-normal" 
+                        placeholder="Contoh: Universitas Gadjah Mada">
+                </div>
+            </div>
+                
+                <div class="pt-6">
+                    <button type="submit" id="regSubmitBtn" class="w-full bg-red-600 text-white font-bold py-5 rounded-2xl hover:bg-red-700 transition shadow-xl hover:shadow-red-200 flex justify-center items-center gap-3 text-xl transform hover:-translate-y-1">
+                        <span>Kirim Pengajuan</span>
+                        <i data-lucide="arrow-right" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 4. PENDING APPROVAL (Full Screen) -->
+        <div id="pendingSection" class="hidden w-full max-w-3xl flex flex-col items-center text-center">
+            <div class="bg-yellow-50 w-32 h-32 rounded-full flex items-center justify-center mb-8 animate-pulse">
+                <i data-lucide="clock" class="text-yellow-600 w-16 h-16"></i>
+            </div>
+            <h3 class="text-3xl md:text-5xl font-bold text-slate-900 mb-4">Menunggu Verifikasi</h3>
+            <p class="text-slate-600 mb-10 text-lg md:text-xl max-w-2xl">
+                Data Anda sudah kami terima. Admin sedang memverifikasi status anda. Mohon tunggu beberapa saat.
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-4 w-full max-w-lg">
+                <button onclick="window.location.reload()" class="flex-1 bg-slate-900 text-white font-bold py-4 px-6 rounded-xl hover:bg-slate-800 transition shadow-lg text-lg">
+                    Cek Status
+                </button>
+                <button onclick="logoutUser()" class="flex-1 text-red-600 font-bold py-4 hover:bg-red-50 rounded-xl transition text-lg">
+                    Logout
+                </button>
+            </div>
+
+            <div class="mt-16 flex items-center gap-2 text-slate-400 text-sm">
+                <span>Butuh proses cepat?</span>
+                <a id="pendingContactBtn" href="https://wa.me/6282290193887" target="_blank" class="text-green-600 font-bold hover:underline flex items-center gap-1">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i> Chat Admin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION MODAL (Popup) -->
+    <div id="notificationModal" class="fixed inset-0 z-[70] hidden bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 text-center animate-fade-in-up transform scale-100">
+            <div id="notifIcon" class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-green-100">
+                <i data-lucide="check" class="text-green-600 w-10 h-10"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3" id="notifTitle">Berhasil</h3>
+            <div class="text-slate-600 mb-8 text-base leading-relaxed" id="notifMessage"></div>
+            <button onclick="closeNotification()" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-slate-800 transition shadow-lg text-lg">
+                Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- DEBUG CONSOLE (Hidden by default, toggle with 'd' key) -->
+    <div id="debugConsole" class="fixed bottom-0 left-0 w-full h-1/3 bg-black/90 text-green-400 font-mono text-xs p-4 overflow-y-auto z-[100] hidden">
+        <div class="flex justify-between border-b border-gray-700 mb-2 pb-1">
+            <span class="font-bold">DEBUG LOG</span>
+            <button onclick="document.getElementById('debugConsole').classList.add('hidden')" class="text-red-500">Close</button>
+        </div>
+        <div id="debugContent"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // --- DEBUG LOGGER ---
+        function logToScreen(msg, type = 'info') {
+            const consoleDiv = document.getElementById('debugContent');
+            if (!consoleDiv) return;
+            const line = document.createElement('div');
+            line.className = type === 'error' ? 'text-red-400' : 'text-green-400';
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            console.log(msg); // Keep original console
+        }
+        
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            logToScreen(`Global Error: ${msg} at ${lineNo}:${columnNo}`, 'error');
+            document.getElementById('debugConsole').classList.remove('hidden');
+            return false;
+        };
+
+        // Toggle Debug with 'd' key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.getElementById('debugConsole').classList.toggle('hidden');
+            }
+        });
+        // --------------------
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfhZE-57GF9GKYaqJdkKyR8RVUsrVYOrQ",
+            authDomain: "perhimagi-library.firebaseapp.com",
+            projectId: "perhimagi-library",
+            storageBucket: "perhimagi-library.firebasestorage.app",
+            messagingSenderId: "810004654530",
+            appId: "1:810004654530:web:971937fd2bd5415dab4e5b",
+            measurementId: "G-3B5F7SGR53"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // TODO: GANTI URL INI DENGAN URL WEB APP DARI GOOGLE APPS SCRIPT ANDA
+        const AUTH_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLUsiPIzGJx3ZzM2DlMT00eBRljfq2kHgu11Nk6ZtaIeDugOOZe6bYooN6TTAM6IVA/exec"; 
+
+        let currentUser = null;
+
+        // UI Helpers
+        function showSection(id) {
+            logToScreen(`Showing section: ${id}`);
+            const sections = ['loadingState', 'loginSection', 'noAccessSection', 'registrationSection', 'pendingSection'];
+            
+            // Hide all first
+            sections.forEach(sec => {
+                const el = document.getElementById(sec);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.style.display = 'none'; // Force hide
+                }
+            });
+            
+            // Show target
+            const target = document.getElementById(id);
+            if (target) {
+                target.classList.remove('hidden');
+                target.style.display = 'flex'; // Force flex
+                
+                // Force layout reflow
+                void target.offsetWidth;
+                
+                // Refresh icons
+                try { lucide.createIcons(); } catch(e) {}
+            } else {
+                logToScreen(`Target section not found: ${id}`, 'error');
+            }
+        }
+
+        // Safety Timeout: Force show login if stuck loading for 8s
+        setTimeout(() => {
+            const loading = document.getElementById('loadingState');
+            if (loading && loading.style.display !== 'none' && !loading.classList.contains('hidden')) {
+                logToScreen("Safety timeout triggered.", 'error');
+                
+                // Force UI update
+                if (currentUser) {
+                    showSection('noAccessSection');
+                } else {
+                    showSection('loginSection');
+                }
+                
+                // Show debug console automatically on timeout
+                document.getElementById('debugConsole').classList.remove('hidden');
+            }
+        }, 8000);
+
+        window.toggleInstitutionInput = () => {
+            const isMember = document.getElementById('isPerhimagiMember').checked;
+            const selectContainer = document.getElementById('institutionSelectContainer');
+            const textContainer = document.getElementById('institutionTextContainer');
+            
+            if (isMember) {
+                selectContainer.classList.remove('hidden');
+                textContainer.classList.add('hidden');
+                if (document.getElementById('regInstitutionSelect').options.length <= 1) {
+                    fetchInstitutions();
+                }
+            } else {
+                selectContainer.classList.add('hidden');
+                textContainer.classList.remove('hidden');
+            }
+        };
+
+        async function fetchInstitutions() {
+            const select = document.getElementById('regInstitutionSelect');
+            try {
+                const loadingOption = document.createElement('option');
+                loadingOption.text = "Memuat data...";
+                select.add(loadingOption);
+
+                const url = new URL(AUTH_SCRIPT_URL);
+                url.searchParams.append('action', 'get_institutions');
+                
+                const response = await fetch(url.toString());
+                const result = await response.json();
+                
+                if (select.options.length > 0) select.remove(select.options.length - 1);
+
+                if (result.status === 'success' && Array.isArray(result.data)) {
+                    result.data.forEach(inst => {
+                        const option = document.createElement('option');
+                        option.value = inst;
+                        option.text = inst;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                logToScreen("Failed to fetch institutions: " + error.message, 'error');
+                if (select.options.length > 0) select.remove(select.options.length - 1);
+                const option = document.createElement('option');
+                option.text = "Gagal memuat data";
+                select.add(option);
+            }
+        }
+
+        window.loginWithGoogle = async () => {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                logToScreen("Login Failed: " + error.message, 'error');
+                alert("Login gagal: " + error.message);
+            }
+        };
+
+        window.logoutUser = async () => {
+            try {
+                await signOut(auth);
+                window.location.reload();
+            } catch (error) {
+                logToScreen("Logout Failed: " + error.message, 'error');
+            }
+        };
+
+        window.showRegistration = () => {
+            if (currentUser) {
+                document.getElementById('regName').value = currentUser.displayName || "";
+                document.getElementById('regEmail').value = currentUser.email;
+                showSection('registrationSection');
+            }
+        };
+
+        window.showNoAccess = () => {
+            showSection('noAccessSection');
+        };
+
+        window.showNotification = (title, message, type = 'success') => {
+            const modal = document.getElementById('notificationModal');
+            const iconContainer = document.getElementById('notifIcon');
+            iconContainer.innerHTML = '<i class="w-8 h-8"></i>';
+            const icon = iconContainer.querySelector('i');
+            
+            document.getElementById('notifTitle').textContent = title;
+            document.getElementById('notifMessage').innerHTML = message;
+            
+            if (type === 'success') {
+                iconContainer.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-green-100";
+                icon.setAttribute('data-lucide', 'check');
+                icon.className = "text-green-600 w-10 h-10";
+            } else if (type === 'pending') {
+                iconContainer.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-yellow-100";
+                icon.setAttribute('data-lucide', 'clock');
+                icon.className = "text-yellow-600 w-10 h-10";
+            }
+            
+            lucide.createIcons();
+            modal.classList.remove('hidden');
+        };
+
+        window.closeNotification = () => {
+            document.getElementById('notificationModal').classList.add('hidden');
+            if (document.getElementById('notifTitle').textContent === "Pengajuan Terkirim") {
+                window.location.reload();
+            }
+        };
+
+        window.handleRegistration = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const btn = document.getElementById('regSubmitBtn');
+            
+            const isMember = document.getElementById('isPerhimagiMember').checked;
+            let institution = "";
+            
+            if (isMember) {
+                institution = document.getElementById('regInstitutionSelect').value;
+                if (!institution) {
+                    alert("Silakan pilih Institusi Anda.");
+                    return;
+                }
+            } else {
+                institution = document.getElementById('regInstitutionText').value;
+                if (!institution) {
+                    alert("Silakan isi nama Instansi / Sekolah Anda.");
+                    return;
+                }
+            }
+            
+            if (!name || !email) return;
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> Memproses...`;
+
+            try {
+                const response = await fetch(AUTH_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ 
+                        action: 'register', 
+                        name: name, 
+                        email: email,
+                        institution: institution
+                    })
+                });
+                
+                btn.innerHTML = `<i data-lucide="check" class="w-5 h-5"></i> Terkirim!`;
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    showNotification(
+                        "Pengajuan Terkirim", 
+                        "Data Anda telah kami terima. Silakan tunggu proses verifikasi oleh Admin sebelum dapat mengakses library.",
+                        'success'
+                    );
+                }, 500);
+
+            } catch (error) {
+                logToScreen("Registration Error: " + error.message, 'error');
+                alert("Terjadi kesalahan koneksi.");
+                btn.disabled = false;
+                btn.innerHTML = `<span>Kirim Pengajuan</span> <i data-lucide="arrow-right" class="w-6 h-6"></i>`;
+                lucide.createIcons();
+            }
+        };
+
+        async function checkSheetAccess(user) {
+            logToScreen("Checking access for: " + user.email);
+            try {
+                const url = new URL(AUTH_SCRIPT_URL);
+                url.searchParams.append('action', 'check_access');
+                url.searchParams.append('email', user.email);
+                url.searchParams.append('_', new Date().getTime());
+
+                const response = await fetch(url.toString());
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                
+                const result = await response.json();
+                logToScreen("Auth Result: " + JSON.stringify(result));
+
+                // Normalize status
+                const status = result.status ? result.status.toLowerCase().trim() : 'unregistered';
+
+                if (status === 'authorized') {
+                    logToScreen("Authorized! Redirecting...");
+                    
+                    let greeting = "Selamat Datang!";
+                    let subtext = "Akses diterima.";
+                    
+                    if (result.role === 'pengurus') {
+                        greeting = `Halo, ${result.name || 'Pengurus'}!`;
+                        subtext = `${result.division || 'Pengurus PERHIMAGI'}`;
+                    } else if (result.role === 'member') {
+                        greeting = `Halo, ${result.name || 'Anggota'}!`;
+                        subtext = `${result.institution || 'Anggota PERHIMAGI'}`;
+                    }
+
+                    document.getElementById('loadingState').innerHTML = `
+                        <div class="bg-green-100 rounded-full p-4 mb-6 animate-bounce-slow">
+                            <i data-lucide="check" class="text-green-600 w-12 h-12"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2">${greeting}</h2>
+                        <p class="text-slate-600 font-medium text-lg mb-6">${subtext}</p>
+                        <div class="flex items-center gap-2 text-slate-400 text-sm animate-pulse">
+                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                            Mengalihkan ke library...
+                        </div>
+                    `;
+                    document.getElementById('loadingState').classList.remove('hidden'); // Ensure visible
+                    document.getElementById('loadingState').style.display = 'flex';
+                    
+                    // Initialize icons for the checkmark
+                    try { lucide.createIcons(); } catch(e) {}
+
+                    // Delay redirect to show greeting
+                    setTimeout(() => {
+                        window.location.href = 'beta.html';
+                    }, 3000);
+                } else if (status === 'pending') {
+                    logToScreen("Status is PENDING. Showing pending section.");
+                    const contactBtn = document.getElementById('pendingContactBtn');
+                    const DEFAULT_CONTACT = "6282290193887";
+                    
+                    if (contactBtn && result.contact) {
+                        // Check if institution is a PERHIMAGI member institution
+                        // Note: This requires the Google Apps Script update to return 'isPerhimagi'
+                        if (result.isPerhimagi === true) {
+                            // PERHIMAGI Member: Text only, no link
+                            contactBtn.removeAttribute('href');
+                            contactBtn.className = "text-slate-500 font-medium flex items-center gap-1 cursor-default";
+                            contactBtn.innerHTML = `<i data-lucide="users" class="w-4 h-4"></i> Hubungi koris masing-masing`;
+                        } else {
+                            // General/Admin: Clickable WhatsApp link
+                            contactBtn.href = `https://wa.me/${DEFAULT_CONTACT}`;
+                            contactBtn.className = "text-green-600 font-bold hover:underline flex items-center gap-1";
+                            contactBtn.innerHTML = `<i data-lucide="message-circle" class="w-4 h-4"></i> Chat Admin`;
+                        }
+                        try { lucide.createIcons(); } catch(e) {}
+                    }
+                    showSection('pendingSection');
+                } else {
+                    logToScreen("Status is UNREGISTERED/OTHER. Showing noAccess section.");
+                    const emailDisplay = document.getElementById('userEmailDisplay');
+                    if (emailDisplay) emailDisplay.textContent = user.email;
+                    showSection('noAccessSection');
+                }
+            } catch (error) {
+                logToScreen("Error checking access: " + error.message, 'error');
+                showSection('loginSection');
+            } finally {
+                // Ensure loading is hidden if not authorized (authorized handles its own redirect UI)
+                const loading = document.getElementById('loadingState');
+                if (loading && !loading.innerHTML.includes('Mengalihkan')) {
+                    loading.classList.add('hidden');
+                    loading.style.display = 'none';
+                }
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                logToScreen("User authenticated: " + user.email);
+                checkSheetAccess(user);
+            } else {
+                logToScreen("No user authenticated.");
+                showSection('loginSection');
+            }
+        });
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
