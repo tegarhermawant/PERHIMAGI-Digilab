@@ -526,7 +526,13 @@
 
                     // Delay redirect to show greeting
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirectUrl = urlParams.get('redirect');
+                        if (redirectUrl) {
+                            window.location.href = decodeURIComponent(redirectUrl);
+                        } else {
+                            window.location.href = 'index.html';
+                        }
                     }, 3000);
                 } else if (status === 'pending') {
                     logToScreen("Status is PENDING. Showing pending section.");

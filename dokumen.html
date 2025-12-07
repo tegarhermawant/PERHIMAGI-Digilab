@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Dokumen - PERHIMAGI Digital Library</title>
+    
+    <!-- 1. FIXED FAVICON -->
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi-150x150.png" sizes="32x32">
+    <link rel="icon" href="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" sizes="192x192">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Detail Dokumen - PERHIMAGI Digital Library">
+    <meta property="og:description" content="Referensi Literasi Mahasiswa Geologi di Indonesia">
+    <meta property="og:image" content="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .slide-down { animation: slideDown 0.2s ease-out forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png" 
+                         alt="Logo PERHIMAGI" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold text-red-600">PERHIMAGI</h1>
+                        <p class="text-xs text-slate-500 tracking-wider">DIGITAL LIBRARY</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                    <a href="https://perhimagi.org/" class="hover:text-red-600 transition">Home</a>
+                    <a href="/index.html" class="hover:text-red-600 transition">Library</a>
+                    <a href="/alat/" class="hover:text-red-600 transition">Alat</a>
+                    <a href="/tentang.html" class="hover:text-red-600 transition">Tentang</a>
+                    
+                    <!-- Login / Profile Section -->
+                    <div class="flex items-center ml-4 border-l pl-4 border-slate-200">
+                        <button id="loginBtn" onclick="loginWithGoogle()" class="text-sm font-medium text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition shadow-sm">
+                            Login
+                        </button>
+                        <div id="userProfile" class="hidden flex items-center gap-3">
+                            <img id="userAvatar" src="" alt="User" class="w-8 h-8 rounded-full border border-slate-200">
+                            <div class="flex flex-col">
+                                <span id="userName" class="text-xs font-bold text-slate-900 leading-tight">User</span>
+                                <span id="userRole" class="text-[10px] text-slate-500">Member</span>
+                                <button onclick="logoutUser()" class="text-[10px] text-red-600 hover:underline text-left">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Dropdown (Hidden by default) -->
+        <div id="mobileNavDropdown" class="hidden md:hidden bg-white border-t border-slate-100 shadow-lg absolute top-full w-full left-0 z-50 slide-down">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="https://perhimagi.org/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium">
+                    <i data-lucide="home" class="w-5 h-5"></i> Home
+                </a>
+                <a href="/index.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="book" class="w-5 h-5"></i> Library
+                </a>
+                <a href="/alat/" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Alat
+                </a>
+                <a href="/tentang.html" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium w-full text-left">
+                    <i data-lucide="info" class="w-5 h-5"></i> Tentang
+                </a>
+                <div class="border-t border-slate-100 pt-3 mt-2">
+                    <button id="mobileLoginBtn" onclick="loginWithGoogle()" class="flex items-center gap-3 p-2 rounded-lg bg-red-600 text-white font-medium w-full justify-center">
+                        <i data-lucide="log-in" class="w-5 h-5"></i> Login
+                    </button>
+                    <div id="mobileUserProfile" class="hidden flex flex-col gap-2">
+                        <div class="flex items-center gap-3 p-2">
+                            <img id="mobileUserAvatar" src="" alt="User" class="w-8 h-8 rounded-full border border-slate-200">
+                            <div class="flex flex-col">
+                                <span id="mobileUserName" class="font-bold text-slate-900">User</span>
+                                <span id="mobileUserRole" class="text-xs text-slate-500">Member</span>
+                            </div>
+                        </div>
+                        <button onclick="logoutUser()" class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-red-600 font-medium w-full text-left">
+                            <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 w-full bg-white">
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Back Button -->
+        <button onclick="goBack()" class="inline-flex items-center gap-2 text-slate-500 hover:text-red-600 mb-6 transition-colors font-medium bg-transparent border-none cursor-pointer">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Library
+        </button>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-red-600 mb-4"></div>
+            <p class="text-slate-500">Memuat detail dokumen...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden bg-red-50 border border-red-200 rounded-xl p-8 text-center">
+            <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-circle" class="text-red-600 w-8 h-8"></i>
+            </div>
+            <h3 class="text-red-700 font-bold mb-2 text-lg">Dokumen Tidak Ditemukan</h3>
+            <p class="text-red-600 text-sm mb-6" id="errorMessage">Maaf, dokumen yang Anda cari tidak tersedia atau ID salah.</p>
+            <a href="index.html" class="inline-flex items-center justify-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition">
+                Kembali ke Library
+            </a>
+        </div>
+
+        <!-- Thank You Modal (Popup) -->
+    <div id="thankYouModal" class="fixed inset-0 z-[70] hidden bg-slate-900/60 backdrop-blur-md flex flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 text-center animate-fade-in-up transform scale-100">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-green-100">
+                <i data-lucide="check-circle" class="text-green-600 w-10 h-10"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Terima Kasih!</h3>
+            <p class="text-slate-600 mb-6 text-base leading-relaxed">
+                Dokumen sedang diunduh.
+            </p>
+            
+            <div class="space-y-3">
+                <button onclick="window.location.href='index.html'" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-2xl hover:bg-red-700 transition shadow-lg hover:shadow-red-200 text-lg flex items-center justify-center gap-2">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i> Kembali ke Library
+                </button>
+                
+                <button onclick="window.location.href='/alat/'" class="w-full bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl hover:border-red-600 hover:text-red-600 transition text-lg flex items-center justify-center gap-2">
+                    <i data-lucide="wrench" class="w-5 h-5"></i> Coba Alat Geologi
+                </button>
+
+                <div class="pt-4 border-t border-slate-100 mt-4 flex flex-col gap-2">
+                    <a href="tentang.html" class="text-slate-400 hover:text-slate-600 text-sm font-medium transition hover:underline">
+                        Tentang PERHIMAGI
+                    </a>
+                    <a id="popupReportLink" href="#" target="_blank" class="text-red-400 hover:text-red-600 text-xs font-medium transition flex items-center justify-center gap-1">
+                        <i data-lucide="flag" class="w-3 h-3"></i> Laporkan file bermasalah
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Detail Content (Full Width Style) -->
+        <div id="detailCard" class="hidden fade-in">
+            <!-- Header Section -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8 items-start">
+                <!-- Thumbnail -->
+                <div id="docThumbnailContainer" class="hidden flex-shrink-0 w-32 h-48 md:w-40 md:h-60 bg-slate-200 rounded-lg overflow-hidden shadow-md border border-slate-200 mx-auto md:mx-0">
+                    <img id="docThumbnail" src="" alt="Cover" class="w-full h-full object-cover" referrerpolicy="no-referrer">
+                </div>
+                
+                <div class="flex-1 w-full">
+                    <div class="flex flex-wrap gap-2 mb-3" id="docBadges">
+                        <!-- Badges injected here -->
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-2" id="docTitle">Judul Dokumen</h1>
+                    <div class="flex items-center gap-2 text-slate-500 text-sm mb-4">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                        <span id="docDate">Tanggal Upload</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 p-4 bg-white rounded-xl border border-slate-100 shadow-sm">
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase font-semibold mb-1">Penulis</p>
+                            <p class="text-sm font-bold text-slate-800" id="docAuthor">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase font-semibold mb-1">Tahun</p>
+                            <p class="text-sm font-bold text-slate-800" id="docYear">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase font-semibold mb-1">Bahasa</p>
+                            <p class="text-sm font-bold text-slate-800" id="docLanguage">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase font-semibold mb-1">Download</p>
+                            <p class="text-sm font-bold text-slate-800 flex items-center gap-1">
+                                <i data-lucide="download" class="w-3 h-3 text-slate-400"></i>
+                                <span id="docDownloads">0</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Body Section -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <!-- Left Column: Description & Topics -->
+                    <div class="lg:col-span-2 space-y-10">
+                <div class="mb-8">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> Deskripsi
+                    </h3>
+                    <div class="text-slate-600 leading-relaxed bg-slate-50 p-5 rounded-xl border border-slate-100 text-sm md:text-base" id="docDescription">
+                        -
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i data-lucide="tag" class="w-4 h-4"></i> Topik Terkait
+                    </h3>
+                    <div class="flex flex-wrap gap-2" id="docTopics">
+                        <!-- Topics injected here -->
+                    </div>
+                </div>
+
+                    </div>
+
+                    <!-- Right Column: Action Card (Sticky) -->
+                    <div class="lg:col-span-1">
+                        <div class="sticky top-24 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                            <h3 class="font-bold text-slate-900 mb-4 text-lg">Akses Dokumen</h3>
+                            
+                            <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-4 mb-6">
+                    <div class="flex gap-3 items-start mb-6">
+                        <div class="flex items-center h-5">
+                            <input id="confirmationCheck" type="checkbox" class="w-5 h-5 text-red-600 border-slate-300 rounded focus:ring-red-500 cursor-pointer">
+                        </div>
+                        <label for="confirmationCheck" class="text-sm text-slate-700 cursor-pointer select-none">
+                            <span class="font-bold text-yellow-800 block mb-1 text-base">Pernyataan Komitmen</span>
+                            Saya menyatakan bahwa Aset ini akan dipelajari untuk mendukung <strong>pemerataan ilmu geologi di seluruh Indonesia</strong> sesuai dengan visi misi PERHIMAGI.
+                        </label>
+                    </div>
+
+                    <a id="actionBtn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full py-4 px-6 rounded-xl font-bold text-white transition-all bg-slate-300 cursor-not-allowed pointer-events-none text-lg shadow-sm">
+                        <i data-lucide="lock" class="w-5 h-5"></i> Menunggu Konfirmasi...
+                    </a>
+                    
+                            <!-- Hidden Report Link -->
+                            <p id="reportBrokenLink" class="hidden text-center text-sm text-slate-500 mt-4 pt-4 border-t border-slate-100">
+                                File bermasalah? <a href="#" target="_blank" class="text-red-600 font-bold hover:underline">Laporkan</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto text-center text-sm">
+        <p>&copy; Powered by PERHIMAGI (Persatuan Himpunan Mahasiswa Geologi Indonesia).</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfhZE-57GF9GKYaqJdkKyR8RVUsrVYOrQ",
+            authDomain: "perhimagi-library.firebaseapp.com",
+            projectId: "perhimagi-library",
+            storageBucket: "perhimagi-library.firebasestorage.app",
+            messagingSenderId: "810004654530",
+            appId: "1:810004654530:web:971937fd2bd5415dab4e5b",
+            measurementId: "G-3B5F7SGR53"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // --- AUTH CONFIGURATION ---
+        const AUTH_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLUsiPIzGJx3ZzM2DlMT00eBRljfq2kHgu11Nk6ZtaIeDugOOZe6bYooN6TTAM6IVA/exec"; 
+        
+        // --- DATA CONFIGURATION ---
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJcbZob_yUkPgcvInwVp2-Wgnj2UkQLKrUlmjys4Tgd5Ke1kiOxqbqADlbqku-0s3SHTUQBpkZmKz7/pub?output=csv";
+        const CONTACT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXQcZbV3OpKfMLSQtS-7EC7mUvwBexG4qDImEKL9yVrUemFM8kUGbgX_oex27Lox_Yv-jhDzrOyH3m/pub?output=csv";
+        const COUNT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQ7E1Y4HaoemUnSv1PAjCs8LVqQt0d_4plG7SWhqfILH56GaA81vU_hF4oQN0elIYy/exec";
+        const LOG_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSIQxENaGS4JdeeFsYr6ZIwxOwozNu2Pd7HILz4tVkA_yXNg1YZP8_NgTSxkyOTIEp/exec";
+
+        // --- STATE ---
+        let currentUser = null;
+        let currentItem = null;
+        let contactNumber = "6282290193887";
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auth Listener
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                updateAuthUI(user);
+                
+                // If data is already loaded, re-render action button state
+                if (currentItem) {
+                    renderActionButtons();
+                }
+
+                if (user) {
+                    checkSheetAccess(user);
+                } else {
+                    window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
+                }
+            });
+
+            fetchContactNumber();
+            fetchDataAndRender();
+        });
+
+        // --- ACCESS CHECK ---
+        async function checkSheetAccess(user) {
+            try {
+                const url = new URL(AUTH_SCRIPT_URL);
+                url.searchParams.append('action', 'check_access');
+                url.searchParams.append('email', user.email);
+                url.searchParams.append('_', new Date().getTime());
+
+                const response = await fetch(url.toString());
+                if (!response.ok) throw new Error("Network response was not ok");
+                
+                const result = await response.json();
+                const status = result.status ? result.status.toLowerCase().trim() : 'unregistered';
+
+                if (status !== 'authorized') {
+                    // Not authorized / Pending -> Redirect to Auth Page
+                    window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
+                } else {
+                    // Authorized -> Update UI with role info
+                    updateAuthUI(user, result);
+                }
+            } catch (error) {
+                console.error("Check Access Error:", error);
+                // Optional: Redirect on error or show message
+                // window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
+            }
+        }
+
+        // --- AUTH FUNCTIONS ---
+        window.loginWithGoogle = async () => {
+            window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
+        };
+
+        window.logoutUser = async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error("Logout Failed:", error);
+            }
+        };
+
+        function updateAuthUI(user, userData = null) {
+            const loginBtn = document.getElementById('loginBtn');
+            const userProfile = document.getElementById('userProfile');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            
+            const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+            const mobileUserProfile = document.getElementById('mobileUserProfile');
+            const mobileUserAvatar = document.getElementById('mobileUserAvatar');
+            const mobileUserName = document.getElementById('mobileUserName');
+            const mobileUserRole = document.getElementById('mobileUserRole');
+            
+            if (user) {
+                // Desktop
+                loginBtn.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+                userAvatar.src = user.photoURL;
+                userName.textContent = user.displayName.split(' ')[0];
+
+                // Mobile
+                mobileLoginBtn.classList.add('hidden');
+                mobileUserProfile.classList.remove('hidden');
+                mobileUserAvatar.src = user.photoURL;
+                mobileUserName.textContent = user.displayName;
+
+                // Role / Institution Logic
+                let roleText = 'Member';
+                if (userData) {
+                    if (userData.role === 'pengurus') {
+                        roleText = userData.division || 'Pengurus';
+                    } else if (userData.role === 'member') {
+                        roleText = userData.institution || 'Member';
+                    }
+                }
+                userRole.textContent = roleText;
+                mobileUserRole.textContent = roleText;
+
+            } else {
+                // Desktop
+                loginBtn.classList.remove('hidden');
+                userProfile.classList.add('hidden');
+                
+                // Mobile
+                mobileLoginBtn.classList.remove('hidden');
+                mobileUserProfile.classList.add('hidden');
+            }
+        }
+
+        // --- DATA FETCHING ---
+        async function fetchContactNumber() {
+            try {
+                const response = await fetch(CONTACT_CSV_URL);
+                if (response.ok) {
+                    const text = await response.text();
+                    const fetchedNumber = text.trim().replace(/['"]+/g, ''); 
+                    if (fetchedNumber) contactNumber = fetchedNumber;
+                }
+            } catch (e) { console.error("Contact fetch failed", e); }
+        }
+
+        async function fetchDataAndRender() {
+            try {
+                // Get ID from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const docId = parseInt(urlParams.get('id'));
+
+                if (!docId) throw new Error("ID Dokumen tidak valid.");
+
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error("Gagal mengambil data.");
+                const text = await response.text();
+                const rows = parseCSV(text);
+                const dataRows = rows.slice(1);
+
+                // Find Item
+                const row = dataRows.find((r, index) => index === docId);
+                
+                if (!row) throw new Error("Dokumen tidak ditemukan.");
+
+                // Parse Item
+                const rawTopics = row[6] ? row[6].split(',') : [];
+                const cleanTopics = rawTopics.map(t => t.trim()).filter(t => t);
+                
+                currentItem = {
+                    id: docId,
+                    timestamp: row[0],
+                    judul: row[1] || "Tanpa Judul",
+                    penulis: row[2] || "Tidak Diketahui",
+                    tahun: row[3] || "-",
+                    bahasa: row[4] || "-",
+                    jenis: row[5] || "Umum",
+                    topik: cleanTopics,
+                    deskripsi: row[7] || "Tidak ada deskripsi tersedia.",
+                    akses: row[8] || "Privat",
+                    link: row[9] || "#",
+                    downloads: row[10] || "0"
+                };
+
+                renderDetail(currentItem);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('detailCard').classList.remove('hidden');
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+                document.getElementById('errorMessage').innerText = error.message;
+            }
+        }
+
+        function renderDetail(item) {
+            // Update Meta Title
+            document.title = `${item.judul} - PERHIMAGI Digital Library`;
+
+            // Text Content
+            document.getElementById('docTitle').innerText = item.judul;
+            document.getElementById('docDate').innerText = `Diunggah: ${item.timestamp.split(' ')[0]}`;
+            document.getElementById('docAuthor').innerText = item.penulis;
+            document.getElementById('docYear').innerText = item.tahun;
+            document.getElementById('docLanguage').innerText = item.bahasa;
+            document.getElementById('docDownloads').innerText = item.downloads;
+            document.getElementById('docDescription').innerText = item.deskripsi;
+
+            // Badges
+            const isOpen = item.akses === "Open Source";
+            const badgeClass = isOpen ? "bg-green-100 text-green-800 border-green-200" : "bg-orange-100 text-orange-800 border-orange-200";
+            const badgeIcon = isOpen ? "book-open" : "lock";
+            
+            document.getElementById('docBadges').innerHTML = `
+                <span class="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded uppercase border border-slate-200">${item.jenis}</span>
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${badgeClass}">
+                    <i data-lucide="${badgeIcon}" class="w-3 h-3 mr-1"></i> ${item.akses}
+                </span>
+            `;
+
+            // Topics
+            document.getElementById('docTopics').innerHTML = item.topik.map(t => 
+                `<span class="text-sm bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200 font-medium">${t}</span>`
+            ).join('');
+
+            // Thumbnail
+            const thumbId = getThumbnailId(item.link);
+            const thumbLink = thumbId ? `https://drive.google.com/thumbnail?sz=w500&id=${thumbId}` : null;
+            const thumbContainer = document.getElementById('docThumbnailContainer');
+            const thumbImg = document.getElementById('docThumbnail');
+
+            if (thumbLink) {
+                thumbContainer.classList.remove('hidden');
+                thumbImg.src = thumbLink;
+                thumbImg.onerror = function() { thumbContainer.classList.add('hidden'); };
+            } else {
+                thumbContainer.classList.add('hidden');
+            }
+
+            // Report Link (Hidden in main view, moved to popup)
+            const popupReportLink = document.getElementById('popupReportLink');
+            if (popupReportLink) {
+                popupReportLink.href = `https://wa.me/${contactNumber}?text=Halo%20Divisi%20Akademik%2C%20saya%20ingin%20melaporkan%20file%20ID%20${item.id}%20(${item.judul})%20tidak%20tersedia.`;
+            }
+
+            // Setup Checkbox Listener
+            document.getElementById('confirmationCheck').addEventListener('change', renderActionButtons);
+            
+            // ... (Meta tags logic remains same) ...
+            document.querySelector('meta[property="og:title"]').setAttribute("content", `${item.judul} - PERHIMAGI Digital Library`);
+            document.querySelector('meta[property="og:description"]').setAttribute("content", item.deskripsi.substring(0, 150) + "...");
+            
+            if (thumbLink) {
+                document.querySelector('meta[property="og:image"]').setAttribute("content", thumbLink);
+            } else {
+                document.querySelector('meta[property="og:image"]').setAttribute("content", "https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png");
+            }
+
+            // Initial Button State
+            renderActionButtons();
+            lucide.createIcons();
+        }
+
+        function renderActionButtons() {
+            const btn = document.getElementById('actionBtn');
+            const isChecked = document.getElementById('confirmationCheck').checked;
+            const isPrivate = currentItem.akses === "Privat";
+            // const reportLink = document.getElementById('reportBrokenLink'); // Removed from main view
+
+            if (isChecked) {
+                btn.classList.remove('bg-slate-300', 'cursor-not-allowed', 'pointer-events-none');
+                btn.classList.add('bg-green-600', 'hover:bg-green-700', 'shadow-lg', 'shadow-green-200');
+                
+                if (isPrivate) {
+                    btn.innerHTML = `<i data-lucide="message-circle" class="w-5 h-5"></i> Minta Akses via WhatsApp`;
+                    btn.href = `https://wa.me/${contactNumber}?text=Halo%20Divisi%20Akademik%2C%20saya%20ingin%20meminta%20akses%20untuk%20dokumen%20ID%20${currentItem.id}%20(${currentItem.judul}).`;
+                    btn.target = "_blank";
+                } else {
+                    if (currentUser) {
+                        btn.innerHTML = `<i data-lucide="download" class="w-5 h-5"></i> Download File Sekarang`;
+                        btn.href = convertToDirectDownloadLink(currentItem.link);
+                        btn.target = "_blank"; // Force new tab to ensure popup shows
+                        btn.onclick = () => {
+                            incrementDownload(currentItem.id);
+                            // Show popup immediately as new tab handles download
+                            setTimeout(() => showThankYouPopup(), 1000);
+                        };
+                    } else {
+                        btn.innerHTML = `<i data-lucide="log-in" class="w-5 h-5"></i> Login untuk Download`;
+                        btn.href = "#";
+                        btn.target = "_self";
+                        btn.onclick = (e) => {
+                            e.preventDefault();
+                            loginWithGoogle();
+                        };
+                    }
+                }
+                
+                // Remove old report link listener
+                // btn.addEventListener('click', () => { reportLink.classList.remove('hidden'); });
+
+            } else {
+                btn.classList.add('bg-slate-300', 'cursor-not-allowed', 'pointer-events-none');
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700', 'shadow-lg', 'shadow-green-200');
+                // reportLink.classList.add('hidden');
+                
+                if (isPrivate) {
+                    btn.innerHTML = `<i data-lucide="lock" class="w-5 h-5"></i> Centang Konfirmasi untuk Request`;
+                } else {
+                    btn.innerHTML = `<i data-lucide="lock" class="w-5 h-5"></i> Centang Konfirmasi untuk Download`;
+                }
+                btn.href = "#";
+                btn.onclick = null;
+            }
+            lucide.createIcons();
+        }
+
+        // --- UTILS ---
+        function parseCSV(text) {
+            const result = [];
+            let cell = '', row = [], inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i], nextChar = text[i + 1];
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') { cell += '"'; i++; } 
+                    else { inQuotes = !inQuotes; }
+                } else if (char === ',' && !inQuotes) {
+                    row.push(cell.trim()); cell = '';
+                } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                    if (char === '\r' && nextChar === '\n') i++;
+                    row.push(cell.trim());
+                    if (row.length > 0) result.push(row);
+                    row = []; cell = '';
+                } else { cell += char; }
+            }
+            if (cell || row.length > 0) { row.push(cell.trim()); result.push(row); }
+            return result;
+        }
+
+        function convertToDirectDownloadLink(url) {
+            if (!url) return "#";
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+            const matchId = url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (matchId && matchId[1]) return `https://drive.google.com/uc?export=download&id=${matchId[1]}`;
+            return url;
+        }
+
+        function getThumbnailId(url) {
+            if (!url) return null;
+            let id = null;
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) id = match[1];
+            else {
+                const matchId = url.match(/id=([a-zA-Z0-9_-]+)/);
+                if (matchId && matchId[1]) id = matchId[1];
+            }
+            return id;
+        }
+
+        window.incrementDownload = function(id) {
+            // ... (Same logic as index.html) ...
+            const COOLDOWN_DURATION = 3 * 60 * 60 * 1000;
+            const storageKey = `last_download_${id}`;
+            const lastDownloadTime = localStorage.getItem(storageKey);
+            const now = Date.now();
+
+            if (lastDownloadTime && (now - parseInt(lastDownloadTime) < COOLDOWN_DURATION)) {
+                console.log("Cooldown active");
+            } else {
+                const countUrl = new URL(COUNT_SCRIPT_URL);
+                countUrl.searchParams.append('id', id);
+                fetch(countUrl.toString(), { method: 'POST', mode: 'no-cors' }).then(() => {
+                    localStorage.setItem(storageKey, now.toString());
+                });
+            }
+
+            const title = currentItem ? currentItem.judul : "Unknown";
+            const name = currentUser ? currentUser.displayName : "Anonymous";
+            const email = currentUser ? currentUser.email : "-";
+            const logUrl = new URL(LOG_SCRIPT_URL);
+            logUrl.searchParams.append('id', id);
+            logUrl.searchParams.append('title', title);
+            logUrl.searchParams.append('name', name);
+            logUrl.searchParams.append('email', email);
+            fetch(logUrl.toString(), { method: 'POST', mode: 'no-cors' });
+        };
+
+        window.goBack = function() {
+            if (document.referrer.includes('index.html')) {
+                history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        };
+        // Mobile Menu Logic
+        (function() {
+            const menuButton = document.getElementById("mobileMenuBtn");
+            const mobileNav = document.getElementById("mobileNavDropdown");
+
+            if (menuButton && mobileNav) {
+                menuButton.onclick = function(e) {
+                    e.stopPropagation(); // Prevent bubbling issues
+                    mobileNav.classList.toggle("hidden");
+                };
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!menuButton.contains(e.target) && !mobileNav.contains(e.target) && !mobileNav.classList.contains('hidden')) {
+                        mobileNav.classList.add('hidden');
+                    }
+                });
+            }
+        })();
+
+        // --- POPUP LOGIC ---
+        function showThankYouPopup() {
+            const modal = document.getElementById('thankYouModal');
+            modal.classList.remove('hidden');
+            // Re-init icons inside modal
+            try { lucide.createIcons(); } catch(e) {}
+        }
+    </script>
+</body>
+</html>
