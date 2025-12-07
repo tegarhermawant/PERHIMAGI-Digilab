@@ -539,16 +539,54 @@
 
             // Setup Checkbox Listener
             document.getElementById('confirmationCheck').addEventListener('change', renderActionButtons);
-            
-            // ... (Meta tags logic remains same) ...
-            document.querySelector('meta[property="og:title"]').setAttribute("content", `${item.judul} - PERHIMAGI Digital Library`);
-            document.querySelector('meta[property="og:description"]').setAttribute("content", item.deskripsi.substring(0, 150) + "...");
-            
-            if (thumbLink) {
-                document.querySelector('meta[property="og:image"]').setAttribute("content", thumbLink);
-            } else {
-                document.querySelector('meta[property="og:image"]').setAttribute("content", "https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png");
+            // --- UPDATE META TAGS FOR SOCIAL SHARE ---
+            // Note: This only works for crawlers that execute JS or if using a prerender service.
+            const docTitle = `${item.judul} - PERHIMAGI Digital Library`;
+            const docDesc = item.deskripsi ? (item.deskripsi.substring(0, 150) + (item.deskripsi.length > 150 ? "..." : "")) : "Referensi Literasi Mahasiswa Geologi di Indonesia";
+            const docImage = thumbLink || "https://perhimagi.org/wp-content/uploads/2025/05/Logo-Perhimagi.png";
+            const docUrl = window.location.href;
+
+            // Open Graph
+            document.querySelector('meta[property="og:title"]').setAttribute("content", docTitle);
+            document.querySelector('meta[property="og:description"]').setAttribute("content", docDesc);
+            document.querySelector('meta[property="og:image"]').setAttribute("content", docImage);
+            document.querySelector('meta[property="og:url"]').setAttribute("content", docUrl);
+
+            // Twitter Card (Add dynamically if not present)
+            let twitterCard = document.querySelector('meta[name="twitter:card"]');
+            if (!twitterCard) {
+                twitterCard = document.createElement('meta');
+                twitterCard.setAttribute('name', 'twitter:card');
+                document.head.appendChild(twitterCard);
             }
+            twitterCard.setAttribute("content", "summary_large_image");
+
+            let twitterTitle = document.querySelector('meta[name="twitter:title"]');
+            if (!twitterTitle) {
+                twitterTitle = document.createElement('meta');
+                twitterTitle.setAttribute('name', 'twitter:title');
+                document.head.appendChild(twitterTitle);
+            }
+            twitterTitle.setAttribute("content", docTitle);
+
+            let twitterDesc = document.querySelector('meta[name="twitter:description"]');
+            if (!twitterDesc) {
+                twitterDesc = document.createElement('meta');
+                twitterDesc.setAttribute('name', 'twitter:description');
+                document.head.appendChild(twitterDesc);
+            }
+            twitterDesc.setAttribute("content", docDesc);
+
+            let twitterImage = document.querySelector('meta[name="twitter:image"]');
+            if (!twitterImage) {
+                twitterImage = document.createElement('meta');
+                twitterImage.setAttribute('name', 'twitter:image');
+                document.head.appendChild(twitterImage);
+            }
+            twitterImage.setAttribute("content", docImage);
+
+            // Update Page Title
+            document.title = docTitle;
 
             // Initial Button State
             renderActionButtons();
